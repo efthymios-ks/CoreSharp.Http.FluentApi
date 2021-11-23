@@ -1,37 +1,116 @@
-## Welcome to GitHub Pages
+# CoreSharp.HttpClient.FluentApi 
 
-You can use the [editor on GitHub](https://github.com/efthymios-ks/CoreSharp.HttpClient.FluentApi/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+## Description 
+`CoreSharp.HttpClient.FluentApi` allows fluent http request building.  
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## Features 
+- Automatic json conversions using `Json.NET`. 
+- Optional in-memory response caching for GET requests. 
+- Specific and more meaningful exceptions. 
+- Use of `Stream` where applicable instead of eager converting entities to string. **[Optimizes memory consumption]** 
+- Use of `HttpCompletionOption.ResponseHeadersRead` by default to all requests. **[Optimizes memory consumption and response times]** 
+- Easily expandable. 
 
-### Markdown
+## Installation 
+Install via [nuget](https://www.nuget.org/packages/CoreSharp.HttpClient.FluentApi/).
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+## Interface tree 
+Building the request involves several configurable steps.  
+From initiating the request builder the request to sending the request. 
+```
+HttpClient
+└── IRequest (Headers, ThrowOnError)
+    └── IResource (Route) 
+        └── IMethod (GET, POST, PUT, PATCH, DELETE) 
+            └── IGenericResponse 
+                └── IJsonResponse (Optional) 
 ```
 
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
+## Usage 
+```
+using CoreSharp.HttpClient.FluentApi.Extensions;
 
-### Jekyll Themes
+public class IndexPage 
+{ 
+  //private HttpClient _httpClient = ...;
+  
+  //Methods
+  protected override async Task OnInitializedAsync() 
+  {
+    await base.OnInitializedAsync(); 
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/efthymios-ks/CoreSharp.HttpClient.FluentApi/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+    try
+    { 
+        //GET /albums and map to IEnumerable 
+        var albums = await client
+            .Request()
+            .Resource("albums")
+            .Get()
+            .Json<IEnumerable<Album>>()
+            .SendAsync();
 
-### Support or Contact
+        //GET /posts and map to array with caching
+        for (var i = 0; i < 3; i++)
+        {
+            await client
+                .Request()
+                .Resource("posts")
+                .Get()
+                .Json<Post[]>()
+                .Cache(TimeSpan.FromMinutes(5))
+                .SendAsync();
+        }
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+        //GET /users and map to HashSet 
+        var users = await client
+            .Request()
+            .Resource("users")
+            .Get()
+            .Json<HashSet<User>>()
+            .SendAsync();
+
+        //GET /users/2 and map to class 
+        var user = await client
+            .Request()
+            .Resource("users/2")
+            .Get()
+            .Json<User>()
+            .SendAsync();
+
+        //PATCH /users/2 and get HttpResponseMessage 
+        user.Name = "Efthymios";
+        using var response = await client
+            .Request()
+            .Resource($"users/{user.Id}")
+            .Patch()
+            .Content(user)
+            .SendAsync();
+        var success = response.IsSuccessStatusCode;
+        var json = await response.Content.ReadAsStringAsync();
+
+        //Throw on failed request 
+        await client
+            .Request()
+            .ThrowOnError()
+            .Resource("wrong/url")
+            .Get()
+            .SendAsync();
+    }
+    //IRestClient specific exception 
+    catch (HttpResponseException ex)
+    {
+        var statusCode = ex.ResponseStatusCode;
+        var method = ex.RequestMethod;
+        var url = ex.RequestUrl;
+        var status = ex.ResponseStatus;
+        var content = ex.ResponseContent;
+        var summary = ex.ToString();
+        Console.WriteLine(summary);
+    }
+    //Other exceptions 
+    catch (Exception ex)
+    {
+    }
+  }
+}
+```
