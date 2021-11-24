@@ -22,8 +22,8 @@ HttpClient
 └── IRequest (Headers, ThrowOnError)
     └── IResource (Route) 
         └── IMethod (GET, POST, PUT, PATCH, DELETE) 
-            └── IGenericResponse 
-                └── IJsonResponse (Optional) 
+            └── IGenericResponse (Optional) 
+                └── IJsonResponse 
 ```
 
 ## Usage 
