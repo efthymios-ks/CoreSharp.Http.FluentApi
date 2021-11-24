@@ -27,7 +27,7 @@ HttpClient
             |   └── POST, PUT, PATCH  
             |       └── IContentResponse (Content) 
             └── IGenericResponse (Optional) 
-                └── IJsonResponse 
+                └── IJsonResponse (Cache) 
 ```
 
 ## Usage 
