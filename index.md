@@ -20,7 +20,7 @@ From initiating the request builder the request to sending the request.
 ```
 HttpClient
 └── IRequest (Headers, ThrowOnError)
-    └── IResource (Route) 
+    └── IRoute (Route) 
         └── IMethod (GET, POST, PUT, PATCH, DELETE) 
             |   └── GET 
             |   |   └── IQueryMethod (QueryParameter) 
@@ -48,7 +48,7 @@ public class IndexPage
         //GET /albums and map to IEnumerable 
         var albums = await client
             .Request()
-            .Resource("albums")
+            .Route("albums")
             .Get()
             .Json<IEnumerable<Album>>()
             .SendAsync();
@@ -58,7 +58,7 @@ public class IndexPage
         {
             await client
                 .Request()
-                .Resource("posts")
+                .Route("posts")
                 .Get()
                 .Json<Post[]>()
                 .Cache(TimeSpan.FromMinutes(5))
@@ -68,7 +68,7 @@ public class IndexPage
         //GET /users and map to HashSet 
         var users = await client
             .Request()
-            .Resource("users")
+            .Route("users")
             .Get()
             .Json<HashSet<User>>()
             .SendAsync();
@@ -76,7 +76,7 @@ public class IndexPage
         //GET /users/2 and map to class 
         var user = await client
             .Request()
-            .Resource("users/2")
+            .Route("users/2")
             .Get()
             .Json<User>()
             .SendAsync();
@@ -85,7 +85,7 @@ public class IndexPage
         user.Name = "Efthymios";
         using var response = await client
             .Request()
-            .Resource($"users/{user.Id}")
+            .Route($"users/{user.Id}")
             .Patch()
             .Content(user)
             .SendAsync();
@@ -96,7 +96,7 @@ public class IndexPage
         await client
             .Request()
             .ThrowOnError()
-            .Resource("wrong/url")
+            .Route("wrong/url")
             .Get()
             .SendAsync();
     }
