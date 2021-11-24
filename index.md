@@ -22,6 +22,10 @@ HttpClient
 └── IRequest (Headers, ThrowOnError)
     └── IResource (Route) 
         └── IMethod (GET, POST, PUT, PATCH, DELETE) 
+            |   └── GET 
+            |   |   └── IQueryMethod (QueryParameter) 
+            |   └── POST, PUT, PATCH  
+            |       └── IContentResponse (Content) 
             └── IGenericResponse (Optional) 
                 └── IJsonResponse 
 ```
