@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <Authors>Efthymios Koktsidis</Authors>
+        <Product>Efthymios Koktsidis</Product>
+        <Description>HttpClient extensions for fluent http request building.</Description>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageProjectUrl>https://github.com/efthymios-ks/CoreSharp.HttpClient.FluentApi</PackageProjectUrl>
+        <RepositoryUrl>CoreSharp.HttpClient.FluentApi</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>Http, Web, Rest, Client, Api, Request, Fluent</PackageTags>
+        <PackageReleaseNotes>-Initial release</PackageReleaseNotes>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <PackageIcon>icon.png</PackageIcon>
+        <PackageIconUrl />
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Version>1.1.0</Version>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <DocumentationFile>C:\repos\efthymios-ks\CoreSharp.HttpClient.FluentApi\CoreSharp.HttpClient.FluentApi\CoreSharp.HttpClient.FluentApi.xml</DocumentationFile>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <DocumentationFile>C:\repos\efthymios-ks\CoreSharp.HttpClient.FluentApi\CoreSharp.HttpClient.FluentApi\CoreSharp.HttpClient.FluentApi.xml</DocumentationFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="..\.editorconfig" Link=".editorconfig" />
+        <None Include="..\icon.png">
+          <Pack>True</Pack>
+          <PackagePath></PackagePath>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="CoreSharp" Version="1.1.0" />
+        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="5.0.0" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    </ItemGroup>
+
+</Project>
