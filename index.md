@@ -58,6 +58,7 @@ public class IndexPage
         {
             await client
                 .Request()
+                .AcceptJson()
                 .Route("posts")
                 .Get()
                 .Json<Post[]>()
@@ -65,18 +66,11 @@ public class IndexPage
                 .SendAsync();
         }
 
-        //GET /users and map to HashSet 
-        var users = await client
-            .Request()
-            .Route("users")
-            .Get()
-            .Json<HashSet<User>>()
-            .SendAsync();
-
         //GET /users/2 and map to class 
         var user = await client
             .Request()
-            .Route("users/2")
+            .AcceptJson()
+            .Route("users", 2)
             .Get()
             .Json<User>()
             .SendAsync();
@@ -85,7 +79,8 @@ public class IndexPage
         user.Name = "Efthymios";
         using var response = await client
             .Request()
-            .Route($"users/{user.Id}")
+            .AcceptJson()
+            .Route("users", user.Id)
             .Patch()
             .Content(user)
             .SendAsync();
