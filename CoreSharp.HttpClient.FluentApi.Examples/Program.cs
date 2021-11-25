@@ -28,16 +28,18 @@ namespace CoreSharp.HttpClient.FluentApi.Examples
                 //GET /albums and map to IEnumerable 
                 var albums = await client
                     .Request()
+                    .AcceptJson()
                     .Route("albums")
                     .Get()
                     .Json<IEnumerable<Album>>()
                     .SendAsync();
 
-                //GET /posts and map to array with caching
+                //GET /posts and map to array and cache 
                 for (var i = 0; i < 3; i++)
                 {
                     await client
                         .Request()
+                        .AcceptJson()
                         .Route("posts")
                         .Get()
                         .Json<Post[]>()
@@ -45,18 +47,11 @@ namespace CoreSharp.HttpClient.FluentApi.Examples
                         .SendAsync();
                 }
 
-                //GET /users and map to HashSet 
-                var users = await client
-                    .Request()
-                    .Route("users")
-                    .Get()
-                    .Json<HashSet<User>>()
-                    .SendAsync();
-
                 //GET /users/2 and map to class 
                 var user = await client
                     .Request()
-                    .Route("users/2")
+                    .AcceptJson()
+                    .Route("users", 2)
                     .Get()
                     .Json<User>()
                     .SendAsync();
@@ -65,7 +60,8 @@ namespace CoreSharp.HttpClient.FluentApi.Examples
                 user.Name = "Efthymios";
                 using var response = await client
                     .Request()
-                    .Route($"users/{user.Id}")
+                    .AcceptJson()
+                    .Route("users", user.Id)
                     .Patch()
                     .Content(user)
                     .SendAsync();

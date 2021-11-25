@@ -141,6 +141,18 @@
         <member name="M:CoreSharp.HttpClient.FluentApi.Extensions.IRequestExtensions.Header(CoreSharp.HttpClient.FluentApi.Contracts.IRequest,System.String,System.String)">
             <inheritdoc cref="P:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.Headers" />
         </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Extensions.IRequestExtensions.Authorization(CoreSharp.HttpClient.FluentApi.Contracts.IRequest,System.String)">
+            <inheritdoc cref="F:System.Net.HttpRequestHeader.Authorization" />
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Extensions.IRequestExtensions.Accept(CoreSharp.HttpClient.FluentApi.Contracts.IRequest,System.String)">
+            <inheritdoc cref="F:System.Net.HttpRequestHeader.Accept" />
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Extensions.IRequestExtensions.AcceptJson(CoreSharp.HttpClient.FluentApi.Contracts.IRequest)">
+            <inheritdoc cref="F:System.Net.HttpRequestHeader.Accept" />
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Extensions.IRequestExtensions.AcceptXml(CoreSharp.HttpClient.FluentApi.Contracts.IRequest)">
+            <inheritdoc cref="F:System.Net.HttpRequestHeader.Accept" />
+        </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Extensions.IRequestExtensions.ThrowOnError(CoreSharp.HttpClient.FluentApi.Contracts.IRequest,System.Boolean)">
             <inheritdoc cref="P:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.ThrowOnError" />
         </member>

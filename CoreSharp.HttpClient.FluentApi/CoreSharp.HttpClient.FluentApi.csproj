@@ -10,13 +10,15 @@
         <RepositoryUrl>CoreSharp.HttpClient.FluentApi</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>Http, Web, Rest, Client, Api, Request, Fluent</PackageTags>
-        <PackageReleaseNotes>-Initial release</PackageReleaseNotes>
+        <PackageReleaseNotes>-Added Accept() header extensions.
+-Added Authorization() header extensions.
+-Bug fixes.</PackageReleaseNotes>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <PackageIcon>icon.png</PackageIcon>
         <PackageIconUrl />
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>1.1.0</Version>
+        <Version>1.2.0</Version>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

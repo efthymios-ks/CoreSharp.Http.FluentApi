@@ -29,7 +29,7 @@ namespace CoreSharp.HttpClient.FluentApi.Extensions
             var route = method.Resource.Route;
             var httpMethod = method.HttpMethod;
             var completionOption = method.Resource.Request.CompletionOption;
-            var queryParameter = (method as IQueryMethod)?.Query;
+            var queryParameter = (method as IQueryMethod)?.QueryParameter;
             var httpContent = (method as IContentMethod)?.Content;
 
             //Add query parameter
@@ -41,8 +41,12 @@ namespace CoreSharp.HttpClient.FluentApi.Extensions
             {
                 Content = httpContent
             };
-            foreach (var header in headers)
-                request.Headers.Add(header.Key, header.Value);
+            foreach (var (key, value) in headers)
+            {
+                if (request.Headers.Contains(key))
+                    request.Headers.Remove(key);
+                request.Headers.Add(key, value);
+            }
 
             //Send request 
             var response = await httpClient.SendAsync(request, completionOption, cancellationToken);

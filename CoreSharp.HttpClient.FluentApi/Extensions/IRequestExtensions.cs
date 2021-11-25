@@ -1,9 +1,12 @@
-﻿using CoreSharp.HttpClient.FluentApi.Concrete;
+﻿using CoreSharp.Extensions;
+using CoreSharp.HttpClient.FluentApi.Concrete;
 using CoreSharp.HttpClient.FluentApi.Contracts;
 using CoreSharp.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
+using System.Net.Mime;
 
 namespace CoreSharp.HttpClient.FluentApi.Extensions
 {
@@ -34,13 +37,26 @@ namespace CoreSharp.HttpClient.FluentApi.Extensions
             if (string.IsNullOrWhiteSpace(nameof(value)))
                 throw new ArgumentNullException(nameof(value));
 
-            if (request.Headers.ContainsKey(key))
-                request.Headers[key] = value;
-            else
-                request.Headers.Add(key, value);
+            request.Headers.AddOrUpdate(key, value);
 
             return request;
         }
+
+        /// <inheritdoc cref="HttpRequestHeader.Authorization" />
+        public static IRequest Authorization(this IRequest request, string accessToken)
+            => request.Header("Authorization", $"Bearer {accessToken}");
+
+        /// <inheritdoc cref="HttpRequestHeader.Accept" />
+        public static IRequest Accept(this IRequest request, string mediaType)
+            => request.Header("Accept", mediaType);
+
+        /// <inheritdoc cref="HttpRequestHeader.Accept" />
+        public static IRequest AcceptJson(this IRequest request)
+            => request.Accept(MediaTypeNames.Application.Json);
+
+        /// <inheritdoc cref="HttpRequestHeader.Accept" />
+        public static IRequest AcceptXml(this IRequest request)
+            => request.Accept(MediaTypeNames.Application.Xml);
 
         /// <inheritdoc cref="IRequest.ThrowOnError" />
         public static IRequest ThrowOnError(this IRequest request, bool throwOnError = true)
