@@ -33,13 +33,14 @@ namespace CoreSharp.HttpClient.FluentApi.Extensions
             //Extract args
             var route = jsonQueryResponse.Method.Resource.Route;
             var cacheDuration = jsonQueryResponse.Duration;
+            var memoryCache = Options.MemoryCache;
 
             //Prepare caching fields 
             var shouldCache = cacheDuration is not null && cacheDuration != TimeSpan.Zero;
             var cacheKey = shouldCache ? $"{route} > {typeof(TResponse).FullName}" : string.Empty;
 
             //Return cached value, if applicable 
-            if (shouldCache && Options.MemoryCache.TryGetValue<TResponse>(cacheKey, out var cachedValue))
+            if (shouldCache && memoryCache.TryGetValue<TResponse>(cacheKey, out var cachedValue))
                 return cachedValue;
 
             //Else request... 
@@ -47,7 +48,7 @@ namespace CoreSharp.HttpClient.FluentApi.Extensions
 
             //...and cache response, if needed 
             if (shouldCache)
-                Options.MemoryCache.Set(cacheKey, response, cacheDuration.Value);
+                memoryCache.Set(cacheKey, response, cacheDuration.Value);
 
             return response;
         }

@@ -39,8 +39,6 @@
 
     <ItemGroup>
         <PackageReference Include="CoreSharp" Version="1.1.0" />
-        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="5.0.0" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     </ItemGroup>
 
 </Project>
