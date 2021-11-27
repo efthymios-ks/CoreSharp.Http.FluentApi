@@ -23,7 +23,7 @@ HttpClient
     └── IRoute (Route) 
         └── IMethod (GET, POST, PUT, PATCH, DELETE) 
             |   └── GET 
-            |   |   └── IQueryMethod (QueryParameter) 
+            |   |   └── IQueryMethod (QueryParameters) 
             |   └── POST, PUT, PATCH  
             |       └── IContentResponse (Content) 
             └── IGenericResponse (Optional) 
@@ -34,6 +34,16 @@ HttpClient
 Include `using CoreSharp.HttpClient.FluentApi.Extensions;` 
 
 ## Examples 
+### HttpCompletionOption
+```
+    await httpClient
+            .Request()
+            .CompletionOption(HttpCompletionOption.ResponseContentRead)
+            .Route("albums")
+            .Get() 
+            .SendAsync();
+```
+
 ### Error handling
 ```
     try
@@ -52,9 +62,7 @@ Include `using CoreSharp.HttpClient.FluentApi.Extensions;`
         var content = ex.ResponseContent;
         var summary = ex.ToString(); 
     }
-```
-
-### Ignore error 
+``` 
 ```
     await httpClient
             .Request()
