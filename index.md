@@ -67,7 +67,7 @@ Include `using CoreSharp.HttpClient.FluentApi.Extensions;`
     await httpClient
             .Request()
             .IgnoreError()
-            .Route("albums")
+            .Route("wrong/url")
             .Get()
             .SendAsync();
 ```
