@@ -59,11 +59,11 @@ namespace CoreSharp.HttpClient.FluentApi.Extensions
             => request.Accept(MediaTypeNames.Application.Xml);
 
         /// <inheritdoc cref="IRequest.ThrowOnError" />
-        public static IRequest ThrowOnError(this IRequest request, bool throwOnError = true)
+        public static IRequest IgnoreError(this IRequest request)
         {
             _ = request ?? throw new ArgumentNullException(nameof(request));
 
-            request.ThrowOnError = throwOnError;
+            request.ThrowOnError = false;
 
             return request;
         }

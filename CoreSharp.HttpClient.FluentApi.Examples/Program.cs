@@ -71,7 +71,6 @@ namespace CoreSharp.HttpClient.FluentApi.Examples
                 //Throw on failed request 
                 await client
                     .Request()
-                    .ThrowOnError()
                     .Route("wrong/url")
                     .Get()
                     .SendAsync();

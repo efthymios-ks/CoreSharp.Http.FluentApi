@@ -8,20 +8,6 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
     internal class Request : IRequest
     {
         //Constructors 
-        public Request(IRequest requestSource)
-            : this(requestSource.HttpClient)
-        {
-            _ = requestSource ?? throw new ArgumentNullException(nameof(requestSource));
-
-            if (this is IRequest request)
-            {
-                request.ThrowOnError = requestSource.ThrowOnError;
-                request.Headers.Clear();
-                foreach (var header in requestSource.Headers)
-                    request.Headers.Add(header);
-            }
-        }
-
         public Request(System.Net.Http.HttpClient httpClient)
         {
             _ = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
@@ -34,6 +20,6 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         System.Net.Http.HttpClient IRequest.HttpClient { get; set; }
         HttpCompletionOption IRequest.CompletionOption { get; set; } = HttpCompletionOption.ResponseHeadersRead;
         IDictionary<string, string> IRequest.Headers { get; } = new Dictionary<string, string>();
-        bool IRequest.ThrowOnError { get; set; }
+        bool IRequest.ThrowOnError { get; set; } = true;
     }
 }
