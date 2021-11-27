@@ -28,12 +28,9 @@ namespace CoreSharp.HttpClient.FluentApi.Examples
                 //GET /albums and map to IEnumerable 
                 var albums = await client
                     .Request()
-                    .AcceptJson()
+                    .CompletionOption(HttpCompletionOption.ResponseContentRead)
                     .Route("albums")
                     .Get()
-                    .Query("Id", 5)
-                    .Query("CreationDate", DateTime.Now)
-                    .Query(new { Id = 6, CreationDate = DateTime.Now })
                     .Json<IEnumerable<Album>>()
                     .SendAsync();
 
@@ -42,7 +39,6 @@ namespace CoreSharp.HttpClient.FluentApi.Examples
                 {
                     await client
                         .Request()
-                        .AcceptJson()
                         .Route("posts")
                         .Get()
                         .Json<Post[]>()
@@ -53,7 +49,6 @@ namespace CoreSharp.HttpClient.FluentApi.Examples
                 //GET /users/2 and map to class 
                 var user = await client
                     .Request()
-                    .AcceptJson()
                     .Route("users", 2)
                     .Get()
                     .Json<User>()
@@ -63,7 +58,6 @@ namespace CoreSharp.HttpClient.FluentApi.Examples
                 user.Name = "Efthymios";
                 using var response = await client
                     .Request()
-                    .AcceptJson()
                     .Route("users", user.Id)
                     .Patch()
                     .Content(user)
