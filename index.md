@@ -31,85 +31,188 @@ HttpClient
 ```
 
 ## Usage 
+Include `using CoreSharp.HttpClient.FluentApi.Extensions;` 
+
+## Examples 
+### Error handling
 ```
-using CoreSharp.HttpClient.FluentApi.Extensions;
-
-public class IndexPage 
-{ 
-  //private HttpClient _httpClient = ...;
-  
-  //Methods
-  protected override async Task OnInitializedAsync() 
-  {
-    await base.OnInitializedAsync(); 
-
     try
-    { 
-        //GET /albums and map to IEnumerable 
-        var albums = await client
-            .Request()
-            .Route("albums")
-            .Get()
-            .Json<IEnumerable<Album>>()
-            .SendAsync();
-
-        //GET /posts and map to array with caching
-        for (var i = 0; i < 3; i++)
-        {
-            await client
-                .Request()
-                .AcceptJson()
-                .Route("posts")
-                .Get()
-                .Json<Post[]>()
-                .Cache(TimeSpan.FromMinutes(5))
-                .SendAsync();
-        }
-
-        //GET /users/2 and map to class 
-        var user = await client
-            .Request()
-            .AcceptJson()
-            .Route("users", 2)
-            .Get()
-            .Json<User>()
-            .SendAsync();
-
-        //PATCH /users/2 and get HttpResponseMessage 
-        user.Name = "Efthymios";
-        using var response = await client
-            .Request()
-            .AcceptJson()
-            .Route("users", user.Id)
-            .Patch()
-            .Content(user)
-            .SendAsync();
-        var success = response.IsSuccessStatusCode;
-        var json = await response.Content.ReadAsStringAsync();
-
-        //Throw on failed request 
-        await client
-            .Request()
-            .ThrowOnError()
-            .Route("wrong/url")
-            .Get()
-            .SendAsync();
-    }
-    //IRestClient specific exception 
-    catch (HttpResponseException ex)
     {
-        var statusCode = ex.ResponseStatusCode;
+         await httpClient
+                .Request() 
+                .Route("wrong/url")
+                .Get()
+                .SendAsync();
+    }
+    catch (HttpResponseException ex)
+    {   
         var method = ex.RequestMethod;
         var url = ex.RequestUrl;
         var status = ex.ResponseStatus;
         var content = ex.ResponseContent;
-        var summary = ex.ToString();
-        Console.WriteLine(summary);
+        var summary = ex.ToString(); 
     }
-    //Other exceptions 
-    catch (Exception ex)
-    {
-    }
-  }
-}
+```
+
+### Ignore error 
+```
+    await httpClient
+            .Request()
+            .IgnoreError()
+            .Route("albums")
+            .Get()
+            .SendAsync();
+```
+
+### Add header 
+```
+    await httpClient
+            .Request()
+            .Header("Cache-Control", "max-age=604800") //Cache-Control > max-age=604800 
+            .Route("albums")
+            .Get()
+            .SendAsync();
+```
+
+### Add header ACCEPT 
+```
+    await httpClient
+            .Request()
+            .Accept(MediaTypeNames.Application.Json) //Accept > application/json 
+            .Route("albums")
+            .Get()
+            .SendAsync();
+```
+```
+    await httpClient
+            .Request()
+            .AcceptJson() //Accept > application/json 
+            .Route("albums")
+            .Get()
+            .SendAsync();
+```
+
+### Add header AUTHORIZATION
+```
+    await httpClient
+            .Request()
+            .Authorization("accessTokenValue") // Authorization > Bearer accessTokenValue 
+            .Route("albums")
+            .Get()
+            .SendAsync();
+```
+
+### Request with key (GET, POST, PUT, PATCH, DELETE) 
+```
+    await httpClient
+            .Request()
+            .Route("albums", 1) // /albums/1 
+            .Get()
+            .SendAsync();
+```
+```
+    await httpClient
+            .Request()
+            .Route("albums/1") // /albums/1 
+            .Get()
+            .SendAsync();
+```
+```
+    await httpClient
+            .Request()
+            .Route($"albums/{1}") // /albums/1 
+            .Get()
+            .SendAsync();
+```
+
+
+### GET with query string 
+```
+    await httpClient
+            .Request()
+            .Route("albums")
+            .Get()
+            //albums/?Id=1&Color=Black&CreationDate=2021-11-27T11%3A41%3A06 
+            .Query("Id", 1).Query("Color", "Black").Query("CreationDate", DateTime.Now)
+            .SendAsync();
+```
+```
+    await httpClient
+            .Request()
+            .Route("albums")
+            .Get()
+            //albums/?Id=1&Color=Black&CreationDate=2021-11-27T11%3A41%3A06 
+            .Query(new { Id = 1, Color = "Black", CreationDate = DateTime.Now })
+            .SendAsync();
+``` 
+```
+    await httpClient
+            .Request()
+            .Route("albums")
+            .Get()
+            //albums/?Id=1&UserId=1&Title=My%20Title 
+            .Query(new Album { Id = 1, UserId = 1, Title = "My Title" })
+            .SendAsync();
+```
+### Request with json response 
+```
+    await httpClient
+            .Request()
+            .Route("albums", 1)
+            .Get()
+            .Json<Album>()
+            .SendAsync();
+```
+```
+    await httpClient
+            .Request()
+            .Route("albums")
+            .Get()
+            .Json<IEnumerable<Album>()
+            .SendAsync();
+```
+```
+    await httpClient
+            .Request()
+            .Route("albums")
+            .Get()
+            .Json<Album[]>()
+            .SendAsync();
+```
+
+### GET with json response and caching (only for GET generic requests) 
+```
+    await httpClient
+            .Request()
+            .Route("albums")
+            .Get()
+            .Json<IEnumerable<Album>()
+            .Cache(TimeSpan.FromMinutes(15))
+            .SendAsync();
+```
+
+### Request with body content (POST, PUT, PATCH) 
+```
+    await httpClient
+                .Request()
+                .Route("albums")
+                .Post()
+                .Content(new { Id = 1, UserId = 1, Title = "My Title" })
+                .SendAsync();
+```
+```
+    await httpClient
+                .Request()
+                .Route("albums")
+                .Post()
+                .Content(new Album { Id = 1, UserId = 1, Title = "My Title" })
+                .SendAsync();
+```
+```
+    await httpClient
+                .Request()
+                .Route("albums")
+                .Post()
+                .Content(@"{ ""Id"" = 1, ""UserId"" = 1, ""Title"" = ""My Title"" }")
+                .SendAsync();
 ```
