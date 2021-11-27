@@ -48,7 +48,8 @@ Include `using CoreSharp.HttpClient.FluentApi.Extensions;`
 ```
     try
     {
-         await httpClient
+        // Throws by default 
+        await httpClient
                 .Request() 
                 .Route("wrong/url")
                 .Get()
@@ -76,7 +77,8 @@ Include `using CoreSharp.HttpClient.FluentApi.Extensions;`
 ```
     await httpClient
             .Request()
-            .Header("Cache-Control", "max-age=604800") //Cache-Control > max-age=604800 
+            // Cache-Control > max-age=604800 
+            .Header("Cache-Control", "max-age=604800")
             .Route("albums")
             .Get()
             .SendAsync();
@@ -86,7 +88,8 @@ Include `using CoreSharp.HttpClient.FluentApi.Extensions;`
 ```
     await httpClient
             .Request()
-            .Accept(MediaTypeNames.Application.Json) //Accept > application/json 
+            // Accept > application/json 
+            .Accept(MediaTypeNames.Application.Json)
             .Route("albums")
             .Get()
             .SendAsync();
@@ -94,7 +97,8 @@ Include `using CoreSharp.HttpClient.FluentApi.Extensions;`
 ```
     await httpClient
             .Request()
-            .AcceptJson() //Accept > application/json 
+            // Accept > application/json 
+            .AcceptJson()
             .Route("albums")
             .Get()
             .SendAsync();
@@ -104,7 +108,8 @@ Include `using CoreSharp.HttpClient.FluentApi.Extensions;`
 ```
     await httpClient
             .Request()
-            .Authorization("accessTokenValue") // Authorization > Bearer accessTokenValue 
+            // Authorization > Bearer accessTokenValue 
+            .Authorization("accessTokenValue")
             .Route("albums")
             .Get()
             .SendAsync();
@@ -114,21 +119,24 @@ Include `using CoreSharp.HttpClient.FluentApi.Extensions;`
 ```
     await httpClient
             .Request()
-            .Route("albums", 1) // /albums/1 
+            // /albums/1 
+            .Route("albums", 1)
             .Get()
             .SendAsync();
 ```
 ```
     await httpClient
             .Request()
-            .Route("albums/1") // /albums/1 
+            // /albums/1 
+            .Route("albums/1")
             .Get()
             .SendAsync();
 ```
 ```
     await httpClient
             .Request()
-            .Route($"albums/{1}") // /albums/1 
+            // /albums/1 
+            .Route($"albums/{1}")
             .Get()
             .SendAsync();
 ```
@@ -140,7 +148,7 @@ Include `using CoreSharp.HttpClient.FluentApi.Extensions;`
             .Request()
             .Route("albums")
             .Get()
-            //albums/?Id=1&Color=Black&CreationDate=2021-11-27T11%3A41%3A06 
+            // albums/?Id=1&Color=Black&CreationDate=2021-11-27T11%3A41%3A06 
             .Query("Id", 1).Query("Color", "Black").Query("CreationDate", DateTime.Now)
             .SendAsync();
 ```
@@ -149,7 +157,7 @@ Include `using CoreSharp.HttpClient.FluentApi.Extensions;`
             .Request()
             .Route("albums")
             .Get()
-            //albums/?Id=1&Color=Black&CreationDate=2021-11-27T11%3A41%3A06 
+            // albums/?Id=1&Color=Black&CreationDate=2021-11-27T11%3A41%3A06 
             .Query(new { Id = 1, Color = "Black", CreationDate = DateTime.Now })
             .SendAsync();
 ``` 
@@ -158,7 +166,7 @@ Include `using CoreSharp.HttpClient.FluentApi.Extensions;`
             .Request()
             .Route("albums")
             .Get()
-            //albums/?Id=1&UserId=1&Title=My%20Title 
+            // albums/?Id=1&UserId=1&Title=My%20Title 
             .Query(new Album { Id = 1, UserId = 1, Title = "My Title" })
             .SendAsync();
 ```
@@ -202,25 +210,25 @@ Include `using CoreSharp.HttpClient.FluentApi.Extensions;`
 ### Request with body content (POST, PUT, PATCH) 
 ```
     await httpClient
-                .Request()
-                .Route("albums")
-                .Post()
-                .Content(new { Id = 1, UserId = 1, Title = "My Title" })
-                .SendAsync();
+            .Request()
+            .Route("albums")
+            .Post()
+            .Content(new { Id = 1, UserId = 1, Title = "My Title" })
+            .SendAsync();
 ```
 ```
     await httpClient
-                .Request()
-                .Route("albums")
-                .Post()
-                .Content(new Album { Id = 1, UserId = 1, Title = "My Title" })
-                .SendAsync();
+            .Request()
+            .Route("albums")
+            .Post()
+            .Content(new Album { Id = 1, UserId = 1, Title = "My Title" })
+            .SendAsync();
 ```
 ```
     await httpClient
-                .Request()
-                .Route("albums")
-                .Post()
-                .Content(@"{ ""Id"" = 1, ""UserId"" = 1, ""Title"" = ""My Title"" }")
-                .SendAsync();
+            .Request()
+            .Route("albums")
+            .Post()
+            .Content(@"{ ""Id"" = 1, ""UserId"" = 1, ""Title"" = ""My Title"" }")
+            .SendAsync();
 ```
