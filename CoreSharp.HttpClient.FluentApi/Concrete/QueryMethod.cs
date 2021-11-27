@@ -1,6 +1,5 @@
-﻿using CoreSharp.Extensions;
-using CoreSharp.HttpClient.FluentApi.Contracts;
-using System;
+﻿using CoreSharp.HttpClient.FluentApi.Contracts;
+using System.Collections.Generic;
 using System.Net.Http;
 
 namespace CoreSharp.HttpClient.FluentApi.Concrete
@@ -11,16 +10,10 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         public QueryMethod(IRoute route, HttpMethod httpMethod)
             : base(route, httpMethod)
         {
-            var validMethods = new[] { HttpMethod.Get };
-            if (!httpMethod.IsIn(validMethods))
-            {
-                var validMethodsAsString = validMethods.StringJoin(", ");
-                var message = $"{nameof(httpMethod)} must be one of the following: {validMethodsAsString}.";
-                throw new ArgumentException(message, nameof(httpMethod));
-            }
+            HttpMethodX.ValidateQueryMethod(httpMethod);
         }
 
         //Properties  
-        string IQueryMethod.QueryParameter { get; set; }
+        IDictionary<string, object> IQueryMethod.QueryParameters { get; } = new Dictionary<string, object>();
     }
 }

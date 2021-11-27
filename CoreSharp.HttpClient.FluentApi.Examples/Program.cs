@@ -31,6 +31,9 @@ namespace CoreSharp.HttpClient.FluentApi.Examples
                     .AcceptJson()
                     .Route("albums")
                     .Get()
+                    .Query("Id", 5)
+                    .Query("CreationDate", DateTime.Now)
+                    .Query(new { Id = 6, CreationDate = DateTime.Now })
                     .Json<IEnumerable<Album>>()
                     .SendAsync();
 

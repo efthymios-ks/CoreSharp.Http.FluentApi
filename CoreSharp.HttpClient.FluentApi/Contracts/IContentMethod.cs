@@ -5,6 +5,6 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
     public interface IContentMethod : IMethod
     {
         //Properties
-        public HttpContent Content { get; internal set; }
+        internal HttpContent Content { get; set; }
     }
 }

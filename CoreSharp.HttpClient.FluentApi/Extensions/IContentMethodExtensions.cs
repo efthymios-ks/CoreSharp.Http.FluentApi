@@ -16,11 +16,11 @@ namespace CoreSharp.HttpClient.FluentApi.Extensions
     public static class IContentMethodExtensions
     {
         //Methods 
-        /// <inheritdoc cref="Content(IContentMethod, HttpContent)" />
+        /// <inheritdoc cref="Content(IContentMethod, string, string)" />
         public static IContentMethod Content(this IContentMethod contentMethod, string content)
             => contentMethod.Content(content, MediaTypeNames.Application.Json);
 
-        /// <inheritdoc cref="Content(IContentMethod, HttpContent)" />
+        /// <inheritdoc cref="Content(IContentMethod, string, Encoding, string)" />
         public static IContentMethod Content(this IContentMethod contentMethod, string content, string mediaContentType)
             => contentMethod.Content(content, Encoding.UTF8, mediaContentType);
 
@@ -28,7 +28,7 @@ namespace CoreSharp.HttpClient.FluentApi.Extensions
         public static IContentMethod Content(this IContentMethod contentMethod, string content, Encoding encoding, string mediaContentType)
             => contentMethod.Content(new StringContent(content, encoding, mediaContentType));
 
-        /// <inheritdoc cref="Content(IContentMethod, HttpContent)" />
+        /// <inheritdoc cref="Content(IContentMethod, object, JsonSerializerSettings)" />
         public static IContentMethod Content(this IContentMethod contentMethod, object content)
             => contentMethod.Content(content, DefaultJsonSettings.Instance);
 

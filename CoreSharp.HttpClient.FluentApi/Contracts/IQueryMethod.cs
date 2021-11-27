@@ -1,8 +1,10 @@
-﻿namespace CoreSharp.HttpClient.FluentApi.Contracts
+﻿using System.Collections.Generic;
+
+namespace CoreSharp.HttpClient.FluentApi.Contracts
 {
     public interface IQueryMethod : IMethod
     {
-        //Properties
-        public string QueryParameter { get; internal set; }
+        //Properties 
+        internal IDictionary<string, object> QueryParameters { get; }
     }
 }

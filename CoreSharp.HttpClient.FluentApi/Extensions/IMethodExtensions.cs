@@ -1,6 +1,7 @@
 ﻿using CoreSharp.Extensions;
 using CoreSharp.HttpClient.FluentApi.Concrete;
 using CoreSharp.HttpClient.FluentApi.Contracts;
+using CoreSharp.Models;
 using CoreSharp.Models.Newtonsoft.Settings;
 using Newtonsoft.Json;
 using System;
@@ -29,12 +30,19 @@ namespace CoreSharp.HttpClient.FluentApi.Extensions
             var route = method.Resource.Route;
             var httpMethod = method.HttpMethod;
             var completionOption = method.Resource.Request.CompletionOption;
-            var queryParameter = (method as IQueryMethod)?.QueryParameter;
+            var queryParameters = (method as IQueryMethod)?.QueryParameters;
             var httpContent = (method as IContentMethod)?.Content;
 
             //Add query parameter
-            if (httpMethod == HttpMethod.Get && !string.IsNullOrWhiteSpace(queryParameter))
+            if (httpMethod == HttpMethod.Get && queryParameters.Count > 0)
+            {
+                var queryBuilder = new UrlQueryBuilder
+                {
+                    queryParameters
+                };
+                var queryParameter = queryBuilder.ToString();
                 route += queryParameter;
+            }
 
             //Create request 
             using var request = new HttpRequestMessage(httpMethod, route)
@@ -58,7 +66,7 @@ namespace CoreSharp.HttpClient.FluentApi.Extensions
             return response;
         }
 
-        /// <inheritdoc cref="Json{TResponse}(IMethod, Func{Stream, TResponse})" />
+        /// <inheritdoc cref="Json{TResponse}(IMethod, JsonSerializerSettings)" />
         public static IJsonResponse<TResponse> Json<TResponse>(this IMethod method)
             where TResponse : class
             => method.Json<TResponse>(DefaultJsonSettings.Instance);

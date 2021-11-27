@@ -1,10 +1,10 @@
 ﻿using CoreSharp.Extensions;
 using CoreSharp.HttpClient.FluentApi.Concrete;
 using CoreSharp.HttpClient.FluentApi.Contracts;
-using CoreSharp.Models;
 using CoreSharp.Models.Newtonsoft.Settings;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace CoreSharp.HttpClient.FluentApi.Extensions
@@ -15,25 +15,39 @@ namespace CoreSharp.HttpClient.FluentApi.Extensions
     public static class IQueryMethodExtensions
     {
         //Methods 
-        /// <inheritdoc cref="Query(IQueryMethod, string)" />
+        /// <inheritdoc cref="Query(IQueryMethod, IDictionary{string, object})" />
         public static IQueryMethod Query<TQueryParameter>(this IQueryMethod queryMethod, TQueryParameter queryParameter) where TQueryParameter : class
         {
             _ = queryMethod ?? throw new ArgumentNullException(nameof(queryParameter));
+            _ = queryParameter ?? throw new ArgumentNullException(nameof(queryParameter));
 
-            var queryBuilder = new UrlQueryBuilder();
-            queryBuilder.Parse(queryParameter);
-            return queryMethod.Query($"{queryBuilder}");
+            var parameters = queryParameter.GetPropertiesDictionary();
+            return queryMethod.Query(parameters);
+        }
+
+        /// <inheritdoc cref="Query(IQueryMethod, string, object)" />
+        public static IQueryMethod Query(this IQueryMethod queryMethod, IDictionary<string, object> parameters)
+        {
+            _ = queryMethod ?? throw new ArgumentNullException(nameof(queryMethod));
+            _ = parameters ?? throw new ArgumentNullException(nameof(parameters));
+
+            foreach (var (key, value) in parameters)
+                queryMethod.Query(key, value);
+
+            return queryMethod;
         }
 
         /// <summary>
         /// Define query parameter.
         /// </summary>
-        public static IQueryMethod Query(this IQueryMethod queryMethod, string queryParameter)
+        public static IQueryMethod Query(this IQueryMethod queryMethod, string key, object value)
         {
             _ = queryMethod ?? throw new ArgumentNullException(nameof(queryMethod));
+            _ = value ?? throw new ArgumentNullException(nameof(value));
+            if (string.IsNullOrWhiteSpace(key))
+                throw new ArgumentNullException(nameof(key));
 
-            queryMethod.QueryParameter = queryParameter;
-
+            queryMethod.QueryParameters.AddOrUpdate(key, value);
             return queryMethod;
         }
 
