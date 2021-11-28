@@ -25,7 +25,7 @@ namespace CoreSharp.HttpClient.FluentApi.Extensions
         }
 
         /// <inheritdoc cref="IJsonResponseExtensions.SendAsync{TResponse}(IJsonResponse{TResponse}, CancellationToken)"/>
-        public static async Task<TResponse> SendAsync<TResponse>(this IJsonQueryResponse<TResponse> jsonQueryResponse, CancellationToken cancellationToken = default)
+        public static async ValueTask<TResponse> SendAsync<TResponse>(this IJsonQueryResponse<TResponse> jsonQueryResponse, CancellationToken cancellationToken = default)
             where TResponse : class
         {
             _ = jsonQueryResponse ?? throw new ArgumentNullException(nameof(jsonQueryResponse));
