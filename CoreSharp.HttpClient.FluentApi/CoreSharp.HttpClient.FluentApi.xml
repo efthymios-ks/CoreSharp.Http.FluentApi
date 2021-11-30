@@ -45,16 +45,16 @@
             </summary>
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Extensions.IContentMethodExtensions.Content(CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod,System.String)">
-            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Extensions.IContentMethodExtensions.Content(CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod,System.Net.Http.HttpContent)" />
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Extensions.IContentMethodExtensions.Content(CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod,System.String,System.String)" />
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Extensions.IContentMethodExtensions.Content(CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod,System.String,System.String)">
-            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Extensions.IContentMethodExtensions.Content(CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod,System.Net.Http.HttpContent)" />
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Extensions.IContentMethodExtensions.Content(CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod,System.String,System.Text.Encoding,System.String)" />
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Extensions.IContentMethodExtensions.Content(CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod,System.String,System.Text.Encoding,System.String)">
             <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Extensions.IContentMethodExtensions.Content(CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod,System.Net.Http.HttpContent)" />
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Extensions.IContentMethodExtensions.Content(CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod,System.Object)">
-            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Extensions.IContentMethodExtensions.Content(CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod,System.Net.Http.HttpContent)" />
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Extensions.IContentMethodExtensions.Content(CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod,System.Object,Newtonsoft.Json.JsonSerializerSettings)" />
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Extensions.IContentMethodExtensions.Content(CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod,System.Object,Newtonsoft.Json.JsonSerializerSettings)">
             <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Extensions.IContentMethodExtensions.Content(CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod,System.Net.Http.HttpContent)" />
@@ -97,9 +97,12 @@
             <inheritdoc cref="M:System.Net.Http.HttpClient.SendAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)" />
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Extensions.IMethodExtensions.Json``1(CoreSharp.HttpClient.FluentApi.Contracts.IMethod)">
-            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Extensions.IMethodExtensions.Json``1(CoreSharp.HttpClient.FluentApi.Contracts.IMethod,System.Func{System.IO.Stream,``0})" />
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Extensions.IMethodExtensions.Json``1(CoreSharp.HttpClient.FluentApi.Contracts.IMethod,Newtonsoft.Json.JsonSerializerSettings)" />
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Extensions.IMethodExtensions.Json``1(CoreSharp.HttpClient.FluentApi.Contracts.IMethod,Newtonsoft.Json.JsonSerializerSettings)">
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Extensions.IMethodExtensions.Json``1(CoreSharp.HttpClient.FluentApi.Contracts.IMethod,System.Func{System.IO.Stream,``0})" />
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Extensions.IMethodExtensions.Json``1(CoreSharp.HttpClient.FluentApi.Contracts.IMethod,System.Func{System.String,``0})">
             <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Extensions.IMethodExtensions.Json``1(CoreSharp.HttpClient.FluentApi.Contracts.IMethod,System.Func{System.IO.Stream,``0})" />
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Extensions.IMethodExtensions.Json``1(CoreSharp.HttpClient.FluentApi.Contracts.IMethod,System.Func{System.IO.Stream,``0})">
@@ -114,9 +117,12 @@
             </summary>
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Extensions.IQueryMethodExtensions.Query``1(CoreSharp.HttpClient.FluentApi.Contracts.IQueryMethod,``0)">
-            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Extensions.IQueryMethodExtensions.Query(CoreSharp.HttpClient.FluentApi.Contracts.IQueryMethod,System.String)" />
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Extensions.IQueryMethodExtensions.Query(CoreSharp.HttpClient.FluentApi.Contracts.IQueryMethod,System.Collections.Generic.IDictionary{System.String,System.Object})" />
         </member>
-        <member name="M:CoreSharp.HttpClient.FluentApi.Extensions.IQueryMethodExtensions.Query(CoreSharp.HttpClient.FluentApi.Contracts.IQueryMethod,System.String)">
+        <member name="M:CoreSharp.HttpClient.FluentApi.Extensions.IQueryMethodExtensions.Query(CoreSharp.HttpClient.FluentApi.Contracts.IQueryMethod,System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Extensions.IQueryMethodExtensions.Query(CoreSharp.HttpClient.FluentApi.Contracts.IQueryMethod,System.String,System.Object)" />
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Extensions.IQueryMethodExtensions.Query(CoreSharp.HttpClient.FluentApi.Contracts.IQueryMethod,System.String,System.Object)">
             <summary>
             Define query parameter.
             </summary>
@@ -125,6 +131,9 @@
             <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Extensions.IQueryMethodExtensions.Json``1(CoreSharp.HttpClient.FluentApi.Contracts.IQueryMethod,Newtonsoft.Json.JsonSerializerSettings)" />
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Extensions.IQueryMethodExtensions.Json``1(CoreSharp.HttpClient.FluentApi.Contracts.IQueryMethod,Newtonsoft.Json.JsonSerializerSettings)">
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Extensions.IQueryMethodExtensions.Json``1(CoreSharp.HttpClient.FluentApi.Contracts.IQueryMethod,System.Func{System.IO.Stream,``0})" />
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Extensions.IQueryMethodExtensions.Json``1(CoreSharp.HttpClient.FluentApi.Contracts.IQueryMethod,System.Func{System.String,``0})">
             <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Extensions.IQueryMethodExtensions.Json``1(CoreSharp.HttpClient.FluentApi.Contracts.IQueryMethod,System.Func{System.IO.Stream,``0})" />
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Extensions.IQueryMethodExtensions.Json``1(CoreSharp.HttpClient.FluentApi.Contracts.IQueryMethod,System.Func{System.IO.Stream,``0})">
@@ -153,7 +162,7 @@
         <member name="M:CoreSharp.HttpClient.FluentApi.Extensions.IRequestExtensions.AcceptXml(CoreSharp.HttpClient.FluentApi.Contracts.IRequest)">
             <inheritdoc cref="F:System.Net.HttpRequestHeader.Accept" />
         </member>
-        <member name="M:CoreSharp.HttpClient.FluentApi.Extensions.IRequestExtensions.ThrowOnError(CoreSharp.HttpClient.FluentApi.Contracts.IRequest,System.Boolean)">
+        <member name="M:CoreSharp.HttpClient.FluentApi.Extensions.IRequestExtensions.IgnoreError(CoreSharp.HttpClient.FluentApi.Contracts.IRequest)">
             <inheritdoc cref="P:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.ThrowOnError" />
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Extensions.IRequestExtensions.CompletionOption(CoreSharp.HttpClient.FluentApi.Contracts.IRequest,System.Net.Http.HttpCompletionOption)">
@@ -195,6 +204,11 @@
         <member name="M:CoreSharp.HttpClient.FluentApi.Extensions.IRouteExtensions.Delete(CoreSharp.HttpClient.FluentApi.Contracts.IRoute)">
             <summary>
             Set request to <see cref="P:System.Net.Http.HttpMethod.Delete"/>.
+            </summary>
+        </member>
+        <member name="T:CoreSharp.HttpClient.FluentApi.HttpMethodX">
+            <summary>
+            <see cref="T:System.Net.Http.HttpMethod"/> utilities.
             </summary>
         </member>
     </members>

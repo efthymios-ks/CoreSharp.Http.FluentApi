@@ -66,14 +66,24 @@ namespace CoreSharp.HttpClient.FluentApi.Extensions
             return queryMethod.Json(DeserializeFunction);
         }
 
-        /// <inheritdoc cref="IMethodExtensions.Json{TResponse}(IMethod, Func{Stream, TResponse})" />
-        public static IJsonQueryResponse<TResponse> Json<TResponse>(this IQueryMethod queryMethod, Func<Stream, TResponse> deserializeFunction)
+        /// <inheritdoc cref="Json{TResponse}(IQueryMethod, Func{Stream, TResponse})" />
+        public static IJsonQueryResponse<TResponse> Json<TResponse>(this IQueryMethod queryMethod, Func<string, TResponse> deserializeStringFunction)
             where TResponse : class
         {
             _ = queryMethod ?? throw new ArgumentNullException(nameof(queryMethod));
-            _ = deserializeFunction ?? throw new ArgumentNullException(nameof(deserializeFunction));
+            _ = deserializeStringFunction ?? throw new ArgumentNullException(nameof(deserializeStringFunction));
 
-            return new JsonQueryResponse<TResponse>(queryMethod, deserializeFunction);
+            return new JsonQueryResponse<TResponse>(queryMethod, deserializeStringFunction);
+        }
+
+        /// <inheritdoc cref="IMethodExtensions.Json{TResponse}(IMethod, Func{Stream, TResponse})" />
+        public static IJsonQueryResponse<TResponse> Json<TResponse>(this IQueryMethod queryMethod, Func<Stream, TResponse> deserializeStreamFunction)
+            where TResponse : class
+        {
+            _ = queryMethod ?? throw new ArgumentNullException(nameof(queryMethod));
+            _ = deserializeStreamFunction ?? throw new ArgumentNullException(nameof(deserializeStreamFunction));
+
+            return new JsonQueryResponse<TResponse>(queryMethod, deserializeStreamFunction);
         }
     }
 }

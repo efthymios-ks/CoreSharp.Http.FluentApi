@@ -77,21 +77,31 @@ namespace CoreSharp.HttpClient.FluentApi.Extensions
         {
             _ = jsonSerializerSettings ?? throw new ArgumentNullException(nameof(jsonSerializerSettings));
 
-            TResponse DeserializeFunction(Stream stream) => stream.ToEntity<TResponse>(jsonSerializerSettings);
-            return method.Json(DeserializeFunction);
+            TResponse DeserializeStreamFunction(Stream stream) => stream.ToEntity<TResponse>(jsonSerializerSettings);
+            return method.Json(DeserializeStreamFunction);
+        }
+
+        /// <inheritdoc cref="Json{TResponse}(IMethod, Func{Stream, TResponse})" />
+        public static IJsonResponse<TResponse> Json<TResponse>(this IMethod method, Func<string, TResponse> deserializeStreamFunction)
+            where TResponse : class
+        {
+            _ = method ?? throw new ArgumentNullException(nameof(method));
+            _ = deserializeStreamFunction ?? throw new ArgumentNullException(nameof(deserializeStreamFunction));
+
+            return new JsonResponse<TResponse>(method, deserializeStreamFunction);
         }
 
         /// <summary>
         /// Treat <see cref="HttpResponseMessage.Content"/> as json
         /// and convert to strongly-typed object.
         /// </summary>
-        public static IJsonResponse<TResponse> Json<TResponse>(this IMethod method, Func<Stream, TResponse> deserializeFunction)
+        public static IJsonResponse<TResponse> Json<TResponse>(this IMethod method, Func<Stream, TResponse> deserializeStringFunction)
             where TResponse : class
         {
             _ = method ?? throw new ArgumentNullException(nameof(method));
-            _ = deserializeFunction ?? throw new ArgumentNullException(nameof(deserializeFunction));
+            _ = deserializeStringFunction ?? throw new ArgumentNullException(nameof(deserializeStringFunction));
 
-            return new JsonResponse<TResponse>(method, deserializeFunction);
+            return new JsonResponse<TResponse>(method, deserializeStringFunction);
         }
     }
 }
