@@ -1,5 +1,6 @@
 ﻿using CoreSharp.HttpClient.FluentApi.Contracts;
 using System;
+using System.Net.Http;
 
 namespace CoreSharp.HttpClient.FluentApi.Concrete
 {
@@ -12,15 +13,25 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
             if (string.IsNullOrWhiteSpace(resourceName))
                 throw new ArgumentNullException(nameof(resourceName));
 
-            if (this is IRoute route)
-            {
-                route.Request = request;
-                route.Route = resourceName;
-            }
+            var me = Me;
+            me.Request = request;
+            me.Route = resourceName;
         }
 
         //Properties 
+        private IRoute Me => this;
         IRequest IRoute.Request { get; set; }
         string IRoute.Route { get; set; }
+
+        //Methods 
+        public IQueryMethod Get() => new QueryMethod(this, HttpMethod.Get);
+
+        public IContentMethod Post() => new ContentMethod(this, HttpMethod.Post);
+
+        public IContentMethod Put() => new ContentMethod(this, HttpMethod.Put);
+
+        public IContentMethod Patch() => new ContentMethod(this, HttpMethod.Patch);
+
+        public IMethod Delete() => new Method(this, HttpMethod.Delete);
     }
 }

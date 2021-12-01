@@ -11,6 +11,14 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         }
 
         //Properties 
+        private ICacheQueryResponse<TResponse> Me => this;
         TimeSpan? ICacheQueryResponse<TResponse>.Duration { get; set; }
+
+        //Methods 
+        public ICacheQueryResponse<TResponse> Cache(TimeSpan duration)
+        {
+            Me.Duration = duration;
+            return this;
+        }
     }
 }

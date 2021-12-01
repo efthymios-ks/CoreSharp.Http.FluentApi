@@ -6,5 +6,11 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
     {
         //Properties
         internal TimeSpan? Duration { get; set; }
+
+        //Methods 
+        /// <summary>
+        /// Enable in-memory, client-side response caching.
+        /// </summary>
+        public ICacheQueryResponse<TResponse> Cache(TimeSpan duration);
     }
 }

@@ -3,16 +3,16 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CoreSharp.HttpClient.FluentApi.Extensions
+namespace CoreSharp.HttpClient.FluentApi.Utilities
 {
     /// <summary>
-    /// <see cref="IJsonQueryResponse{TResponse}"/> extensions.
+    /// <see cref="IJsonQueryResponse{TResponse}"/> utilities.
     /// </summary>
-    public static class IJsonResponseExtensions
+    internal static class IJsonResponseX
     {
         //Methods 
-        /// <inheritdoc cref="IMethodExtensions.SendAsync(IMethod, CancellationToken)"/>
-        public static async Task<TResponse> SendAsync<TResponse>(this IJsonResponse<TResponse> jsonResponse, CancellationToken cancellationToken = default)
+        /// <inheritdoc cref="IMethod.SendAsync(CancellationToken)"/>
+        public static async Task<TResponse> SendAsync<TResponse>(IJsonResponse<TResponse> jsonResponse, CancellationToken cancellationToken = default)
             where TResponse : class
         {
             _ = jsonResponse ?? throw new ArgumentNullException(nameof(jsonResponse));

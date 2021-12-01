@@ -1,6 +1,9 @@
 ﻿using CoreSharp.HttpClient.FluentApi.Contracts;
+using CoreSharp.HttpClient.FluentApi.Utilities;
 using System;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CoreSharp.HttpClient.FluentApi.Concrete
 {
@@ -12,8 +15,7 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         {
             _ = deserializeStreamFunction ?? throw new ArgumentNullException(nameof(deserializeStreamFunction));
 
-            if (this is IJsonResponse<TResponse> jsonResponse)
-                jsonResponse.DeserializeStreamFunction = deserializeStreamFunction;
+            Me.DeserializeStreamFunction = deserializeStreamFunction;
         }
 
         public JsonResponse(IMethod method, Func<string, TResponse> deserializeStringFunction)
@@ -21,8 +23,7 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         {
             _ = deserializeStringFunction ?? throw new ArgumentNullException(nameof(deserializeStringFunction));
 
-            if (this is IJsonResponse<TResponse> jsonResponse)
-                jsonResponse.DeserializeStringFunction = deserializeStringFunction;
+            Me.DeserializeStringFunction = deserializeStringFunction;
         }
 
         public JsonResponse(IMethod method) : base(method)
@@ -30,7 +31,12 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         }
 
         //Properties 
+        private IJsonResponse<TResponse> Me => this;
         Func<Stream, TResponse> IJsonResponse<TResponse>.DeserializeStreamFunction { get; set; }
         Func<string, TResponse> IJsonResponse<TResponse>.DeserializeStringFunction { get; set; }
+
+        //Methods 
+        public async Task<TResponse> SendAsync(CancellationToken cancellationToken = default)
+            => await IJsonResponseX.SendAsync(this, cancellationToken);
     }
 }
