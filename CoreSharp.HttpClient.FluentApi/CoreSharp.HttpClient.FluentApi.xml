@@ -123,7 +123,16 @@
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.CompletionOption(System.Net.Http.HttpCompletionOption)">
             <inheritdoc cref="P:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.CompletionOptionInternal" />
         </member>
-        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.Route``1(System.String,``0)">
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.Route(System.String,System.Int32)">
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.Route(System.String)" />
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.Route(System.String,System.Int64)">
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.Route(System.String)" />
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.Route(System.String,System.Guid)">
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.Route(System.String)" />
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.Route(System.String,System.String)">
             <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.Route(System.String)" />
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.Route(System.String)">

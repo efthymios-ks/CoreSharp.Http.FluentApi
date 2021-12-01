@@ -1,4 +1,5 @@
 ﻿using CoreSharp.Models;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -49,7 +50,16 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
         IRequest CompletionOption(HttpCompletionOption completionOption);
 
         /// <inheritdoc cref="Route(string)" />
-        IRoute Route<TKey>(string resourceName, TKey key);
+        IRoute Route(string resourceName, int key);
+
+        /// <inheritdoc cref="Route(string)" />
+        IRoute Route(string resourceName, long key);
+
+        /// <inheritdoc cref="Route(string)" />
+        IRoute Route(string resourceName, Guid key);
+
+        /// <inheritdoc cref="Route(string)" />
+        IRoute Route(string resourceName, string key);
 
         /// <summary>
         /// Add resource route to request.

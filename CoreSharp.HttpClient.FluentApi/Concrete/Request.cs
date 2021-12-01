@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Mime;
+using static System.FormattableString;
 
 namespace CoreSharp.HttpClient.FluentApi.Concrete
 {
@@ -12,11 +13,7 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
     {
         //Constructors 
         public Request(System.Net.Http.HttpClient httpClient)
-        {
-            _ = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-
-            Me.HttpClient = httpClient;
-        }
+            => Me.HttpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
         //Properties 
         private IRequest Me => this;
@@ -63,7 +60,6 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         public IRequest IgnoreError()
         {
             Me.ThrowOnError = false;
-
             return this;
         }
 
@@ -73,7 +69,16 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
             return this;
         }
 
-        public IRoute Route<TKey>(string resourceName, TKey key)
+        public IRoute Route(string resourceName, int key)
+            => Route(Invariant($"{resourceName}/{key})"));
+
+        public IRoute Route(string resourceName, long key)
+            => Route(Invariant($"{resourceName}/{key}"));
+
+        public IRoute Route(string resourceName, Guid key)
+            => Route($"{resourceName}/{key}");
+
+        public IRoute Route(string resourceName, string key)
             => Route($"{resourceName}/{key}");
 
         public IRoute Route(string resourceName)
