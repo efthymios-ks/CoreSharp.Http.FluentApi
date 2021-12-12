@@ -4,6 +4,7 @@ using System.Net.Http;
 
 namespace CoreSharp.HttpClient.FluentApi.Concrete
 {
+    /// <inheritdoc cref="IRoute"/>
     internal class Route : IRoute
     {
         //Constructors  

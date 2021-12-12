@@ -8,6 +8,7 @@ using System.Text;
 
 namespace CoreSharp.HttpClient.FluentApi.Concrete
 {
+    /// <inheritdoc cref="IContentMethod"/>
     internal class ContentMethod : Method, IContentMethod
     {
         //Constructors 

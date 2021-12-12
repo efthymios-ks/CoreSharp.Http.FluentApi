@@ -3,6 +3,7 @@ using System;
 
 namespace CoreSharp.HttpClient.FluentApi.Concrete
 {
+    /// <inheritdoc cref="ICacheQueryResponse{TResponse}"/>
     internal class CacheQueryResponse<TResponse> : GenericQueryResponse<TResponse>, ICacheQueryResponse<TResponse> where TResponse : class
     {
         //Constructors

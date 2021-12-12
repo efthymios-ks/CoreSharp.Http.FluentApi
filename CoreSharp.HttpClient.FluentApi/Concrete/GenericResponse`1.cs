@@ -3,6 +3,7 @@ using System;
 
 namespace CoreSharp.HttpClient.FluentApi.Concrete
 {
+    /// <inheritdoc cref="IGenericResponse{TResponse}"/>
     internal class GenericResponse<TResponse> : IGenericResponse<TResponse> where TResponse : class
     {
         //Constructors

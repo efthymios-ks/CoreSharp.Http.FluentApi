@@ -34,8 +34,7 @@ namespace CoreSharp.HttpClient.FluentApi.Utilities
             }
 
             //Error
-            else
-                throw new InvalidOperationException("No deserialization function has been provided.");
+            throw new InvalidOperationException("No deserialization function has been provided.");
         }
     }
 }

@@ -9,6 +9,7 @@ using System.Net.Http;
 
 namespace CoreSharp.HttpClient.FluentApi.Concrete
 {
+    /// <inheritdoc cref="IQueryMethod"/>
     internal class QueryMethod : Method, IQueryMethod
     {
         //Constructors 

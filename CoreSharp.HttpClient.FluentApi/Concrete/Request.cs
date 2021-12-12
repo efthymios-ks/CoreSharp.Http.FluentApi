@@ -9,6 +9,7 @@ using static System.FormattableString;
 
 namespace CoreSharp.HttpClient.FluentApi.Concrete
 {
+    /// <inheritdoc cref="IRequest"/>
     internal class Request : IRequest
     {
         //Constructors 

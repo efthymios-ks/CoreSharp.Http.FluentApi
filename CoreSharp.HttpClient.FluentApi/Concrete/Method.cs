@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace CoreSharp.HttpClient.FluentApi.Concrete
 {
+    /// <inheritdoc cref="IMethod"/>
     internal class Method : IMethod
     {
         //Constructors 

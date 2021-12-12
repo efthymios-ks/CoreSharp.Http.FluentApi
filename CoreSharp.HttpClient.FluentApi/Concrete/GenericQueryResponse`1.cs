@@ -2,6 +2,7 @@
 
 namespace CoreSharp.HttpClient.FluentApi.Concrete
 {
+    /// <inheritdoc cref="IGenericQueryResponse{TResponse}"/>
     internal class GenericQueryResponse<TResponse> : GenericResponse<TResponse>, IGenericQueryResponse<TResponse> where TResponse : class
     {
         //Constructors
