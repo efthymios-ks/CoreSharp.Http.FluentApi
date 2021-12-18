@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace CoreSharp.HttpClient.FluentApi.Concrete
 {
     /// <inheritdoc cref="IJsonQueryResponse{TResponse}"/>
-    internal class JsonQueryResponse<TResponse> : CacheQueryResponse<TResponse>, IJsonQueryResponse<TResponse> where TResponse : class
+    public class JsonQueryResponse<TResponse> : CacheQueryResponse<TResponse>, IJsonQueryResponse<TResponse> where TResponse : class
     {
         //Constructors
         public JsonQueryResponse(IQueryMethod queryMethod, Func<Stream, TResponse> deserializeStreamFunction)
@@ -38,13 +38,13 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         Func<string, TResponse> IJsonResponse<TResponse>.DeserializeStringFunction { get; set; }
 
         //Methods 
-        public new IJsonQueryResponse<TResponse> Cache(TimeSpan duration)
+        IJsonQueryResponse<TResponse> IJsonQueryResponse<TResponse>.Cache(TimeSpan duration)
         {
-            base.Cache(duration);
+            (this as ICacheQueryResponse<TResponse>)!.Cache(duration);
             return this;
         }
 
-        public async ValueTask<TResponse> SendAsync(CancellationToken cancellationToken = default)
+        async ValueTask<TResponse> IJsonQueryResponse<TResponse>.SendAsync(CancellationToken cancellationToken)
         {
             //Extract args
             var route = Me.Method.Route.Route;
@@ -60,7 +60,7 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
                 return cachedValue;
 
             //Else request... 
-            var response = await (this as IJsonResponse<TResponse>)!.SendAsync(cancellationToken);
+            var response = await (this as IGenericResponse<TResponse>)!.SendAsync(cancellationToken);
 
             //...and cache response, if needed 
             if (shouldCache)
@@ -69,7 +69,7 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
             return response;
         }
 
-        async Task<TResponse> IJsonResponse<TResponse>.SendAsync(CancellationToken cancellationToken)
-             => await IJsonResponseX.SendAsync(this, cancellationToken);
+        public override async Task<TResponse> SendAsync(CancellationToken cancellationToken = default)
+            => await IJsonResponseX.SendAsync(this, cancellationToken);
     }
 }

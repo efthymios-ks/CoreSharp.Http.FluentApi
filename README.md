@@ -34,6 +34,40 @@ HttpClient
 Include `using CoreSharp.HttpClient.FluentApi.Extensions;` 
 
 ## Examples 
+
+### Responses
+```
+    var response = await httpClient
+                            .Request()
+                            .Route("albums", 1)
+                            .Get()
+                            .SendAsync();
+``` 
+```
+    var responseAsString = await httpClient
+                            .Request()
+                            .Route("albums", 1)
+                            .Get()
+                            .String()
+                            .SendAsync();
+``` 
+```
+   using var responseAsStream = await httpClient
+                                    .Request()
+                                    .Route("albums", 1)
+                                    .Get()
+                                    .Stream()
+                                    .SendAsync();
+```
+```
+    var responseAsBytes = await httpClient
+                            .Request()
+                            .Route("albums", 1)
+                            .Get()
+                            .Bytes()
+                            .SendAsync();
+```
+
 ### HttpCompletionOption
 ```
     await httpClient
@@ -115,7 +149,7 @@ Include `using CoreSharp.HttpClient.FluentApi.Extensions;`
             .SendAsync();
 ```
 
-### Request with key (GET, POST, PUT, PATCH, DELETE) 
+### Request with key 
 ```
     await httpClient
             .Request()
@@ -141,8 +175,7 @@ Include `using CoreSharp.HttpClient.FluentApi.Extensions;`
             .SendAsync();
 ```
 
-
-### GET with query string 
+### Query parameter (GET)
 ```
     await httpClient
             .Request()
@@ -170,7 +203,8 @@ Include `using CoreSharp.HttpClient.FluentApi.Extensions;`
             .Query(new Album { Id = 1, UserId = 1, Title = "My Title" })
             .SendAsync();
 ```
-### Request with json response 
+
+### Map json response to strongly-typed classes
 ```
     await httpClient
             .Request()
@@ -196,7 +230,7 @@ Include `using CoreSharp.HttpClient.FluentApi.Extensions;`
             .SendAsync();
 ```
 
-### GET with json response and caching (only for GET generic requests) 
+### Cache json response (GET generic requests) 
 ```
     await httpClient
             .Request()
@@ -207,7 +241,7 @@ Include `using CoreSharp.HttpClient.FluentApi.Extensions;`
             .SendAsync();
 ```
 
-### Request with body content (POST, PUT, PATCH) 
+### Body content (POST, PUT, PATCH) 
 ```
     await httpClient
             .Request()

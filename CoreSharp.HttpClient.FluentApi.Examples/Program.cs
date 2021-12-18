@@ -33,6 +33,22 @@ namespace CoreSharp.HttpClient.FluentApi.Examples
                     .Json<IEnumerable<Album>>()
                     .SendAsync();
 
+                //GET /albums to string 
+                var albumsJson = await client
+                    .Request()
+                    .Route("albums")
+                    .Get()
+                    .String()
+                    .SendAsync();
+
+                //GET /albums to byte[] 
+                var albumsBytes = await client
+                    .Request()
+                    .Route("albums")
+                    .Get()
+                    .Bytes()
+                    .SendAsync();
+
                 //GET /posts and map to array and cache 
                 for (var i = 0; i < 3; i++)
                 {

@@ -3,10 +3,9 @@ using System.Threading.Tasks;
 
 namespace CoreSharp.HttpClient.FluentApi.Contracts
 {
-    public interface IGenericResponse<TResponse> : IResponse where TResponse : class
+    public interface IStringResponse : IResponse
     {
-        //Methods 
         /// <inheritdoc cref="IResponse.SendAsync(CancellationToken)"/>
-        public new Task<TResponse> SendAsync(CancellationToken cancellationToken = default);
+        public new Task<string> SendAsync(CancellationToken cancellationtoken = default);
     }
 }

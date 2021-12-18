@@ -4,10 +4,10 @@ using System;
 namespace CoreSharp.HttpClient.FluentApi.Concrete
 {
     /// <inheritdoc cref="ICacheQueryResponse{TResponse}"/>
-    internal class CacheQueryResponse<TResponse> : GenericQueryResponse<TResponse>, ICacheQueryResponse<TResponse> where TResponse : class
+    public abstract class CacheQueryResponse<TResponse> : GenericQueryResponseBase<TResponse>, ICacheQueryResponse<TResponse> where TResponse : class
     {
         //Constructors
-        public CacheQueryResponse(IQueryMethod queryMethod) : base(queryMethod)
+        protected CacheQueryResponse(IQueryMethod queryMethod) : base(queryMethod)
         {
         }
 
@@ -16,7 +16,7 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         TimeSpan? ICacheQueryResponse<TResponse>.Duration { get; set; }
 
         //Methods 
-        public ICacheQueryResponse<TResponse> Cache(TimeSpan duration)
+        ICacheQueryResponse<TResponse> ICacheQueryResponse<TResponse>.Cache(TimeSpan duration)
         {
             Me.Duration = duration;
             return this;

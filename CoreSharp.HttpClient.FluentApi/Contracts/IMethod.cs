@@ -31,5 +31,14 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
         /// and convert to strongly-typed object.
         /// </summary>
         IJsonResponse<TResponse> Json<TResponse>(Func<string, TResponse> deserializeStreamFunction) where TResponse : class;
+
+        /// <inheritdoc cref="HttpContent.ReadAsStringAsync(CancellationToken)"/>
+        IStringResponse String();
+
+        /// <inheritdoc cref="HttpContent.ReadAsStreamAsync(CancellationToken)"/>
+        IStreamResponse Stream();
+
+        /// <inheritdoc cref="HttpContent.ReadAsByteArrayAsync(CancellationToken)"/>
+        IBytesResponse Bytes();
     }
 }
