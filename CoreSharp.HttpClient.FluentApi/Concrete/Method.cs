@@ -104,5 +104,14 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
 
             return new JsonResponse<TResponse>(this, deserializeStringFunction);
         }
+
+        public IStringResponse String()
+            => new StringResponse(this);
+
+        public IStreamResponse Stream()
+            => new StreamResponse(this);
+
+        public IBytesResponse Bytes()
+            => new BytesResponse(this);
     }
 }
