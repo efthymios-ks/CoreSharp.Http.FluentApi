@@ -4,14 +4,13 @@ using System.Threading.Tasks;
 
 namespace CoreSharp.HttpClient.FluentApi.Contracts
 {
-    public interface IJsonQueryResponse<TResponse> : IJsonResponse<TResponse>, ICacheQueryResponse<TResponse>
-        where TResponse : class
+    public interface IJsonQueryResponse<TResponse> : IJsonResponse<TResponse>, ICacheQueryResponse<TResponse> where TResponse : class
     {
         //Methods
         /// <inheritdoc cref="ICacheQueryResponse{TResponse}.Cache(TimeSpan)"/>
         public new IJsonQueryResponse<TResponse> Cache(TimeSpan duration);
 
-        /// <inheritdoc cref="IJsonResponse{TResponse}.SendAsync(CancellationToken)"/>
+        /// <inheritdoc cref="IGenericResponse{TResponse}.SendAsync(CancellationToken)"/>
         public new ValueTask<TResponse> SendAsync(CancellationToken cancellationToken = default);
     }
 }

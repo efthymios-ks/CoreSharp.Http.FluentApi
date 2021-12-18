@@ -1,7 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace CoreSharp.HttpClient.FluentApi.Contracts
 {
@@ -10,9 +8,5 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
         //Properties 
         internal Func<Stream, TResponse> DeserializeStreamFunction { get; set; }
         internal Func<string, TResponse> DeserializeStringFunction { get; set; }
-
-        //Methods 
-        /// <inheritdoc cref="IMethod.SendAsync(CancellationToken)"/>
-        public Task<TResponse> SendAsync(CancellationToken cancellationToken = default);
     }
 }

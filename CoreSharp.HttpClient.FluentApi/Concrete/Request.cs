@@ -71,7 +71,7 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         }
 
         public IRoute Route(string resourceName, int key)
-            => Route(Invariant($"{resourceName}/{key})"));
+            => Route(Invariant($"{resourceName}/{key}"));
 
         public IRoute Route(string resourceName, long key)
             => Route(Invariant($"{resourceName}/{key}"));

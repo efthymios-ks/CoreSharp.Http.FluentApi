@@ -1,12 +1,10 @@
-﻿using CoreSharp.HttpClient.FluentApi.Contracts;
-
-namespace CoreSharp.HttpClient.FluentApi.Concrete
+﻿namespace CoreSharp.HttpClient.FluentApi.Contracts
 {
     /// <inheritdoc cref="IGenericQueryResponse{TResponse}"/>
-    internal class GenericQueryResponse<TResponse> : GenericResponse<TResponse>, IGenericQueryResponse<TResponse> where TResponse : class
+    public abstract class GenericQueryResponseBase<TResponse> : GenericResponse<TResponse>, IGenericQueryResponse<TResponse> where TResponse : class
     {
         //Constructors
-        public GenericQueryResponse(IQueryMethod queryMethod) : base(queryMethod)
+        protected GenericQueryResponseBase(IMethod method) : base(method)
         {
         }
     }

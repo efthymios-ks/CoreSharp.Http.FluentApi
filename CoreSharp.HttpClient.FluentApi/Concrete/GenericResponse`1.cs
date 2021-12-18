@@ -1,21 +1,18 @@
-﻿using CoreSharp.HttpClient.FluentApi.Contracts;
-using System;
+﻿using CoreSharp.HttpClient.FluentApi.Concrete;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace CoreSharp.HttpClient.FluentApi.Concrete
+namespace CoreSharp.HttpClient.FluentApi.Contracts
 {
     /// <inheritdoc cref="IGenericResponse{TResponse}"/>
-    internal class GenericResponse<TResponse> : IGenericResponse<TResponse> where TResponse : class
+    public abstract class GenericResponse<TResponse> : Response, IGenericResponse<TResponse> where TResponse : class
     {
         //Constructors
-        public GenericResponse(IMethod method)
+        protected GenericResponse(IMethod method) : base(method)
         {
-            _ = method ?? throw new ArgumentNullException(nameof(method));
-
-            if (this is IGenericResponse<TResponse> jsonResponse)
-                jsonResponse.Method = method;
         }
 
-        //Properties 
-        IMethod IGenericResponse<TResponse>.Method { get; set; }
+        //Methods
+        public new abstract Task<TResponse> SendAsync(CancellationToken cancellationToken = default);
     }
 }

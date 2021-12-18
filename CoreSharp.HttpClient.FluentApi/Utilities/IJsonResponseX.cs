@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace CoreSharp.HttpClient.FluentApi.Utilities
 {
     /// <summary>
-    /// <see cref="IJsonQueryResponse{TResponse}"/> utilities.
+    /// <see cref="IJsonResponse{TResponse}"/> utilities.
     /// </summary>
     internal static class IJsonResponseX
     {
@@ -17,7 +17,7 @@ namespace CoreSharp.HttpClient.FluentApi.Utilities
         {
             _ = jsonResponse ?? throw new ArgumentNullException(nameof(jsonResponse));
 
-            using var response = await jsonResponse.Method.SendAsync(cancellationToken);
+            using var response = await (jsonResponse as IResponse)!.SendAsync(cancellationToken);
 
             //Stream deserialization 
             if (jsonResponse.DeserializeStreamFunction is not null)

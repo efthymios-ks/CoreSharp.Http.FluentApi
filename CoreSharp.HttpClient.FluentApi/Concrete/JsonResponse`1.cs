@@ -8,24 +8,16 @@ using System.Threading.Tasks;
 namespace CoreSharp.HttpClient.FluentApi.Concrete
 {
     /// <inheritdoc cref="IJsonResponse{TResponse}"/>
-    internal class JsonResponse<TResponse> : GenericResponse<TResponse>, IJsonResponse<TResponse> where TResponse : class
+    public class JsonResponse<TResponse> : GenericResponse<TResponse>, IJsonResponse<TResponse> where TResponse : class
     {
         //Constructors
         public JsonResponse(IMethod method, Func<Stream, TResponse> deserializeStreamFunction)
             : this(method)
-        {
-            _ = deserializeStreamFunction ?? throw new ArgumentNullException(nameof(deserializeStreamFunction));
-
-            Me.DeserializeStreamFunction = deserializeStreamFunction;
-        }
+            => Me.DeserializeStreamFunction = deserializeStreamFunction ?? throw new ArgumentNullException(nameof(deserializeStreamFunction));
 
         public JsonResponse(IMethod method, Func<string, TResponse> deserializeStringFunction)
             : this(method)
-        {
-            _ = deserializeStringFunction ?? throw new ArgumentNullException(nameof(deserializeStringFunction));
-
-            Me.DeserializeStringFunction = deserializeStringFunction;
-        }
+            => Me.DeserializeStringFunction = deserializeStringFunction ?? throw new ArgumentNullException(nameof(deserializeStringFunction));
 
         public JsonResponse(IMethod method) : base(method)
         {
@@ -37,7 +29,7 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         Func<string, TResponse> IJsonResponse<TResponse>.DeserializeStringFunction { get; set; }
 
         //Methods 
-        public async Task<TResponse> SendAsync(CancellationToken cancellationToken = default)
+        public override async Task<TResponse> SendAsync(CancellationToken cancellationToken = default)
             => await IJsonResponseX.SendAsync(this, cancellationToken);
     }
 }
