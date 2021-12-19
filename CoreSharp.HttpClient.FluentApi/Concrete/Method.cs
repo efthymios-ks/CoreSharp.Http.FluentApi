@@ -80,12 +80,15 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
             where TResponse : class
             => Json<TResponse>(DefaultJsonSettings.Instance);
 
+        public IGenericResponse<TResponse> To<TResponse>() where TResponse : class
+            => new GenericResponse<TResponse>(this);
+
         public IJsonResponse<TResponse> Json<TResponse>(JsonSerializerSettings jsonSerializerSettings)
             where TResponse : class
         {
             _ = jsonSerializerSettings ?? throw new ArgumentNullException(nameof(jsonSerializerSettings));
 
-            TResponse DeserializeStreamFunction(Stream stream) => stream.ToEntity<TResponse>(jsonSerializerSettings);
+            TResponse DeserializeStreamFunction(Stream stream) => stream.FromJson<TResponse>(jsonSerializerSettings);
             return Json(DeserializeStreamFunction);
         }
 

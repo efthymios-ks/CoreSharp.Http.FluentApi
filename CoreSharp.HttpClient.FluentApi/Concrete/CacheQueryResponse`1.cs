@@ -1,13 +1,22 @@
 ﻿using CoreSharp.HttpClient.FluentApi.Contracts;
+using CoreSharp.HttpClient.FluentApi.Utilities;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CoreSharp.HttpClient.FluentApi.Concrete
 {
     /// <inheritdoc cref="ICacheQueryResponse{TResponse}"/>
-    public abstract class CacheQueryResponse<TResponse> : GenericQueryResponseBase<TResponse>, ICacheQueryResponse<TResponse> where TResponse : class
+    public class CacheQueryResponse<TResponse> : GenericQueryResponse<TResponse>, ICacheQueryResponse<TResponse> where TResponse : class
     {
         //Constructors
-        protected CacheQueryResponse(IQueryMethod queryMethod) : base(queryMethod)
+        public CacheQueryResponse(IGenericQueryResponse<TResponse> genericQueryResponse)
+            : this(genericQueryResponse.Method as IQueryMethod)
+        {
+        }
+
+        public CacheQueryResponse(IQueryMethod queryMethod)
+            : base(queryMethod)
         {
         }
 
@@ -20,6 +29,14 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         {
             Me.Duration = duration;
             return this;
+        }
+
+        async ValueTask<TResponse> ICacheQueryResponse<TResponse>.SendAsync(CancellationToken cancellationToken)
+        {
+            var requestTask = (this as IGenericQueryResponse<TResponse>)!.SendAsync(cancellationToken);
+            var route = Me.Method.Route.Route;
+            var cacheDuration = Me.Duration;
+            return await ICacheQueryX.SendAsync(requestTask, route, cacheDuration);
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using CoreSharp.HttpClient.FluentApi.Contracts;
-using CoreSharp.Models.Newtonsoft.Settings;
 using Newtonsoft.Json;
 using System.IO;
 using System.Net.Http;
@@ -20,26 +19,23 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         HttpContent IContentMethod.ContentInternal { get; set; }
 
         //Methods  
-        public IContentMethod Content(string content)
-            => Content(content, MediaTypeNames.Application.Json);
-
         public IContentMethod Content(string content, string mediaContentType)
             => Content(content, Encoding.UTF8, mediaContentType);
 
         public IContentMethod Content(string content, Encoding encoding, string mediaContentType)
             => Content(new StringContent(content, encoding, mediaContentType));
 
-        public IContentMethod Content(object content)
-            => Content(content, DefaultJsonSettings.Instance);
+        public IContentMethod JsonContent(string content)
+            => Content(content, MediaTypeNames.Application.Json);
 
-        public IContentMethod Content(object content, JsonSerializerSettings jsonSerializerSettings)
+        public IContentMethod JsonContent(object content)
         {
             if (content is HttpContent httpContent)
                 Content(httpContent);
             else if (content is string json)
-                Content(json);
+                JsonContent(json);
             else if (content is not null)
-                Content(ToStreamContent(content, jsonSerializerSettings));
+                Content(ToStreamContent(content));
             return this;
         }
 
@@ -55,10 +51,9 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         /// </summary>
         private static StreamContent ToStreamContent(
             object content,
-            JsonSerializerSettings jsonSerializerSettings,
             int bufferSize = 4096)
         {
-            var serializer = JsonSerializer.Create(jsonSerializerSettings);
+            var serializer = JsonSerializer.Create();
             var stream = new MemoryStream();
             using var streamWriter = new StreamWriter(stream, Encoding.UTF8, bufferSize, true);
             using var jsonWriter = new JsonTextWriter(streamWriter);

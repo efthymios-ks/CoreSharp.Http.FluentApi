@@ -1,11 +1,22 @@
-﻿namespace CoreSharp.HttpClient.FluentApi.Contracts
+﻿using CoreSharp.HttpClient.FluentApi.Concrete;
+using System;
+
+namespace CoreSharp.HttpClient.FluentApi.Contracts
 {
     /// <inheritdoc cref="IGenericQueryResponse{TResponse}"/>
-    public abstract class GenericQueryResponseBase<TResponse> : GenericResponse<TResponse>, IGenericQueryResponse<TResponse> where TResponse : class
+    public class GenericQueryResponse<TResponse> : GenericResponse<TResponse>, IGenericQueryResponse<TResponse> where TResponse : class
     {
         //Constructors
-        protected GenericQueryResponseBase(IMethod method) : base(method)
+        public GenericQueryResponse(IQueryMethod queryMethod) : base(queryMethod)
         {
+        }
+
+        //Methods
+        public ICacheQueryResponse<TResponse> Cache(TimeSpan duration)
+        {
+            var cacheQueryResponse = new CacheQueryResponse<TResponse>(this);
+            (cacheQueryResponse as ICacheQueryResponse<TResponse>)!.Cache(duration);
+            return cacheQueryResponse;
         }
     }
 }

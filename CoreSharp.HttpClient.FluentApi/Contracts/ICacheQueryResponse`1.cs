@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CoreSharp.HttpClient.FluentApi.Contracts
 {
@@ -8,9 +10,10 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
         internal TimeSpan? Duration { get; set; }
 
         //Methods 
-        /// <summary>
-        /// Enable in-memory, client-side response caching.
-        /// </summary>
-        public ICacheQueryResponse<TResponse> Cache(TimeSpan duration);
+        /// <inheritdoc cref="IGenericQueryResponse{TResponse}.Cache(TimeSpan)"/>
+        public new ICacheQueryResponse<TResponse> Cache(TimeSpan duration);
+
+        /// <inheritdoc cref="IGenericResponse{TResponse}.SendAsync(CancellationToken)"/>
+        public new ValueTask<TResponse> SendAsync(CancellationToken cancellationToken = default);
     }
 }

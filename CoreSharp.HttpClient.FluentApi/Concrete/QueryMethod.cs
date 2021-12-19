@@ -58,7 +58,7 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         {
             _ = jsonSerializerSettings ?? throw new ArgumentNullException(nameof(jsonSerializerSettings));
 
-            TResponse DeserializeStreamFunction(Stream stream) => stream.ToEntity<TResponse>(jsonSerializerSettings);
+            TResponse DeserializeStreamFunction(Stream stream) => stream.FromJson<TResponse>(jsonSerializerSettings);
             return Json(DeserializeStreamFunction);
         }
 
@@ -77,5 +77,9 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
 
             return new JsonQueryResponse<TResponse>(this, deserializeStreamFunction);
         }
+
+        IGenericQueryResponse<TResponse> IQueryMethod.To<TResponse>()
+            where TResponse : class
+            => new GenericQueryResponse<TResponse>(this);
     }
 }

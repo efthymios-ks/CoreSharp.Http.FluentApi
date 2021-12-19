@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Net.Http.Headers;
+using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Net.Http;
@@ -17,13 +18,20 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
         /// <inheritdoc cref="System.Net.Http.HttpClient.SendAsync(HttpRequestMessage, CancellationToken)" />
         Task<HttpResponseMessage> SendAsync(CancellationToken cancellationToken = default);
 
+        /// <summary>
+        /// Check <see cref="HttpResponseMessage.Headers"/>
+        /// for <see cref="HeaderNames.ContentType"/>
+        /// and map accordingly.
+        /// </summary>
+        IGenericResponse<TResponse> To<TResponse>() where TResponse : class;
+
         /// <inheritdoc cref="Json{TResponse}(JsonSerializerSettings)" />
         IJsonResponse<TResponse> Json<TResponse>(JsonSerializerSettings jsonSerializerSettings) where TResponse : class;
 
         /// <inheritdoc cref="Json{TResponse}(Func{Stream, TResponse})" />
         IJsonResponse<TResponse> Json<TResponse>() where TResponse : class;
 
-        /// <inheritdoc cref="Json{TResponse}(Func{Stream, TResponse})" />
+        /// <inheritdoc cref="Json{TResponse}(Func{string, TResponse})" />
         IJsonResponse<TResponse> Json<TResponse>(Func<Stream, TResponse> deserializeStringFunction) where TResponse : class;
 
         /// <summary>

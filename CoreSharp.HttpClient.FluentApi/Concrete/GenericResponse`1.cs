@@ -1,18 +1,23 @@
-﻿using CoreSharp.HttpClient.FluentApi.Concrete;
+﻿using CoreSharp.Extensions;
+using CoreSharp.HttpClient.FluentApi.Concrete;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace CoreSharp.HttpClient.FluentApi.Contracts
 {
     /// <inheritdoc cref="IGenericResponse{TResponse}"/>
-    public abstract class GenericResponse<TResponse> : Response, IGenericResponse<TResponse> where TResponse : class
+    public class GenericResponse<TResponse> : Response, IGenericResponse<TResponse> where TResponse : class
     {
         //Constructors
-        protected GenericResponse(IMethod method) : base(method)
+        public GenericResponse(IMethod method) : base(method)
         {
         }
 
         //Methods
-        public new abstract Task<TResponse> SendAsync(CancellationToken cancellationToken = default);
+        public new virtual async Task<TResponse> SendAsync(CancellationToken cancellationToken = default)
+        {
+            using var response = await base.SendAsync(cancellationToken);
+            return await response.Content.DeserializeAsync<TResponse>(cancellationToken);
+        }
     }
 }
