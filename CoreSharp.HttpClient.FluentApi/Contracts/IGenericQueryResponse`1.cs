@@ -3,7 +3,8 @@ using System;
 
 namespace CoreSharp.HttpClient.FluentApi.Contracts
 {
-    public interface IGenericQueryResponse<TResponse> : IGenericResponse<TResponse> where TResponse : class
+    public interface IGenericQueryResponse<TResponse> : IGenericResponse<TResponse>
+        where TResponse : class
     {
         //Methods 
         /// <summary>

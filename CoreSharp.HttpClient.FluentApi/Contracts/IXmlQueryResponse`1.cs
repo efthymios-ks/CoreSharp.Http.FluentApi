@@ -4,15 +4,12 @@ using System.Threading.Tasks;
 
 namespace CoreSharp.HttpClient.FluentApi.Contracts
 {
-    public interface ICacheQueryResponse<TResponse> : IGenericQueryResponse<TResponse>
+    public interface IXmlQueryResponse<TResponse> : IXmlResponse<TResponse>, ICacheQueryResponse<TResponse>
         where TResponse : class
     {
-        //Properties
-        internal TimeSpan? Duration { get; set; }
-
-        //Methods 
-        /// <inheritdoc cref="IGenericQueryResponse{TResponse}.Cache(TimeSpan)"/>
-        public new ICacheQueryResponse<TResponse> Cache(TimeSpan duration);
+        //Methods
+        /// <inheritdoc cref="ICacheQueryResponse{TResponse}.Cache(TimeSpan)"/>
+        public new IXmlQueryResponse<TResponse> Cache(TimeSpan duration);
 
         /// <inheritdoc cref="IGenericResponse{TResponse}.SendAsync(CancellationToken)"/>
         public new ValueTask<TResponse> SendAsync(CancellationToken cancellationToken = default);

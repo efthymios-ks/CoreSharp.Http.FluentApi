@@ -21,6 +21,12 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
         /// <inheritdoc cref="Content(HttpContent)" />
         public IContentMethod JsonContent(object content);
 
+        /// <inheritdoc cref="Content(string, string)" />
+        public IContentMethod XmlContent(string content);
+
+        /// <inheritdoc cref="Content(HttpContent)" />
+        public IContentMethod XmlContent(object content);
+
         /// <summary>
         /// Sets <see cref="HttpRequestMessage.Content"/>.
         /// </summary>

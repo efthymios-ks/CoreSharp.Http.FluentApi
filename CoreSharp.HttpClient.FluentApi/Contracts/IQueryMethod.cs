@@ -12,7 +12,8 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
 
         //Methods
         /// <inheritdoc cref="Query(IDictionary{string, object})" />
-        public IQueryMethod Query<TQueryParameter>(TQueryParameter queryParameter) where TQueryParameter : class;
+        public IQueryMethod Query<TQueryParameter>(TQueryParameter queryParameter)
+            where TQueryParameter : class;
 
         /// <inheritdoc cref="Query(string, object)" />
         public IQueryMethod Query(IDictionary<string, object> parameters);
@@ -23,18 +24,31 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
         public IQueryMethod Query(string key, object value);
 
         /// <inheritdoc cref="IMethod.To{TResponse}" />
-        public new IGenericQueryResponse<TResponse> To<TResponse>() where TResponse : class;
+        public new IGenericQueryResponse<TResponse> To<TResponse>()
+            where TResponse : class;
 
         /// <inheritdoc cref="Json{TResponse}(JsonSerializerSettings)" />
-        public new IJsonQueryResponse<TResponse> Json<TResponse>() where TResponse : class;
+        public new IJsonQueryResponse<TResponse> Json<TResponse>()
+            where TResponse : class;
 
         /// <inheritdoc cref="Json{TResponse}(Func{Stream, TResponse})" />
-        public new IJsonQueryResponse<TResponse> Json<TResponse>(JsonSerializerSettings jsonSerializerSettings) where TResponse : class;
+        public new IJsonQueryResponse<TResponse> Json<TResponse>(JsonSerializerSettings jsonSerializerSettings)
+            where TResponse : class;
 
         /// <inheritdoc cref="Json{TResponse}(Func{Stream, TResponse})" />
-        public new IJsonQueryResponse<TResponse> Json<TResponse>(Func<string, TResponse> deserializeStringFunction) where TResponse : class;
+        public new IJsonQueryResponse<TResponse> Json<TResponse>(Func<string, TResponse> deserializeStringFunction)
+            where TResponse : class;
 
         /// <inheritdoc cref="IMethod.Json{TResponse}(Func{Stream, TResponse})" />
-        public new IJsonQueryResponse<TResponse> Json<TResponse>(Func<Stream, TResponse> deserializeStreamFunction) where TResponse : class;
+        public new IJsonQueryResponse<TResponse> Json<TResponse>(Func<Stream, TResponse> deserializeStreamFunction)
+            where TResponse : class;
+
+        /// <inheritdoc cref="Xml{TResponse}(Func{string, TResponse})" />
+        public new IXmlQueryResponse<TResponse> Xml<TResponse>()
+            where TResponse : class;
+
+        /// <inheritdoc cref="IMethod.Xml{TResponse}(Func{string, TResponse})" />
+        public new IXmlQueryResponse<TResponse> Xml<TResponse>(Func<string, TResponse> deserializeStreamFunction)
+            where TResponse : class;
     }
 }

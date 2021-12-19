@@ -4,7 +4,8 @@ using System;
 namespace CoreSharp.HttpClient.FluentApi.Contracts
 {
     /// <inheritdoc cref="IGenericQueryResponse{TResponse}"/>
-    internal class GenericQueryResponse<TResponse> : GenericResponse<TResponse>, IGenericQueryResponse<TResponse> where TResponse : class
+    internal class GenericQueryResponse<TResponse> : GenericResponse<TResponse>, IGenericQueryResponse<TResponse>
+        where TResponse : class
     {
         //Constructors
         public GenericQueryResponse(IQueryMethod queryMethod) : base(queryMethod)

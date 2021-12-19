@@ -33,7 +33,8 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         public virtual async Task<HttpResponseMessage> SendAsync(CancellationToken cancellationToken = default)
             => await IMethodX.SendAsync(this, cancellationToken: cancellationToken);
 
-        public IGenericResponse<TResponse> To<TResponse>() where TResponse : class
+        public IGenericResponse<TResponse> To<TResponse>()
+            where TResponse : class
             => new GenericResponse<TResponse>(this);
 
         public IJsonResponse<TResponse> Json<TResponse>()
@@ -63,6 +64,21 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
             _ = deserializeStringFunction ?? throw new ArgumentNullException(nameof(deserializeStringFunction));
 
             return new JsonResponse<TResponse>(this, deserializeStringFunction);
+        }
+
+        public IXmlResponse<TResponse> Xml<TResponse>()
+            where TResponse : class
+        {
+            static TResponse DeserializeStringFunction(string xml) => xml.FromXml<TResponse>();
+            return Xml(DeserializeStringFunction);
+        }
+
+        public IXmlResponse<TResponse> Xml<TResponse>(Func<string, TResponse> deserializeStringFunction)
+            where TResponse : class
+        {
+            _ = deserializeStringFunction ?? throw new ArgumentNullException(nameof(deserializeStringFunction));
+
+            return new XmlResponse<TResponse>(this, deserializeStringFunction);
         }
 
         public IStringResponse String()

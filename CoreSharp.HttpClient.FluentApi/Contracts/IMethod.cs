@@ -24,22 +24,38 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
         /// in <see cref="HttpResponseMessage.Headers"/>
         /// and deserialize accordingly.
         /// </summary>
-        IGenericResponse<TResponse> To<TResponse>() where TResponse : class;
-
-        /// <inheritdoc cref="Json{TResponse}(JsonSerializerSettings)" />
-        IJsonResponse<TResponse> Json<TResponse>(JsonSerializerSettings jsonSerializerSettings) where TResponse : class;
+        IGenericResponse<TResponse> To<TResponse>()
+            where TResponse : class;
 
         /// <inheritdoc cref="Json{TResponse}(Func{Stream, TResponse})" />
-        IJsonResponse<TResponse> Json<TResponse>() where TResponse : class;
+        IJsonResponse<TResponse> Json<TResponse>()
+            where TResponse : class;
+
+        /// <inheritdoc cref="Json{TResponse}(JsonSerializerSettings)" />
+        IJsonResponse<TResponse> Json<TResponse>(JsonSerializerSettings jsonSerializerSettings)
+            where TResponse : class;
 
         /// <inheritdoc cref="Json{TResponse}(Func{string, TResponse})" />
-        IJsonResponse<TResponse> Json<TResponse>(Func<Stream, TResponse> deserializeStringFunction) where TResponse : class;
+        IJsonResponse<TResponse> Json<TResponse>(Func<Stream, TResponse> deserializeStringFunction)
+            where TResponse : class;
 
         /// <summary>
         /// Treat <see cref="HttpResponseMessage.Content"/>
         /// as json and deserialize to provided type.
         /// </summary>
-        IJsonResponse<TResponse> Json<TResponse>(Func<string, TResponse> deserializeStreamFunction) where TResponse : class;
+        IJsonResponse<TResponse> Json<TResponse>(Func<string, TResponse> deserializeStreamFunction)
+            where TResponse : class;
+
+        /// <inheritdoc cref="Xml{TResponse}(Func{string, TResponse})" />
+        IXmlResponse<TResponse> Xml<TResponse>()
+            where TResponse : class;
+
+        /// <summary>
+        /// Treat <see cref="HttpResponseMessage.Content"/>
+        /// as xml and deserialize to provided type.
+        /// </summary>
+        IXmlResponse<TResponse> Xml<TResponse>(Func<string, TResponse> deserializeStringFunction)
+            where TResponse : class;
 
         /// <inheritdoc cref="HttpContent.ReadAsStringAsync(CancellationToken)"/>
         IStringResponse String();

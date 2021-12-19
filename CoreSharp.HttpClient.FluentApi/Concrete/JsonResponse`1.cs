@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 namespace CoreSharp.HttpClient.FluentApi.Concrete
 {
     /// <inheritdoc cref="IJsonResponse{TResponse}"/>
-    internal class JsonResponse<TResponse> : GenericResponse<TResponse>, IJsonResponse<TResponse> where TResponse : class
+    internal class JsonResponse<TResponse> : GenericResponse<TResponse>, IJsonResponse<TResponse>
+        where TResponse : class
     {
         //Constructors
         public JsonResponse(IMethod method, Func<Stream, TResponse> deserializeStreamFunction)

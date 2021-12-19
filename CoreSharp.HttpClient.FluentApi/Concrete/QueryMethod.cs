@@ -87,5 +87,14 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
 
             return new JsonQueryResponse<TResponse>(this, deserializeStreamFunction);
         }
+
+        IXmlQueryResponse<TResponse> IQueryMethod.Xml<TResponse>()
+        {
+            static TResponse DeserializeStringFunction(string xml) => xml.FromXml<TResponse>();
+            return Me.Xml(DeserializeStringFunction);
+        }
+
+        IXmlQueryResponse<TResponse> IQueryMethod.Xml<TResponse>(Func<string, TResponse> deserializeStringFunction)
+            => new XmlQueryResponse<TResponse>(this, deserializeStringFunction);
     }
 }

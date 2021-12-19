@@ -4,7 +4,8 @@ using System.Threading.Tasks;
 
 namespace CoreSharp.HttpClient.FluentApi.Contracts
 {
-    public interface IJsonQueryResponse<TResponse> : IJsonResponse<TResponse>, ICacheQueryResponse<TResponse> where TResponse : class
+    public interface IJsonQueryResponse<TResponse> : IJsonResponse<TResponse>, ICacheQueryResponse<TResponse>
+        where TResponse : class
     {
         //Methods
         /// <inheritdoc cref="ICacheQueryResponse{TResponse}.Cache(TimeSpan)"/>

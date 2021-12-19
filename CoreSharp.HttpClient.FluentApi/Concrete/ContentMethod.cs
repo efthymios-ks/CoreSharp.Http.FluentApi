@@ -1,4 +1,5 @@
-﻿using CoreSharp.HttpClient.FluentApi.Contracts;
+﻿using CoreSharp.Extensions;
+using CoreSharp.HttpClient.FluentApi.Contracts;
 using CoreSharp.HttpClient.FluentApi.Utilities;
 using Newtonsoft.Json;
 using System.IO;
@@ -36,10 +37,17 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
 
         public IContentMethod JsonContent(object content)
         {
-            if (content is string json)
-                JsonContent(json);
-            else if (content is not null)
-                Content(ToStreamContent(content));
+            Content(ToStreamContent(content));
+            return this;
+        }
+
+        public IContentMethod XmlContent(string content)
+            => Content(content, MediaTypeNames.Application.Xml);
+
+        public IContentMethod XmlContent(object content)
+        {
+            var xmlContent = content.ToXml();
+            XmlContent(xmlContent);
             return this;
         }
 

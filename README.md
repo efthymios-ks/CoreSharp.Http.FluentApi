@@ -66,13 +66,14 @@ Include `using CoreSharp.HttpClient.FluentApi.Extensions;`
                                     .Get()
                                     .Bytes()
                                     .SendAsync();
-``` 
 ```
-    var album = await httpClient
+```
+    var albums = await httpClient
                         .Request()
-                        .Route("albums", 1)
+                        .Route("albums")
                         .Get()
-                        .Json<Album>()
+                        // Check Content-Type response header
+                        .To<IEnumerable<Album>()
                         .SendAsync();
 ```
 ```
@@ -80,9 +81,20 @@ Include `using CoreSharp.HttpClient.FluentApi.Extensions;`
                         .Request()
                         .Route("albums")
                         .Get()
+                        // Forced json deserialization 
                         .Json<IEnumerable<Album>()
                         .SendAsync();
-``` 
+```
+```
+    var albums = await httpClient
+                        .Request()
+                        .Route("albums")
+                        .Get()
+                        // Forced xml deserialization 
+                        .Xml<IEnumerable<Album>()
+                        .SendAsync();
+     
+
 ### HttpCompletionOption
 ```
     await httpClient
@@ -127,7 +139,7 @@ Include `using CoreSharp.HttpClient.FluentApi.Extensions;`
     await httpClient
             .Request()
             // Cache-Control > max-age=604800 
-            .Header("Cache-Control", "max-age=604800")
+            .Header(HeaderNames.CacheControl, "max-age=604800")
             .Route("albums")
             .Get()
             .SendAsync();
