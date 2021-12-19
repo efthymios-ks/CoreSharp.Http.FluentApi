@@ -10,10 +10,10 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
 
         //Methods
         /// <inheritdoc cref="Content(string, Encoding, string)" />
-        public IContentMethod Content(string content, string mediaContentType);
+        public IContentMethod Content(string content, string mediaTypeName);
 
         /// <inheritdoc cref="Content(HttpContent)" />
-        public IContentMethod Content(string content, Encoding encoding, string mediaContentType);
+        public IContentMethod Content(string content, Encoding encoding, string mediaTypeName);
 
         /// <inheritdoc cref="Content(string, string)" />
         public IContentMethod JsonContent(string content);

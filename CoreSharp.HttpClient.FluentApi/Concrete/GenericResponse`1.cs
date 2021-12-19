@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace CoreSharp.HttpClient.FluentApi.Contracts
 {
     /// <inheritdoc cref="IGenericResponse{TResponse}"/>
-    public class GenericResponse<TResponse> : Response, IGenericResponse<TResponse> where TResponse : class
+    internal class GenericResponse<TResponse> : Response, IGenericResponse<TResponse> where TResponse : class
     {
         //Constructors
         public GenericResponse(IMethod method) : base(method)

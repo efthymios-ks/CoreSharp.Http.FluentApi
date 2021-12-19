@@ -11,7 +11,12 @@ namespace CoreSharp.HttpClient.FluentApi.Utilities
     internal static class IJsonResponseX
     {
         //Methods 
-        /// <inheritdoc cref="IMethod.SendAsync(CancellationToken)"/>
+        /// <summary>
+        /// Call <see cref="IMethod.SendAsync(CancellationToken)"/>
+        /// and deserialize to provided type using either
+        /// <see cref="IJsonResponse{TResponse}.DeserializeStreamFunction"/> or
+        /// <see cref="IJsonResponse{TResponse}.DeserializeStringFunction"/>.
+        /// </summary>
         public static async Task<TResponse> SendAsync<TResponse>(IJsonResponse<TResponse> jsonResponse, CancellationToken cancellationToken = default)
             where TResponse : class
         {

@@ -8,24 +8,16 @@ using System.Threading.Tasks;
 namespace CoreSharp.HttpClient.FluentApi.Concrete
 {
     /// <inheritdoc cref="IJsonQueryResponse{TResponse}"/>
-    public class JsonQueryResponse<TResponse> : CacheQueryResponse<TResponse>, IJsonQueryResponse<TResponse> where TResponse : class
+    internal class JsonQueryResponse<TResponse> : CacheQueryResponse<TResponse>, IJsonQueryResponse<TResponse> where TResponse : class
     {
         //Constructors
         public JsonQueryResponse(IQueryMethod queryMethod, Func<Stream, TResponse> deserializeStreamFunction)
             : this(queryMethod)
-        {
-            _ = deserializeStreamFunction ?? throw new ArgumentNullException(nameof(deserializeStreamFunction));
-
-            Me.DeserializeStreamFunction = deserializeStreamFunction;
-        }
+            => Me.DeserializeStreamFunction = deserializeStreamFunction ?? throw new ArgumentNullException(nameof(deserializeStreamFunction));
 
         public JsonQueryResponse(IQueryMethod queryMethod, Func<string, TResponse> deserializeStringFunction)
             : this(queryMethod)
-        {
-            _ = deserializeStringFunction ?? throw new ArgumentNullException(nameof(deserializeStringFunction));
-
-            Me.DeserializeStringFunction = deserializeStringFunction;
-        }
+            => Me.DeserializeStringFunction = deserializeStringFunction ?? throw new ArgumentNullException(nameof(deserializeStringFunction));
 
         public JsonQueryResponse(IQueryMethod queryMethod) : base(queryMethod)
         {
@@ -48,7 +40,7 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
             var requestTask = SendAsync(cancellationToken);
             var route = Me.Method.Route.Route;
             var cacheDuration = Me.Duration;
-            return await ICacheQueryX.SendAsync(requestTask, route, cacheDuration);
+            return await ICacheQueryX.CachedRequestAsync(requestTask, route, cacheDuration);
         }
 
         public override async Task<TResponse> SendAsync(CancellationToken cancellationToken = default)

@@ -1,11 +1,14 @@
 ﻿using CoreSharp.Extensions;
 using CoreSharp.HttpClient.FluentApi.Contracts;
+using CoreSharp.HttpClient.FluentApi.Utilities;
 using CoreSharp.Models.Newtonsoft.Settings;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CoreSharp.HttpClient.FluentApi.Concrete
 {
@@ -21,6 +24,13 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         IDictionary<string, object> IQueryMethod.QueryParameters { get; } = new Dictionary<string, object>();
 
         //Methods 
+        public override async Task<HttpResponseMessage> SendAsync(CancellationToken cancellationToken = default)
+            => await IMethodX.SendAsync(this, queryParameters: Me.QueryParameters, cancellationToken: cancellationToken);
+
+        IGenericQueryResponse<TResponse> IQueryMethod.To<TResponse>()
+            where TResponse : class
+            => new GenericQueryResponse<TResponse>(this);
+
         public IQueryMethod Query<TQueryParameter>(TQueryParameter queryParameter) where TQueryParameter : class
         {
             _ = queryParameter ?? throw new ArgumentNullException(nameof(queryParameter));
@@ -77,9 +87,5 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
 
             return new JsonQueryResponse<TResponse>(this, deserializeStreamFunction);
         }
-
-        IGenericQueryResponse<TResponse> IQueryMethod.To<TResponse>()
-            where TResponse : class
-            => new GenericQueryResponse<TResponse>(this);
     }
 }

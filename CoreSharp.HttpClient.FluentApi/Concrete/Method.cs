@@ -1,6 +1,6 @@
 ﻿using CoreSharp.Extensions;
 using CoreSharp.HttpClient.FluentApi.Contracts;
-using CoreSharp.Models;
+using CoreSharp.HttpClient.FluentApi.Utilities;
 using CoreSharp.Models.Newtonsoft.Settings;
 using Newtonsoft.Json;
 using System;
@@ -20,9 +20,8 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
             _ = route ?? throw new ArgumentNullException(nameof(route));
             _ = httpMethod ?? throw new ArgumentNullException(nameof(httpMethod));
 
-            var me = Me;
-            me.Route = route;
-            me.HttpMethod = httpMethod;
+            Me.Route = route;
+            Me.HttpMethod = httpMethod;
         }
 
         //Properties 
@@ -31,57 +30,15 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         HttpMethod IMethod.HttpMethod { get; set; }
 
         //Methods 
-        public async Task<HttpResponseMessage> SendAsync(CancellationToken cancellationToken = default)
-        {
-            //Extract values 
-            var httpClient = Me.Route.Request.HttpClient;
-            var headers = Me.Route.Request.HeadersInternal;
-            var throwOnError = Me.Route.Request.ThrowOnError;
-            var route = Me.Route.Route;
-            var httpMethod = Me.HttpMethod;
-            var completionOption = Me.Route.Request.CompletionOptionInternal;
-            var queryParameters = (Me as IQueryMethod)?.QueryParameters;
-            var httpContent = (Me as IContentMethod)?.ContentInternal;
+        public virtual async Task<HttpResponseMessage> SendAsync(CancellationToken cancellationToken = default)
+            => await IMethodX.SendAsync(this, cancellationToken: cancellationToken);
 
-            //Add query parameter
-            if (httpMethod == HttpMethod.Get && queryParameters.Count > 0)
-            {
-                var queryBuilder = new UrlQueryBuilder
-                {
-                    queryParameters
-                };
-                var queryParameter = queryBuilder.ToString();
-                route += queryParameter;
-            }
-
-            //Create request 
-            using var request = new HttpRequestMessage(httpMethod, route)
-            {
-                Content = httpContent
-            };
-            foreach (var (key, value) in headers)
-            {
-                if (request.Headers.Contains(key))
-                    request.Headers.Remove(key);
-                request.Headers.Add(key, value);
-            }
-
-            //Send request 
-            var response = await httpClient.SendAsync(request, completionOption, cancellationToken);
-
-            //Check response status 
-            if (throwOnError)
-                await response.EnsureSuccessAsync();
-
-            return response;
-        }
+        public IGenericResponse<TResponse> To<TResponse>() where TResponse : class
+            => new GenericResponse<TResponse>(this);
 
         public IJsonResponse<TResponse> Json<TResponse>()
             where TResponse : class
             => Json<TResponse>(DefaultJsonSettings.Instance);
-
-        public IGenericResponse<TResponse> To<TResponse>() where TResponse : class
-            => new GenericResponse<TResponse>(this);
 
         public IJsonResponse<TResponse> Json<TResponse>(JsonSerializerSettings jsonSerializerSettings)
             where TResponse : class

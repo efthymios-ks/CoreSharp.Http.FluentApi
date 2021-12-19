@@ -1,8 +1,9 @@
 ﻿using CoreSharp.Models;
+using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Net.Http;
+using System.Net.Mime;
 
 namespace CoreSharp.HttpClient.FluentApi.Contracts
 {
@@ -28,19 +29,32 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
         /// <inheritdoc cref="Header(string, string)" />
         IRequest Headers(IDictionary<string, string> headers);
 
-        /// <inheritdoc cref="HeadersInternal" />
+        /// <summary>
+        /// Add specified key-value header
+        /// to outgoing <see cref="HttpRequestMessage"/>.
+        /// </summary>
         IRequest Header(string key, string value);
 
-        /// <inheritdoc cref="HttpRequestHeader.Accept" />
-        IRequest Accept(string mediaType);
+        /// <summary>
+        /// Set the <see cref="HeaderNames.Accept"/> header.
+        /// </summary>
+        IRequest Accept(string mediaTypeName);
 
-        /// <inheritdoc cref="HttpRequestHeader.Accept" />
+        /// <summary>
+        /// Set the <see cref="HeaderNames.Accept"/> header
+        /// to <see cref="MediaTypeNames.Application.Json"/>.
+        /// </summary>
         IRequest AcceptJson();
 
-        /// <inheritdoc cref="HttpRequestHeader.Accept" />
+        /// <summary>
+        /// Set the <see cref="HeaderNames.Accept"/> header
+        /// to <see cref="MediaTypeNames.Application.Xml"/>.
+        /// </summary>
         IRequest AcceptXml();
 
-        /// <inheritdoc cref="HttpRequestHeader.Authorization" />
+        /// <summary>
+        /// Set the <see cref="HeaderNames.Authorization"/> header.
+        /// </summary>
         IRequest Authorization(string accessToken);
 
         /// <inheritdoc cref="ThrowOnError" />
@@ -62,7 +76,7 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
         IRoute Route(string resourceName, string key);
 
         /// <summary>
-        /// Add resource route to request.
+        /// Set <see cref="HttpRequestMessage.RequestUri"/>.
         /// </summary>
         IRoute Route(string resourceName);
     }

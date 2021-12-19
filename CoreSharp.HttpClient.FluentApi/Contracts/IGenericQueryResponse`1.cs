@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Caching.Memory;
+using System;
 
 namespace CoreSharp.HttpClient.FluentApi.Contracts
 {
@@ -7,6 +8,7 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
         //Methods 
         /// <summary>
         /// Enable in-memory, client-side response caching.
+        /// Uses <see cref="IMemoryCache"/> internally.
         /// </summary>
         public ICacheQueryResponse<TResponse> Cache(TimeSpan duration);
     }

@@ -12,6 +12,7 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
     {
         //Properties
         internal IRoute Route { get; set; }
+        /// <inheritdoc cref="HttpRequestMessage.Method" />
         internal HttpMethod HttpMethod { get; set; }
 
         //Methods 
@@ -19,9 +20,9 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
         Task<HttpResponseMessage> SendAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Check <see cref="HttpResponseMessage.Headers"/>
-        /// for <see cref="HeaderNames.ContentType"/>
-        /// and map accordingly.
+        /// Check <see cref="HeaderNames.ContentType"/>
+        /// in <see cref="HttpResponseMessage.Headers"/>
+        /// and deserialize accordingly.
         /// </summary>
         IGenericResponse<TResponse> To<TResponse>() where TResponse : class;
 
@@ -35,8 +36,8 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
         IJsonResponse<TResponse> Json<TResponse>(Func<Stream, TResponse> deserializeStringFunction) where TResponse : class;
 
         /// <summary>
-        /// Treat <see cref="HttpResponseMessage.Content"/> as json
-        /// and convert to strongly-typed object.
+        /// Treat <see cref="HttpResponseMessage.Content"/>
+        /// as json and deserialize to provided type.
         /// </summary>
         IJsonResponse<TResponse> Json<TResponse>(Func<string, TResponse> deserializeStreamFunction) where TResponse : class;
 

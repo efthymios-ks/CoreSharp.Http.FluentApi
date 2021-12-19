@@ -6,6 +6,7 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
     {
         //Properties 
         internal IRequest Request { get; set; }
+        /// <inheritdoc cref="HttpRequestMessage.RequestUri" />
         internal string Route { get; set; }
 
         //Methods 

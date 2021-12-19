@@ -1,7 +1,6 @@
 ﻿using CoreSharp.HttpClient.FluentApi.Contracts;
 using Microsoft.Extensions.Caching.Memory;
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace CoreSharp.HttpClient.FluentApi.Utilities
@@ -12,8 +11,12 @@ namespace CoreSharp.HttpClient.FluentApi.Utilities
     internal static class ICacheQueryX
     {
         //Methods 
-        /// <inheritdoc cref="IMethod.SendAsync(CancellationToken)"/>
-        public static async ValueTask<TResponse> SendAsync<TResponse>(Task<TResponse> requestTask, string route, TimeSpan? cacheDuration)
+        /// <summary>
+        /// Return cached response.
+        /// If not existing or timed-out,
+        /// request new response and cache.
+        /// </summary>
+        public static async ValueTask<TResponse> CachedRequestAsync<TResponse>(Task<TResponse> requestTask, string route, TimeSpan? cacheDuration)
             where TResponse : class
         {
             _ = requestTask ?? throw new ArgumentNullException(nameof(requestTask));

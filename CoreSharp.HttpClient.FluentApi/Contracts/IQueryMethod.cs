@@ -18,9 +18,12 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
         public IQueryMethod Query(IDictionary<string, object> parameters);
 
         /// <summary>
-        /// Define query parameter.
+        /// Set query parameter.
         /// </summary>
         public IQueryMethod Query(string key, object value);
+
+        /// <inheritdoc cref="IMethod.To{TResponse}" />
+        public new IGenericQueryResponse<TResponse> To<TResponse>() where TResponse : class;
 
         /// <inheritdoc cref="Json{TResponse}(JsonSerializerSettings)" />
         public new IJsonQueryResponse<TResponse> Json<TResponse>() where TResponse : class;
@@ -33,8 +36,5 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
 
         /// <inheritdoc cref="IMethod.Json{TResponse}(Func{Stream, TResponse})" />
         public new IJsonQueryResponse<TResponse> Json<TResponse>(Func<Stream, TResponse> deserializeStreamFunction) where TResponse : class;
-
-        /// <inheritdoc cref="IMethod.To{TResponse}" />
-        public new IGenericQueryResponse<TResponse> To<TResponse>() where TResponse : class;
     }
 }

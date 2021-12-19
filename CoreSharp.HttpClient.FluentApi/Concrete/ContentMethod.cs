@@ -1,9 +1,12 @@
 ﻿using CoreSharp.HttpClient.FluentApi.Contracts;
+using CoreSharp.HttpClient.FluentApi.Utilities;
 using Newtonsoft.Json;
 using System.IO;
 using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CoreSharp.HttpClient.FluentApi.Concrete
 {
@@ -18,21 +21,22 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         private IContentMethod Me => this;
         HttpContent IContentMethod.ContentInternal { get; set; }
 
-        //Methods  
-        public IContentMethod Content(string content, string mediaContentType)
-            => Content(content, Encoding.UTF8, mediaContentType);
+        //Methods 
+        public override async Task<HttpResponseMessage> SendAsync(CancellationToken cancellationToken = default)
+            => await IMethodX.SendAsync(this, httpContent: Me.ContentInternal, cancellationToken: cancellationToken);
 
-        public IContentMethod Content(string content, Encoding encoding, string mediaContentType)
-            => Content(new StringContent(content, encoding, mediaContentType));
+        public IContentMethod Content(string content, string mediaTypeName)
+            => Content(content, Encoding.UTF8, mediaTypeName);
+
+        public IContentMethod Content(string content, Encoding encoding, string mediaTypeName)
+            => Content(new StringContent(content, encoding, mediaTypeName));
 
         public IContentMethod JsonContent(string content)
             => Content(content, MediaTypeNames.Application.Json);
 
         public IContentMethod JsonContent(object content)
         {
-            if (content is HttpContent httpContent)
-                Content(httpContent);
-            else if (content is string json)
+            if (content is string json)
                 JsonContent(json);
             else if (content is not null)
                 Content(ToStreamContent(content));

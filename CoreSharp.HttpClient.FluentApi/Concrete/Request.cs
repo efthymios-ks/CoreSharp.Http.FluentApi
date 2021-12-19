@@ -1,6 +1,7 @@
 ﻿using CoreSharp.Extensions;
 using CoreSharp.HttpClient.FluentApi.Contracts;
 using CoreSharp.Utilities;
+using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -46,8 +47,8 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
             return this;
         }
 
-        public IRequest Accept(string mediaType)
-            => Header("Accept", mediaType);
+        public IRequest Accept(string mediaTypeName)
+            => Header(HeaderNames.Accept, mediaTypeName);
 
         public IRequest AcceptJson()
             => Accept(MediaTypeNames.Application.Json);
@@ -56,7 +57,7 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
             => Accept(MediaTypeNames.Application.Xml);
 
         public IRequest Authorization(string accessToken)
-             => Header("Authorization", $"Bearer {accessToken}");
+             => Header(HeaderNames.Authorization, $"Bearer {accessToken}");
 
         public IRequest IgnoreError()
         {

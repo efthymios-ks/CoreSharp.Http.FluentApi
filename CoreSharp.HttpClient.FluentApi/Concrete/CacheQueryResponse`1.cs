@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 namespace CoreSharp.HttpClient.FluentApi.Concrete
 {
     /// <inheritdoc cref="ICacheQueryResponse{TResponse}"/>
-    public class CacheQueryResponse<TResponse> : GenericQueryResponse<TResponse>, ICacheQueryResponse<TResponse> where TResponse : class
+    internal class CacheQueryResponse<TResponse> : GenericQueryResponse<TResponse>, ICacheQueryResponse<TResponse> where TResponse : class
     {
         //Constructors
         public CacheQueryResponse(IGenericQueryResponse<TResponse> genericQueryResponse)
-            : this(genericQueryResponse.Method as IQueryMethod)
+            : this(genericQueryResponse?.Method as IQueryMethod)
         {
         }
 
@@ -36,7 +36,7 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
             var requestTask = (this as IGenericQueryResponse<TResponse>)!.SendAsync(cancellationToken);
             var route = Me.Method.Route.Route;
             var cacheDuration = Me.Duration;
-            return await ICacheQueryX.SendAsync(requestTask, route, cacheDuration);
+            return await ICacheQueryX.CachedRequestAsync(requestTask, route, cacheDuration);
         }
     }
 }
