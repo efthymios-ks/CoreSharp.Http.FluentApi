@@ -4,18 +4,67 @@
         <name>CoreSharp.HttpClient.FluentApi</name>
     </assembly>
     <members>
-        <member name="M:CoreSharp.HttpClient.FluentApi.Concrete.ContentMethod.ToStreamContent(System.Object,Newtonsoft.Json.JsonSerializerSettings,System.Int32)">
+        <member name="T:CoreSharp.HttpClient.FluentApi.Concrete.BytesResponse">
+            <inheritdoc cref="T:CoreSharp.HttpClient.FluentApi.Contracts.IBytesResponse" />
+        </member>
+        <member name="T:CoreSharp.HttpClient.FluentApi.Concrete.CacheQueryResponse`1">
+            <inheritdoc cref="T:CoreSharp.HttpClient.FluentApi.Contracts.ICacheQueryResponse`1"/>
+        </member>
+        <member name="T:CoreSharp.HttpClient.FluentApi.Concrete.ContentMethod">
+            <inheritdoc cref="T:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod"/>
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Concrete.ContentMethod.ToStreamContent(System.Object,System.Int32)">
             <summary>
             Build <see cref="T:System.Net.Http.StreamContent" /> from given item.
             </summary>
         </member>
-        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.ICacheQueryResponse`1.Cache(System.TimeSpan)">
-            <summary>
-            Enable in-memory, client-side response caching.
-            </summary>
+        <member name="T:CoreSharp.HttpClient.FluentApi.Concrete.JsonQueryResponse`1">
+            <inheritdoc cref="T:CoreSharp.HttpClient.FluentApi.Contracts.IJsonQueryResponse`1"/>
         </member>
-        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.Content(System.String)">
-            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.Content(System.String,System.String)" />
+        <member name="T:CoreSharp.HttpClient.FluentApi.Concrete.JsonResponse`1">
+            <inheritdoc cref="T:CoreSharp.HttpClient.FluentApi.Contracts.IJsonResponse`1"/>
+        </member>
+        <member name="T:CoreSharp.HttpClient.FluentApi.Concrete.Method">
+            <inheritdoc cref="T:CoreSharp.HttpClient.FluentApi.Contracts.IMethod"/>
+        </member>
+        <member name="T:CoreSharp.HttpClient.FluentApi.Concrete.QueryMethod">
+            <inheritdoc cref="T:CoreSharp.HttpClient.FluentApi.Contracts.IQueryMethod"/>
+        </member>
+        <member name="T:CoreSharp.HttpClient.FluentApi.Concrete.Request">
+            <inheritdoc cref="T:CoreSharp.HttpClient.FluentApi.Contracts.IRequest"/>
+        </member>
+        <member name="T:CoreSharp.HttpClient.FluentApi.Concrete.Response">
+            <inheritdoc cref="T:CoreSharp.HttpClient.FluentApi.Contracts.IResponse" />
+        </member>
+        <member name="T:CoreSharp.HttpClient.FluentApi.Concrete.Route">
+            <inheritdoc cref="T:CoreSharp.HttpClient.FluentApi.Contracts.IRoute"/>
+        </member>
+        <member name="T:CoreSharp.HttpClient.FluentApi.Concrete.StreamResponse">
+            <inheritdoc cref="T:CoreSharp.HttpClient.FluentApi.Contracts.IStreamResponse" />
+        </member>
+        <member name="T:CoreSharp.HttpClient.FluentApi.Concrete.StringResponse">
+            <inheritdoc cref="T:CoreSharp.HttpClient.FluentApi.Contracts.IStringResponse" />
+        </member>
+        <member name="T:CoreSharp.HttpClient.FluentApi.Concrete.XmlQueryResponse`1">
+            <inheritdoc cref="T:CoreSharp.HttpClient.FluentApi.Contracts.IXmlQueryResponse`1"/>
+        </member>
+        <member name="T:CoreSharp.HttpClient.FluentApi.Concrete.XmlResponse`1">
+            <inheritdoc cref="T:CoreSharp.HttpClient.FluentApi.Contracts.IXmlResponse`1"/>
+        </member>
+        <member name="T:CoreSharp.HttpClient.FluentApi.Contracts.GenericQueryResponse`1">
+            <inheritdoc cref="T:CoreSharp.HttpClient.FluentApi.Contracts.IGenericQueryResponse`1"/>
+        </member>
+        <member name="T:CoreSharp.HttpClient.FluentApi.Contracts.GenericResponse`1">
+            <inheritdoc cref="T:CoreSharp.HttpClient.FluentApi.Contracts.IGenericResponse`1"/>
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IBytesResponse.SendAsync(System.Threading.CancellationToken)">
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IResponse.SendAsync(System.Threading.CancellationToken)"/>
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.ICacheQueryResponse`1.Cache(System.TimeSpan)">
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IGenericQueryResponse`1.Cache(System.TimeSpan)"/>
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.ICacheQueryResponse`1.SendAsync(System.Threading.CancellationToken)">
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IGenericResponse`1.SendAsync(System.Threading.CancellationToken)"/>
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.Content(System.String,System.String)">
             <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.Content(System.String,System.Text.Encoding,System.String)" />
@@ -23,10 +72,16 @@
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.Content(System.String,System.Text.Encoding,System.String)">
             <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.Content(System.Net.Http.HttpContent)" />
         </member>
-        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.Content(System.Object)">
-            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.Content(System.Object,Newtonsoft.Json.JsonSerializerSettings)" />
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.JsonContent(System.String)">
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.Content(System.String,System.String)" />
         </member>
-        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.Content(System.Object,Newtonsoft.Json.JsonSerializerSettings)">
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.JsonContent(System.Object)">
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.Content(System.Net.Http.HttpContent)" />
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.XmlContent(System.String)">
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.Content(System.String,System.String)" />
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.XmlContent(System.Object)">
             <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.Content(System.Net.Http.HttpContent)" />
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.Content(System.Net.Http.HttpContent)">
@@ -34,32 +89,69 @@
             Sets <see cref="P:System.Net.Http.HttpRequestMessage.Content"/>.
             </summary>
         </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IGenericQueryResponse`1.Cache(System.TimeSpan)">
+            <summary>
+            Enable in-memory, client-side response caching.
+            Uses <see cref="T:Microsoft.Extensions.Caching.Memory.IMemoryCache"/> internally.
+            </summary>
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IGenericResponse`1.SendAsync(System.Threading.CancellationToken)">
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IResponse.SendAsync(System.Threading.CancellationToken)"/>
+        </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IJsonQueryResponse`1.Cache(System.TimeSpan)">
             <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.ICacheQueryResponse`1.Cache(System.TimeSpan)"/>
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IJsonQueryResponse`1.SendAsync(System.Threading.CancellationToken)">
-            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IJsonResponse`1.SendAsync(System.Threading.CancellationToken)"/>
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IGenericResponse`1.SendAsync(System.Threading.CancellationToken)"/>
         </member>
-        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IJsonResponse`1.SendAsync(System.Threading.CancellationToken)">
-            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.SendAsync(System.Threading.CancellationToken)"/>
+        <member name="P:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.HttpMethod">
+            <inheritdoc cref="P:System.Net.Http.HttpRequestMessage.Method" />
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.SendAsync(System.Threading.CancellationToken)">
             <inheritdoc cref="M:System.Net.Http.HttpClient.SendAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)" />
         </member>
-        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.Json``1(Newtonsoft.Json.JsonSerializerSettings)">
-            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.Json``1(Newtonsoft.Json.JsonSerializerSettings)" />
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.To``1">
+            <summary>
+            Check <see cref="F:Microsoft.Net.Http.Headers.HeaderNames.ContentType"/>
+            in <see cref="P:System.Net.Http.HttpResponseMessage.Headers"/>
+            and deserialize accordingly.
+            </summary>
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.Json``1">
             <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.Json``1(System.Func{System.IO.Stream,``0})" />
         </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.Json``1(Newtonsoft.Json.JsonSerializerSettings)">
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.Json``1(Newtonsoft.Json.JsonSerializerSettings)" />
+        </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.Json``1(System.Func{System.IO.Stream,``0})">
-            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.Json``1(System.Func{System.IO.Stream,``0})" />
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.Json``1(System.Func{System.String,``0})" />
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.Json``1(System.Func{System.String,``0})">
             <summary>
-            Treat <see cref="P:System.Net.Http.HttpResponseMessage.Content"/> as json
-            and convert to strongly-typed object.
+            Treat <see cref="P:System.Net.Http.HttpResponseMessage.Content"/>
+            as json and deserialize to provided type.
             </summary>
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.Xml``1">
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.Xml``1(System.Func{System.IO.Stream,``0})" />
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.Xml``1(System.Func{System.IO.Stream,``0})">
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.Xml``1(System.Func{System.String,``0})"/>
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.Xml``1(System.Func{System.String,``0})">
+            <summary>
+            Treat <see cref="P:System.Net.Http.HttpResponseMessage.Content"/>
+            as xml and deserialize to provided type.
+            </summary>
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.String">
+            <inheritdoc cref="M:System.Net.Http.HttpContent.ReadAsStringAsync(System.Threading.CancellationToken)"/>
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.Stream">
+            <inheritdoc cref="M:System.Net.Http.HttpContent.ReadAsStreamAsync(System.Threading.CancellationToken)"/>
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.Bytes">
+            <inheritdoc cref="M:System.Net.Http.HttpContent.ReadAsByteArrayAsync(System.Threading.CancellationToken)"/>
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IQueryMethod.Query``1(``0)">
             <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IQueryMethod.Query(System.Collections.Generic.IDictionary{System.String,System.Object})" />
@@ -69,8 +161,11 @@
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IQueryMethod.Query(System.String,System.Object)">
             <summary>
-            Define query parameter.
+            Set query parameter.
             </summary>
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IQueryMethod.To``1">
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.To``1" />
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IQueryMethod.Json``1">
             <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IQueryMethod.Json``1(Newtonsoft.Json.JsonSerializerSettings)" />
@@ -83,6 +178,15 @@
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IQueryMethod.Json``1(System.Func{System.IO.Stream,``0})">
             <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.Json``1(System.Func{System.IO.Stream,``0})" />
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IQueryMethod.Xml``1">
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IQueryMethod.Xml``1(System.Func{System.IO.Stream,``0})" />
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IQueryMethod.Xml``1(System.Func{System.IO.Stream,``0})">
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IQueryMethod.Xml``1(System.Func{System.String,``0})"/>
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IQueryMethod.Xml``1(System.Func{System.String,``0})">
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.Xml``1(System.Func{System.String,``0})" />
         </member>
         <member name="P:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.HttpClient">
             <inheritdoc cref="T:System.Net.Http.HttpClient" />
@@ -103,19 +207,32 @@
             <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.Header(System.String,System.String)" />
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.Header(System.String,System.String)">
-            <inheritdoc cref="P:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.HeadersInternal" />
+            <summary>
+            Add specified key-value header
+            to outgoing <see cref="T:System.Net.Http.HttpRequestMessage"/>.
+            </summary>
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.Accept(System.String)">
-            <inheritdoc cref="F:System.Net.HttpRequestHeader.Accept" />
+            <summary>
+            Set the <see cref="F:Microsoft.Net.Http.Headers.HeaderNames.Accept"/> header.
+            </summary>
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.AcceptJson">
-            <inheritdoc cref="F:System.Net.HttpRequestHeader.Accept" />
+            <summary>
+            Set the <see cref="F:Microsoft.Net.Http.Headers.HeaderNames.Accept"/> header
+            to <see cref="F:System.Net.Mime.MediaTypeNames.Application.Json"/>.
+            </summary>
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.AcceptXml">
-            <inheritdoc cref="F:System.Net.HttpRequestHeader.Accept" />
+            <summary>
+            Set the <see cref="F:Microsoft.Net.Http.Headers.HeaderNames.Accept"/> header
+            to <see cref="F:System.Net.Mime.MediaTypeNames.Application.Xml"/>.
+            </summary>
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.Authorization(System.String)">
-            <inheritdoc cref="F:System.Net.HttpRequestHeader.Authorization" />
+            <summary>
+            Set the <see cref="F:Microsoft.Net.Http.Headers.HeaderNames.Authorization"/> header.
+            </summary>
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.IgnoreError">
             <inheritdoc cref="P:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.ThrowOnError" />
@@ -137,8 +254,14 @@
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.Route(System.String)">
             <summary>
-            Add resource route to request.
+            Set <see cref="P:System.Net.Http.HttpRequestMessage.RequestUri"/>.
             </summary>
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IResponse.SendAsync(System.Threading.CancellationToken)">
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.SendAsync(System.Threading.CancellationToken)"/>
+        </member>
+        <member name="P:CoreSharp.HttpClient.FluentApi.Contracts.IRoute.Route">
+            <inheritdoc cref="P:System.Net.Http.HttpRequestMessage.RequestUri" />
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IRoute.Get">
             <summary>
@@ -165,6 +288,18 @@
             Set request to <see cref="P:System.Net.Http.HttpMethod.Delete"/>.
             </summary>
         </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IStreamResponse.SendAsync(System.Threading.CancellationToken)">
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IResponse.SendAsync(System.Threading.CancellationToken)"/>
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IStringResponse.SendAsync(System.Threading.CancellationToken)">
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IResponse.SendAsync(System.Threading.CancellationToken)"/>
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IXmlQueryResponse`1.Cache(System.TimeSpan)">
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.ICacheQueryResponse`1.Cache(System.TimeSpan)"/>
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IXmlQueryResponse`1.SendAsync(System.Threading.CancellationToken)">
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IGenericResponse`1.SendAsync(System.Threading.CancellationToken)"/>
+        </member>
         <member name="T:CoreSharp.HttpClient.FluentApi.Extensions.HttpClientExtensions">
             <summary>
             <see cref="N:CoreSharp.HttpClient"/> extensions.
@@ -180,13 +315,51 @@
             <see cref="T:System.Net.Http.HttpMethod"/> utilities.
             </summary>
         </member>
+        <member name="T:CoreSharp.HttpClient.FluentApi.Utilities.ICacheQueryX">
+            <summary>
+            <see cref="T:CoreSharp.HttpClient.FluentApi.Contracts.ICacheQueryResponse`1"/> utilities.
+            </summary>
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Utilities.ICacheQueryX.CachedRequestAsync``1(System.Threading.Tasks.Task{``0},System.String,System.Nullable{System.TimeSpan})">
+            <summary>
+            Return cached response.
+            If not existing or timed-out,
+            request new response and cache.
+            </summary>
+        </member>
         <member name="T:CoreSharp.HttpClient.FluentApi.Utilities.IJsonResponseX">
             <summary>
-            <see cref="T:CoreSharp.HttpClient.FluentApi.Contracts.IJsonQueryResponse`1"/> utilities.
+            <see cref="T:CoreSharp.HttpClient.FluentApi.Contracts.IJsonResponse`1"/> utilities.
             </summary>
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Utilities.IJsonResponseX.SendAsync``1(CoreSharp.HttpClient.FluentApi.Contracts.IJsonResponse{``0},System.Threading.CancellationToken)">
-            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.SendAsync(System.Threading.CancellationToken)"/>
+            <summary>
+            Call <see cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.SendAsync(System.Threading.CancellationToken)"/>
+            and deserialize to provided type using either
+            <see cref="P:CoreSharp.HttpClient.FluentApi.Contracts.IJsonResponse`1.DeserializeStreamFunction"/> or
+            <see cref="P:CoreSharp.HttpClient.FluentApi.Contracts.IJsonResponse`1.DeserializeStringFunction"/>.
+            </summary>
+        </member>
+        <member name="T:CoreSharp.HttpClient.FluentApi.Utilities.IMethodX">
+            <summary>
+            <see cref="T:CoreSharp.HttpClient.FluentApi.Contracts.IMethod"/> utilities.
+            </summary>
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Utilities.IMethodX.SendAsync(CoreSharp.HttpClient.FluentApi.Contracts.IMethod,System.Collections.Generic.IDictionary{System.String,System.Object},System.Net.Http.HttpContent,System.Threading.CancellationToken)">
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.SendAsync(System.Threading.CancellationToken)" />
+        </member>
+        <member name="T:CoreSharp.HttpClient.FluentApi.Utilities.IXmlResponseX">
+            <summary>
+            <see cref="T:CoreSharp.HttpClient.FluentApi.Contracts.IXmlResponse`1"/> utilities.
+            </summary>
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Utilities.IXmlResponseX.SendAsync``1(CoreSharp.HttpClient.FluentApi.Contracts.IXmlResponse{``0},System.Threading.CancellationToken)">
+            <summary>
+            Call <see cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.SendAsync(System.Threading.CancellationToken)"/>
+            and deserialize to provided type using either
+            <see cref="P:CoreSharp.HttpClient.FluentApi.Contracts.IXmlResponse`1.DeserializeStreamFunction"/> or
+            <see cref="P:CoreSharp.HttpClient.FluentApi.Contracts.IXmlResponse`1.DeserializeStringFunction"/>.
+            </summary>
         </member>
     </members>
 </doc>

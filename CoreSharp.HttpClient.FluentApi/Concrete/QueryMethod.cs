@@ -90,11 +90,22 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
 
         IXmlQueryResponse<TResponse> IQueryMethod.Xml<TResponse>()
         {
-            static TResponse DeserializeStringFunction(string xml) => xml.FromXml<TResponse>();
-            return Me.Xml(DeserializeStringFunction);
+            static TResponse DeserializeStreamFunction(Stream stream) => stream.FromXmlAsync<TResponse>().GetAwaiter().GetResult();
+            return Me.Xml(DeserializeStreamFunction);
+        }
+
+        IXmlQueryResponse<TResponse> IQueryMethod.Xml<TResponse>(Func<Stream, TResponse> deserializeStreamFunction)
+        {
+            _ = deserializeStreamFunction ?? throw new ArgumentNullException(nameof(deserializeStreamFunction));
+
+            return new XmlQueryResponse<TResponse>(this, deserializeStreamFunction);
         }
 
         IXmlQueryResponse<TResponse> IQueryMethod.Xml<TResponse>(Func<string, TResponse> deserializeStringFunction)
-            => new XmlQueryResponse<TResponse>(this, deserializeStringFunction);
+        {
+            _ = deserializeStringFunction ?? throw new ArgumentNullException(nameof(deserializeStringFunction));
+
+            return new XmlQueryResponse<TResponse>(this, deserializeStringFunction);
+        }
     }
 }

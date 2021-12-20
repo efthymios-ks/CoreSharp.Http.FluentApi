@@ -46,8 +46,12 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
         IJsonResponse<TResponse> Json<TResponse>(Func<string, TResponse> deserializeStreamFunction)
             where TResponse : class;
 
-        /// <inheritdoc cref="Xml{TResponse}(Func{string, TResponse})" />
+        /// <inheritdoc cref="Xml{TResponse}(Func{Stream, TResponse})" />
         IXmlResponse<TResponse> Xml<TResponse>()
+            where TResponse : class;
+
+        /// <inheritdoc cref="Xml{TResponse}(Func{string, TResponse})"/>
+        IXmlResponse<TResponse> Xml<TResponse>(Func<Stream, TResponse> deserializeStreamFunction)
             where TResponse : class;
 
         /// <summary>

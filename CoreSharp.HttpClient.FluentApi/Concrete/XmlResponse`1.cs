@@ -1,6 +1,7 @@
 ﻿using CoreSharp.HttpClient.FluentApi.Contracts;
 using CoreSharp.HttpClient.FluentApi.Utilities;
 using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,6 +12,10 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         where TResponse : class
     {
         //Constructors
+        public XmlResponse(IMethod method, Func<Stream, TResponse> deserializeStreamFunction)
+            : this(method)
+            => Me.DeserializeStreamFunction = deserializeStreamFunction ?? throw new ArgumentNullException(nameof(deserializeStreamFunction));
+
         public XmlResponse(IMethod method, Func<string, TResponse> deserializeStringFunction)
             : this(method)
             => Me.DeserializeStringFunction = deserializeStringFunction ?? throw new ArgumentNullException(nameof(deserializeStringFunction));
@@ -21,6 +26,7 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
 
         //Properties 
         private IXmlResponse<TResponse> Me => this;
+        Func<Stream, TResponse> IXmlResponse<TResponse>.DeserializeStreamFunction { get; set; }
         Func<string, TResponse> IXmlResponse<TResponse>.DeserializeStringFunction { get; set; }
 
         //Methods 

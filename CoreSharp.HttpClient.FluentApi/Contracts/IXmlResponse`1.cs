@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace CoreSharp.HttpClient.FluentApi.Contracts
 {
@@ -6,6 +7,7 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
         where TResponse : class
     {
         //Properties 
+        internal Func<Stream, TResponse> DeserializeStreamFunction { get; set; }
         internal Func<string, TResponse> DeserializeStringFunction { get; set; }
     }
 }

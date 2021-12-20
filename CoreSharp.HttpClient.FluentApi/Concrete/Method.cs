@@ -73,6 +73,13 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
             return Xml(DeserializeStringFunction);
         }
 
+        public IXmlResponse<TResponse> Xml<TResponse>(Func<Stream, TResponse> deserializeStreamFunction) where TResponse : class
+        {
+            _ = deserializeStreamFunction ?? throw new ArgumentNullException(nameof(deserializeStreamFunction));
+
+            return new XmlResponse<TResponse>(this, deserializeStreamFunction);
+        }
+
         public IXmlResponse<TResponse> Xml<TResponse>(Func<string, TResponse> deserializeStringFunction)
             where TResponse : class
         {

@@ -31,7 +31,7 @@ namespace CoreSharp.HttpClient.FluentApi.Utilities
                 return jsonResponse.DeserializeStreamFunction(stream);
             }
 
-            //String deserialization
+            //String deserialization 
             else if (jsonResponse.DeserializeStringFunction is not null)
             {
                 var json = await response.Content.ReadAsStringAsync(cancellationToken);
