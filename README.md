@@ -26,8 +26,9 @@ HttpClient
             |   |   └── IQueryMethod (QueryParameters) 
             |   └── POST, PUT, PATCH  
             |       └── IContentResponse (Content) 
-            └── IGenericResponse (Optional) 
-                └── IJsonResponse (Cache) 
+            └── IGenericResponse (Cache) 
+                └── IJsonResponse  
+                └── IXmlResponse 
 ```
 
 ## Usage 
