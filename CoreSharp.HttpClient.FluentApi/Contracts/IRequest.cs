@@ -20,8 +20,8 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
         internal IDictionary<string, string> HeadersInternal { get; }
 
         /// <summary>
-        /// Whether the interface throws an <see cref="HttpResponseException"/>
-        /// or not on not successful requests using <see cref="HttpResponseMessage.StatusCode"/>.
+        /// Whether the interface should throw an <see cref="HttpResponseException"/>
+        /// or not on unsuccessful requests using <see cref="HttpResponseMessage.StatusCode"/>.
         /// </summary>
         internal bool ThrowOnError { get; set; }
 
@@ -53,9 +53,10 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
         IRequest AcceptXml();
 
         /// <summary>
-        /// Set the <see cref="HeaderNames.Authorization"/> header.
+        /// Set the <see cref="HeaderNames.Authorization"/> header
+        /// to bearer given value.
         /// </summary>
-        IRequest Authorization(string accessToken);
+        IRequest Bearer(string accessToken);
 
         /// <inheritdoc cref="ThrowOnError" />
         IRequest IgnoreError();

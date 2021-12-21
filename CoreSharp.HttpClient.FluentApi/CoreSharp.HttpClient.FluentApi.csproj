@@ -10,13 +10,13 @@
         <RepositoryUrl>CoreSharp.HttpClient.FluentApi</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>Http, Web, Rest, Client, Api, Request, Fluent</PackageTags>
-        <PackageReleaseNotes>-Interfaces, IMethod, Overloaded `Xml()` method.</PackageReleaseNotes>
+        <PackageReleaseNotes>-Interfaces, IRequest, Changed `Authorization()` to `Bearer()`.</PackageReleaseNotes>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <PackageIcon>icon.png</PackageIcon>
         <PackageIconUrl />
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>1.6.1</Version>
+        <Version>1.7.0</Version>
         <AssemblyVersion>1.0.0.0</AssemblyVersion>
         <FileVersion>1.0.0.0</FileVersion>
     </PropertyGroup>

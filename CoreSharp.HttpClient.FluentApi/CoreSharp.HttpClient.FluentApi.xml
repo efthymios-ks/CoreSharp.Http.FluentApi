@@ -199,8 +199,8 @@
         </member>
         <member name="P:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.ThrowOnError">
             <summary>
-            Whether the interface throws an <see cref="T:CoreSharp.Models.HttpResponseException"/>
-            or not on not successful requests using <see cref="P:System.Net.Http.HttpResponseMessage.StatusCode"/>.
+            Whether the interface should throw an <see cref="T:CoreSharp.Models.HttpResponseException"/>
+            or not on unsuccessful requests using <see cref="P:System.Net.Http.HttpResponseMessage.StatusCode"/>.
             </summary>
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.Headers(System.Collections.Generic.IDictionary{System.String,System.String})">
@@ -229,9 +229,10 @@
             to <see cref="F:System.Net.Mime.MediaTypeNames.Application.Xml"/>.
             </summary>
         </member>
-        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.Authorization(System.String)">
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.Bearer(System.String)">
             <summary>
-            Set the <see cref="F:Microsoft.Net.Http.Headers.HeaderNames.Authorization"/> header.
+            Set the <see cref="F:Microsoft.Net.Http.Headers.HeaderNames.Authorization"/> header
+            to bearer given value.
             </summary>
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.IgnoreError">

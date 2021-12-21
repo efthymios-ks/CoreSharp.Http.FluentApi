@@ -94,6 +94,7 @@ Include `using CoreSharp.HttpClient.FluentApi.Extensions;`
                         // Forced xml deserialization 
                         .Xml<IEnumerable<Album>()
                         .SendAsync();
+```
      
 
 ### HttpCompletionOption
@@ -171,7 +172,7 @@ Include `using CoreSharp.HttpClient.FluentApi.Extensions;`
     await httpClient
             .Request()
             // Authorization > Bearer accessTokenValue 
-            .Authorization("accessTokenValue")
+            .Bearer("accessTokenValue")
             .Route("albums")
             .Get()
             .SendAsync();

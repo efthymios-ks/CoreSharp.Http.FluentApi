@@ -56,7 +56,7 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         public IRequest AcceptXml()
             => Accept(MediaTypeNames.Application.Xml);
 
-        public IRequest Authorization(string accessToken)
+        public IRequest Bearer(string accessToken)
              => Header(HeaderNames.Authorization, $"Bearer {accessToken}");
 
         public IRequest IgnoreError()
