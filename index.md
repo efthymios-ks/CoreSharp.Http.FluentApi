@@ -94,7 +94,7 @@ Include `using CoreSharp.HttpClient.FluentApi.Extensions;`
                         // Forced xml deserialization 
                         .Xml<IEnumerable<Album>()
                         .SendAsync();
-     
+```
 
 ### HttpCompletionOption
 ```
