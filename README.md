@@ -6,7 +6,7 @@
 ## Features 
 - Automatic json conversions using `Json.NET`. 
 - Optional in-memory response caching for GET requests. 
-- Specific and more meaningful exceptions. 
+- Specific and more meaningful exceptions (HttpResponseException, TimeoutException). 
 - Use of `Stream` where applicable instead of eager converting entities to string. **[Optimizes memory consumption]** 
 - Use of `HttpCompletionOption.ResponseHeadersRead` by default to all requests. **[Optimizes memory consumption and response times]** 
 - Easily expandable. 
@@ -94,8 +94,7 @@ Include `using CoreSharp.HttpClient.FluentApi.Extensions;`
                         // Forced xml deserialization 
                         .Xml<IEnumerable<Album>()
                         .SendAsync();
-```
-     
+``` 
 
 ### HttpCompletionOption
 ```
@@ -105,6 +104,22 @@ Include `using CoreSharp.HttpClient.FluentApi.Extensions;`
             .Route("albums")
             .Get() 
             .SendAsync();
+```
+
+### Timeout
+```
+    try
+    {
+        await httpClient
+                .Request()
+                .Timeout(TimeSpan.FromSeconds(15))
+                .Route("albums")
+                .Get() 
+                .SendAsync();
+    }
+    catch (TimeoutException ex)
+    {
+    }
 ```
 
 ### Error handling

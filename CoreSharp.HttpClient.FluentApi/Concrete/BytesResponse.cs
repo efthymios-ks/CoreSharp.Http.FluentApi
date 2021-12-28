@@ -16,6 +16,8 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         async Task<byte[]> IBytesResponse.SendAsync(CancellationToken cancellationtoken)
         {
             using var response = await SendAsync(cancellationtoken);
+            if (response is null)
+                return default;
             return await response.Content.ReadAsByteArrayAsync(cancellationtoken);
         }
     }

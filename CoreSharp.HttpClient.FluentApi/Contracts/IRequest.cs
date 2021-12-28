@@ -1,4 +1,4 @@
-﻿using CoreSharp.Models;
+﻿using CoreSharp.Models.Exceptions;
 using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
@@ -13,11 +13,13 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
         /// <inheritdoc cref="System.Net.Http.HttpClient" />
         internal System.Net.Http.HttpClient HttpClient { get; set; }
 
+        /// <inheritdoc cref="HttpRequestMessage.Headers" />
+        internal IDictionary<string, string> HeadersInternal { get; }
+
         /// <inheritdoc cref="HttpCompletionOption"/>
         internal HttpCompletionOption CompletionOptionInternal { get; set; }
 
-        /// <inheritdoc cref="HttpRequestMessage.Headers" />
-        internal IDictionary<string, string> HeadersInternal { get; }
+        internal TimeSpan? TimeoutInternal { get; set; }
 
         /// <summary>
         /// Whether the interface should throw an <see cref="HttpResponseException"/>
@@ -63,6 +65,14 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
 
         /// <inheritdoc cref="CompletionOptionInternal" />
         IRequest CompletionOption(HttpCompletionOption completionOption);
+
+        /// <summary>
+        /// <see cref="TimeSpan"/> to wait before the
+        /// <see cref="HttpRequestMessage"/> timeout.
+        /// If <see cref="System.Net.Http.HttpClient.Timeout"/>
+        /// is lower, then it has higher priority.
+        /// </summary>
+        IRequest Timeout(TimeSpan timeout);
 
         /// <inheritdoc cref="Route(string)" />
         IRoute Route(string resourceName, int key);

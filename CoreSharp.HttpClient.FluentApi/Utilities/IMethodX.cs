@@ -1,6 +1,7 @@
 ﻿using CoreSharp.Extensions;
 using CoreSharp.HttpClient.FluentApi.Contracts;
 using CoreSharp.Models;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
@@ -25,7 +26,8 @@ namespace CoreSharp.HttpClient.FluentApi.Utilities
             var throwOnError = method.Route.Request.ThrowOnError;
             var route = method.Route.Route;
             var httpMethod = method.HttpMethod;
-            var completionOption = method.Route.Request.CompletionOptionInternal;
+            var httpCompletionMode = method.Route.Request.CompletionOptionInternal;
+            var timeout = method.Route.Request.TimeoutInternal ?? TimeSpan.Zero;
 
             //Add query parameter
             if (httpMethod == HttpMethod.Get && queryParameters.Count > 0)
@@ -51,10 +53,21 @@ namespace CoreSharp.HttpClient.FluentApi.Utilities
             }
 
             //Send request 
-            var response = await httpClient.SendAsync(request, completionOption, cancellationToken);
+            HttpResponseMessage response = null;
+            try
+            {
+                response = await httpClient.SendAsync(request, httpCompletionMode, timeout, cancellationToken);
+            }
+            catch
+            {
+#pragma warning disable RCS1236 // Use exception filter.
+                if (throwOnError)
+#pragma warning restore RCS1236 // Use exception filter.
+                    throw;
+            }
 
             //Check response status 
-            if (throwOnError)
+            if (response is not null && throwOnError)
                 await response.EnsureSuccessAsync();
 
             return response;

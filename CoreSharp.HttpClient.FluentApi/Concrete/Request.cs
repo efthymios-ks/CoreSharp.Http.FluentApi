@@ -20,9 +20,10 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         //Properties 
         private IRequest Me => this;
         System.Net.Http.HttpClient IRequest.HttpClient { get; set; }
+        bool IRequest.ThrowOnError { get; set; } = true;
         HttpCompletionOption IRequest.CompletionOptionInternal { get; set; } = HttpCompletionOption.ResponseHeadersRead;
         IDictionary<string, string> IRequest.HeadersInternal { get; } = new Dictionary<string, string>();
-        bool IRequest.ThrowOnError { get; set; } = true;
+        TimeSpan? IRequest.TimeoutInternal { get; set; }
 
         //Methods 
         public IRequest Headers(IDictionary<string, string> headers)
@@ -68,6 +69,12 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         public IRequest CompletionOption(HttpCompletionOption completionOption)
         {
             Me.CompletionOptionInternal = completionOption;
+            return this;
+        }
+
+        public IRequest Timeout(TimeSpan timeout)
+        {
+            Me.TimeoutInternal = timeout;
             return this;
         }
 

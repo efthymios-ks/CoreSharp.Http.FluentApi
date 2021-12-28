@@ -1,7 +1,7 @@
 ﻿using CoreSharp.Extensions;
 using CoreSharp.HttpClient.FluentApi.Domain.Models;
 using CoreSharp.HttpClient.FluentApi.Extensions;
-using CoreSharp.Models;
+using CoreSharp.Models.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -87,6 +87,11 @@ namespace CoreSharp.HttpClient.FluentApi.Examples
                         .Route("wrong/url")
                         .Get()
                         .SendAsync();
+            }
+            //Timeout
+            catch (TimeoutException ex)
+            {
+                Console.WriteLine(ex);
             }
             //Http request specific exception 
             catch (HttpResponseException ex)

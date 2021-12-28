@@ -23,6 +23,8 @@ namespace CoreSharp.HttpClient.FluentApi.Utilities
             _ = xmlResponse ?? throw new ArgumentNullException(nameof(xmlResponse));
 
             using var response = await (xmlResponse as IResponse)!.SendAsync(cancellationToken);
+            if (response is null)
+                return default;
 
             //Stream deserialization
             if (xmlResponse.DeserializeStreamFunction is not null)

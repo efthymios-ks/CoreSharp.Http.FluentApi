@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using System.Net.Http;
 
-namespace CoreSharp.HttpClient.FluentApi
+namespace CoreSharp.HttpClient.FluentApi.Utilities
 {
     /// <summary>
     /// <see cref="HttpMethod"/> utilities.
