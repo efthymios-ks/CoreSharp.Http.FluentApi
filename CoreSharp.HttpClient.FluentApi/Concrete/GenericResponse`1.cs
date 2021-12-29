@@ -18,9 +18,7 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
         public new virtual async Task<TResponse> SendAsync(CancellationToken cancellationToken = default)
         {
             using var response = await base.SendAsync(cancellationToken);
-            if (response is null)
-                return default;
-            return await response.Content.DeserializeAsync<TResponse>(cancellationToken);
+            return await (response?.Content.DeserializeAsync<TResponse>(cancellationToken)).OrDefault();
         }
     }
 }

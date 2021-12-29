@@ -24,7 +24,7 @@ namespace CoreSharp.HttpClient.FluentApi.Utilities
 
             using var response = await (jsonResponse as IResponse)!.SendAsync(cancellationToken);
             if (response is null)
-                return default;
+                return null;
 
             //Stream deserialization 
             if (jsonResponse.DeserializeStreamFunction is not null)

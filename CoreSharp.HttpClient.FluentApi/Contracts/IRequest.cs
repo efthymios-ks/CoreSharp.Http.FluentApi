@@ -27,7 +27,7 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
         /// </summary>
         internal bool ThrowOnError { get; set; }
 
-        //Methods
+        //Methods 
         /// <inheritdoc cref="Header(string, string)" />
         IRequest Headers(IDictionary<string, string> headers);
 
@@ -90,5 +90,12 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
         /// Set <see cref="HttpRequestMessage.RequestUri"/>.
         /// </summary>
         IRoute Route(string resourceName);
+
+        public void Deconstruct(
+            out System.Net.Http.HttpClient httpClient,
+            out IDictionary<string, string> headers,
+            out HttpCompletionOption httpCompletionOption,
+            out TimeSpan timeout,
+            out bool throwOnError);
     }
 }

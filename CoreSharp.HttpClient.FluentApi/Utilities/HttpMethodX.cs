@@ -15,12 +15,13 @@ namespace CoreSharp.HttpClient.FluentApi.Utilities
             _ = httpMethod ?? throw new ArgumentNullException(nameof(httpMethod));
 
             var validMethods = new[] { HttpMethod.Get };
-            if (!httpMethod.IsIn(validMethods))
-            {
-                var validMethodsAsString = string.Join(", ", validMethods.Select(m => m.Method));
-                var message = $"{nameof(httpMethod)} must be one of the following: {validMethodsAsString}.";
-                throw new ArgumentException(message, nameof(httpMethod));
-            }
+            if (httpMethod.IsIn(validMethods))
+                return;
+
+            //Throw exception
+            var validMethodsAsString = string.Join(", ", validMethods.Select(m => m.Method));
+            var message = $"{nameof(httpMethod)} must be one of the following: {validMethodsAsString}.";
+            throw new ArgumentException(message, nameof(httpMethod));
         }
 
         public static void ValidateContentMethod(HttpMethod httpMethod)
@@ -28,12 +29,13 @@ namespace CoreSharp.HttpClient.FluentApi.Utilities
             _ = httpMethod ?? throw new ArgumentNullException(nameof(httpMethod));
 
             var validMethods = new[] { HttpMethod.Post, HttpMethod.Put, HttpMethod.Patch };
-            if (!httpMethod.IsIn(validMethods))
-            {
-                var validMethodsAsString = string.Join(", ", validMethods.Select(m => m.Method));
-                var message = $"{nameof(httpMethod)} must be one of the following: {validMethodsAsString}.";
-                throw new ArgumentException(message, nameof(httpMethod));
-            }
+            if (httpMethod.IsIn(validMethods))
+                return;
+
+            //Throw exception
+            var validMethodsAsString = string.Join(", ", validMethods.Select(m => m.Method));
+            var message = $"{nameof(httpMethod)} must be one of the following: {validMethodsAsString}.";
+            throw new ArgumentException(message, nameof(httpMethod));
         }
     }
 }

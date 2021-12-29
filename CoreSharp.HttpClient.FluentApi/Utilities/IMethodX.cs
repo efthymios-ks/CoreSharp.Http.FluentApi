@@ -1,7 +1,6 @@
 ﻿using CoreSharp.Extensions;
 using CoreSharp.HttpClient.FluentApi.Contracts;
 using CoreSharp.Models;
-using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
@@ -14,20 +13,20 @@ namespace CoreSharp.HttpClient.FluentApi.Utilities
     /// </summary>
     internal static class IMethodX
     {
-        /// <inheritdoc cref="IMethod.SendAsync(CancellationToken)" />
-        internal static async Task<HttpResponseMessage> SendAsync(IMethod method,
-                                                                  IDictionary<string, object> queryParameters = null,
-                                                                  HttpContent httpContent = null,
-                                                                  CancellationToken cancellationToken = default)
+        /// <summary>
+        /// Send an HTTP request as an
+        /// asynchronous operation.
+        /// </summary>
+        public static async Task<HttpResponseMessage> SendAsync(
+            IMethod method,
+            IDictionary<string, object> queryParameters = null,
+            HttpContent httpContent = null,
+            CancellationToken cancellationToken = default)
         {
             //Extract values 
-            var httpClient = method.Route.Request.HttpClient;
-            var headers = method.Route.Request.HeadersInternal;
-            var throwOnError = method.Route.Request.ThrowOnError;
+            var (httpClient, headers, httpCompletionMode, timeout, throwOnError) = method.Route.Request;
             var route = method.Route.Route;
             var httpMethod = method.HttpMethod;
-            var httpCompletionMode = method.Route.Request.CompletionOptionInternal;
-            var timeout = method.Route.Request.TimeoutInternal ?? TimeSpan.Zero;
 
             //Add query parameter
             if (httpMethod == HttpMethod.Get && queryParameters.Count > 0)
@@ -52,25 +51,24 @@ namespace CoreSharp.HttpClient.FluentApi.Utilities
                 request.Headers.Add(key, value);
             }
 
-            //Send request 
-            HttpResponseMessage response = null;
+            //Send request
             try
             {
-                response = await httpClient.SendAsync(request, httpCompletionMode, timeout, cancellationToken);
+                var response = await httpClient.SendAsync(request, httpCompletionMode, timeout, cancellationToken);
+                await response.EnsureSuccessAsync();
+                return response;
             }
+            //Throw if needed
+            catch when (throwOnError)
+            {
+                throw;
+            }
+            //Or "swallow" 
             catch
             {
-#pragma warning disable RCS1236 // Use exception filter.
-                if (throwOnError)
-#pragma warning restore RCS1236 // Use exception filter.
-                    throw;
             }
 
-            //Check response status 
-            if (response is not null && throwOnError)
-                await response.EnsureSuccessAsync();
-
-            return response;
+            return null;
         }
     }
 }

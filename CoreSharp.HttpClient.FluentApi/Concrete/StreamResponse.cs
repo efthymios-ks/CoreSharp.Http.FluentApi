@@ -1,4 +1,5 @@
-﻿using CoreSharp.HttpClient.FluentApi.Contracts;
+﻿using CoreSharp.Extensions;
+using CoreSharp.HttpClient.FluentApi.Contracts;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,9 +18,7 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         async Task<Stream> IStreamResponse.SendAsync(CancellationToken cancellationtoken)
         {
             using var response = await SendAsync(cancellationtoken);
-            if (response is null)
-                return default;
-            return await response.Content.ReadAsStreamAsync(cancellationtoken);
+            return await (response?.Content.ReadAsStreamAsync(cancellationtoken)).OrDefault();
         }
     }
 }

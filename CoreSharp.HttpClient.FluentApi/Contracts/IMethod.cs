@@ -1,6 +1,8 @@
-﻿using Microsoft.Net.Http.Headers;
+﻿using CoreSharp.HttpClient.FluentApi.Utilities;
+using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Threading;
@@ -16,7 +18,7 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
         internal HttpMethod HttpMethod { get; set; }
 
         //Methods 
-        /// <inheritdoc cref="System.Net.Http.HttpClient.SendAsync(HttpRequestMessage, CancellationToken)" />
+        /// <inheritdoc cref="IMethodX.SendAsync(IMethod, IDictionary{string, object}, HttpContent, CancellationToken)" />
         Task<HttpResponseMessage> SendAsync(CancellationToken cancellationToken = default);
 
         /// <summary>

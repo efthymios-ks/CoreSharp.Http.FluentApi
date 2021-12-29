@@ -74,6 +74,11 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
 
         public IRequest Timeout(TimeSpan timeout)
         {
+            if (timeout.TotalMilliseconds <= 0)
+                throw new ArgumentOutOfRangeException(nameof(timeout), $"{nameof(timeout)} ({timeout.ToStringReadable()}) has to be positive and non-zero.");
+            else if (timeout == System.Threading.Timeout.InfiniteTimeSpan)
+                throw new ArgumentOutOfRangeException(nameof(timeout), $"{nameof(timeout)} cannot be {nameof(System.Threading.Timeout.InfiniteTimeSpan)}.");
+
             Me.TimeoutInternal = timeout;
             return this;
         }
@@ -99,6 +104,20 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
             resourceName = UriX.JoinSegments(resourceName).TrimStart('/');
 
             return new Route(this, resourceName);
+        }
+
+        public void Deconstruct(
+            out System.Net.Http.HttpClient httpClient,
+            out IDictionary<string, string> headers,
+            out HttpCompletionOption httpCompletionOption,
+            out TimeSpan timeout,
+            out bool throwOnError)
+        {
+            httpClient = Me.HttpClient;
+            headers = Me.HeadersInternal;
+            httpCompletionOption = Me.CompletionOptionInternal;
+            timeout = Me.TimeoutInternal ?? TimeSpan.Zero;
+            throwOnError = Me.ThrowOnError;
         }
     }
 }
