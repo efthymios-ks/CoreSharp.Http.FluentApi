@@ -10,13 +10,14 @@
         <RepositoryUrl>CoreSharp.HttpClient.FluentApi</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>Http, Web, Rest, Client, Api, Request, Fluent</PackageTags>
-        <PackageReleaseNotes>-Code clean-up.</PackageReleaseNotes>
+        <PackageReleaseNotes>-Updated packages.
+-Code clean-up.</PackageReleaseNotes>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <PackageIcon>icon.png</PackageIcon>
         <PackageIconUrl />
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>1.8.1</Version>
+        <Version>1.8.3</Version>
         <AssemblyVersion>1.0.0.0</AssemblyVersion>
         <FileVersion>1.0.0.0</FileVersion>
     </PropertyGroup>
@@ -38,7 +39,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="CoreSharp" Version="1.4.1" />
+        <PackageReference Include="CoreSharp" Version="1.6.0" />
     </ItemGroup>
 
 </Project>

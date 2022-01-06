@@ -13,9 +13,37 @@
         <member name="T:CoreSharp.HttpClient.FluentApi.Concrete.ContentMethod">
             <inheritdoc cref="T:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod"/>
         </member>
-        <member name="M:CoreSharp.HttpClient.FluentApi.Concrete.ContentMethod.ToStreamContent(System.Object,System.Int32)">
+        <member name="M:CoreSharp.HttpClient.FluentApi.Concrete.ContentMethod.ToStreamJson(System.Object,System.Int32)">
             <summary>
-            Build <see cref="T:System.Net.Http.StreamContent" /> from given item.
+            Convert object to json <see cref="T:System.IO.Stream"/>.
+            </summary>
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Concrete.ContentMethod.ToStreamContentJson(System.Object,System.Int32)">
+            <summary>
+            Treats entity as json and converts
+            to <see cref="T:System.Net.Http.StreamContent" />
+            with <see cref="F:System.Net.Mime.MediaTypeNames.Application.Json"/>.
+            </summary>
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Concrete.ContentMethod.ToStreamContentJson(System.IO.Stream,System.Int32)">
+            <summary>
+            Create <see cref="T:System.Net.Http.StreamContent"/>
+            from given <see cref="T:System.IO.Stream"/>
+            with <see cref="F:System.Net.Mime.MediaTypeNames.Application.Json"/>.
+            </summary>
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Concrete.ContentMethod.ToStreamContentXml(System.IO.Stream,System.Int32)">
+            <summary>
+            Create <see cref="T:System.Net.Http.StreamContent"/>
+            from given <see cref="T:System.IO.Stream"/>
+            with <see cref="F:System.Net.Mime.MediaTypeNames.Application.Xml"/>.
+            </summary>
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Concrete.ContentMethod.ToStreamContent(System.IO.Stream,System.String,System.Int32)">
+            <summary>
+            Create <see cref="T:System.Net.Http.StreamContent"/>
+            from given <see cref="T:System.IO.Stream"/>
+            with specified <see cref="T:System.Net.Mime.ContentType"/>.
             </summary>
         </member>
         <member name="T:CoreSharp.HttpClient.FluentApi.Concrete.JsonQueryResponse`1">
@@ -66,14 +94,11 @@
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.ICacheQueryResponse`1.SendAsync(System.Threading.CancellationToken)">
             <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IGenericResponse`1.SendAsync(System.Threading.CancellationToken)"/>
         </member>
-        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.Content(System.String,System.String)">
-            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.Content(System.String,System.Text.Encoding,System.String)" />
-        </member>
-        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.Content(System.String,System.Text.Encoding,System.String)">
-            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.Content(System.Net.Http.HttpContent)" />
-        </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.JsonContent(System.String)">
             <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.Content(System.String,System.String)" />
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.JsonContent(System.IO.Stream)">
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.Content(System.Net.Http.HttpContent)" />
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.JsonContent(System.Object)">
             <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.Content(System.Net.Http.HttpContent)" />
@@ -81,12 +106,21 @@
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.XmlContent(System.String)">
             <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.Content(System.String,System.String)" />
         </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.XmlContent(System.IO.Stream)">
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.Content(System.String,System.String)" />
+        </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.XmlContent(System.Object)">
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.Content(System.Net.Http.HttpContent)" />
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.Content(System.String,System.String)">
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.Content(System.String,System.Text.Encoding,System.String)" />
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.Content(System.String,System.Text.Encoding,System.String)">
             <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.Content(System.Net.Http.HttpContent)" />
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IContentMethod.Content(System.Net.Http.HttpContent)">
             <summary>
-            Sets <see cref="P:System.Net.Http.HttpRequestMessage.Content"/>.
+            Set <see cref="P:System.Net.Http.HttpRequestMessage.Content"/>.
             </summary>
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IGenericQueryResponse`1.Cache(System.TimeSpan)">
@@ -108,7 +142,7 @@
             <inheritdoc cref="P:System.Net.Http.HttpRequestMessage.Method" />
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.SendAsync(System.Threading.CancellationToken)">
-            <inheritdoc cref="M:System.Net.Http.HttpClient.SendAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)" />
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Utilities.IMethodX.SendAsync(CoreSharp.HttpClient.FluentApi.Contracts.IMethod,System.Collections.Generic.IDictionary{System.String,System.Object},System.Net.Http.HttpContent,System.Threading.CancellationToken)" />
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.To``1">
             <summary>
@@ -191,15 +225,15 @@
         <member name="P:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.HttpClient">
             <inheritdoc cref="T:System.Net.Http.HttpClient" />
         </member>
-        <member name="P:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.CompletionOptionInternal">
-            <inheritdoc cref="T:System.Net.Http.HttpCompletionOption"/>
-        </member>
         <member name="P:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.HeadersInternal">
             <inheritdoc cref="P:System.Net.Http.HttpRequestMessage.Headers" />
         </member>
+        <member name="P:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.CompletionOptionInternal">
+            <inheritdoc cref="T:System.Net.Http.HttpCompletionOption"/>
+        </member>
         <member name="P:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.ThrowOnError">
             <summary>
-            Whether the interface should throw an <see cref="T:CoreSharp.Models.HttpResponseException"/>
+            Whether the interface should throw an <see cref="T:CoreSharp.Models.Exceptions.HttpResponseException"/>
             or not on unsuccessful requests using <see cref="P:System.Net.Http.HttpResponseMessage.StatusCode"/>.
             </summary>
         </member>
@@ -240,6 +274,14 @@
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.CompletionOption(System.Net.Http.HttpCompletionOption)">
             <inheritdoc cref="P:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.CompletionOptionInternal" />
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.Timeout(System.TimeSpan)">
+            <summary>
+            <see cref="T:System.TimeSpan"/> to wait before the
+            <see cref="T:System.Net.Http.HttpRequestMessage"/> timeout.
+            If <see cref="P:System.Net.Http.HttpClient.Timeout"/>
+            is lower, then it has higher priority.
+            </summary>
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.Route(System.String,System.Int32)">
             <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IRequest.Route(System.String)" />
@@ -311,7 +353,7 @@
             Start a chained configuration for a new http request.
             </summary>
         </member>
-        <member name="T:CoreSharp.HttpClient.FluentApi.HttpMethodX">
+        <member name="T:CoreSharp.HttpClient.FluentApi.Utilities.HttpMethodX">
             <summary>
             <see cref="T:System.Net.Http.HttpMethod"/> utilities.
             </summary>
@@ -347,7 +389,10 @@
             </summary>
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Utilities.IMethodX.SendAsync(CoreSharp.HttpClient.FluentApi.Contracts.IMethod,System.Collections.Generic.IDictionary{System.String,System.Object},System.Net.Http.HttpContent,System.Threading.CancellationToken)">
-            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.SendAsync(System.Threading.CancellationToken)" />
+            <summary>
+            Send an HTTP request as an
+            asynchronous operation.
+            </summary>
         </member>
         <member name="T:CoreSharp.HttpClient.FluentApi.Utilities.IXmlResponseX">
             <summary>
