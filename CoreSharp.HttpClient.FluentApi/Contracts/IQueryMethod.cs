@@ -1,7 +1,8 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using JsonNet = Newtonsoft.Json;
+using TextJson = System.Text.Json;
 
 namespace CoreSharp.HttpClient.FluentApi.Contracts
 {
@@ -27,12 +28,16 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
         public new IGenericQueryResponse<TResponse> To<TResponse>()
             where TResponse : class;
 
-        /// <inheritdoc cref="Json{TResponse}(JsonSerializerSettings)" />
+        /// <inheritdoc cref="Json{TResponse}(JsonNet.JsonSerializerSettings)" />
         public new IJsonQueryResponse<TResponse> Json<TResponse>()
             where TResponse : class;
 
         /// <inheritdoc cref="Json{TResponse}(Func{Stream, TResponse})" />
-        public new IJsonQueryResponse<TResponse> Json<TResponse>(JsonSerializerSettings jsonSerializerSettings)
+        public new IJsonQueryResponse<TResponse> Json<TResponse>(JsonNet.JsonSerializerSettings jsonSerializerSettings)
+            where TResponse : class;
+
+        /// <inheritdoc cref="Json{TResponse}(Func{Stream, TResponse})" />
+        public new IJsonQueryResponse<TResponse> Json<TResponse>(TextJson.JsonSerializerOptions jsonSerializerOptions)
             where TResponse : class;
 
         /// <inheritdoc cref="Json{TResponse}(Func{Stream, TResponse})" />

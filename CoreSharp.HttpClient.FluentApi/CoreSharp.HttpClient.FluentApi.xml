@@ -157,6 +157,9 @@
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.Json``1(Newtonsoft.Json.JsonSerializerSettings)">
             <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.Json``1(Newtonsoft.Json.JsonSerializerSettings)" />
         </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.Json``1(System.Text.Json.JsonSerializerOptions)">
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.Json``1(System.Func{System.IO.Stream,``0})" />
+        </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.Json``1(System.Func{System.IO.Stream,``0})">
             <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IMethod.Json``1(System.Func{System.String,``0})" />
         </member>
@@ -205,6 +208,9 @@
             <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IQueryMethod.Json``1(Newtonsoft.Json.JsonSerializerSettings)" />
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IQueryMethod.Json``1(Newtonsoft.Json.JsonSerializerSettings)">
+            <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IQueryMethod.Json``1(System.Func{System.IO.Stream,``0})" />
+        </member>
+        <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IQueryMethod.Json``1(System.Text.Json.JsonSerializerOptions)">
             <inheritdoc cref="M:CoreSharp.HttpClient.FluentApi.Contracts.IQueryMethod.Json``1(System.Func{System.IO.Stream,``0})" />
         </member>
         <member name="M:CoreSharp.HttpClient.FluentApi.Contracts.IQueryMethod.Json``1(System.Func{System.String,``0})">

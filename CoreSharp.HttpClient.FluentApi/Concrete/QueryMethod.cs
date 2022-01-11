@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -69,6 +70,17 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
             _ = jsonSerializerSettings ?? throw new ArgumentNullException(nameof(jsonSerializerSettings));
 
             TResponse DeserializeStreamFunction(Stream stream) => stream.FromJson<TResponse>(jsonSerializerSettings);
+            return Json(DeserializeStreamFunction);
+        }
+
+        public new IJsonQueryResponse<TResponse> Json<TResponse>(JsonSerializerOptions jsonSerializerOptions)
+            where TResponse : class
+        {
+            _ = jsonSerializerOptions ?? throw new ArgumentNullException(nameof(jsonSerializerOptions));
+
+            TResponse DeserializeStreamFunction(Stream stream) => stream.FromJsonAsync<TResponse>(jsonSerializerOptions)
+                                                                        .GetAwaiter()
+                                                                        .GetResult();
             return Json(DeserializeStreamFunction);
         }
 

@@ -27,7 +27,6 @@ namespace CoreSharp.HttpClient.FluentApi.Examples
 
                 //GET /albums and map to IEnumerable 
                 var albums = await client.Request()
-                                         .AcceptJson()
                                          .Route("albums")
                                          .Get()
                                          .Json<IEnumerable<Album>>()
@@ -53,7 +52,7 @@ namespace CoreSharp.HttpClient.FluentApi.Examples
                     var posts = await client.Request()
                                             .Route("posts")
                                             .Get()
-                                            .To<Post[]>()
+                                            .Json<Post[]>()
                                             .Cache(TimeSpan.FromMinutes(5))
                                             .SendAsync();
                 }
@@ -89,9 +88,9 @@ namespace CoreSharp.HttpClient.FluentApi.Examples
             //Http request specific exception 
             catch (HttpResponseException ex)
             {
-                var statusCode = ex.ResponseStatusCode;
                 var method = ex.RequestMethod;
                 var url = ex.RequestUrl;
+                var statusCode = ex.ResponseStatusCode;
                 var status = ex.ResponseStatus;
                 var content = ex.ResponseContent;
                 var summary = ex.ToString();

@@ -2,12 +2,13 @@
 using CoreSharp.HttpClient.FluentApi.Contracts;
 using CoreSharp.HttpClient.FluentApi.Utilities;
 using CoreSharp.Models.Newtonsoft.Settings;
-using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using JsonNet = Newtonsoft.Json;
+using TextJson = System.Text.Json;
 
 namespace CoreSharp.HttpClient.FluentApi.Concrete
 {
@@ -41,7 +42,7 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
             where TResponse : class
             => Json<TResponse>(DefaultJsonSettings.Instance);
 
-        public IJsonResponse<TResponse> Json<TResponse>(JsonSerializerSettings jsonSerializerSettings)
+        public IJsonResponse<TResponse> Json<TResponse>(JsonNet.JsonSerializerSettings jsonSerializerSettings)
             where TResponse : class
         {
             _ = jsonSerializerSettings ?? throw new ArgumentNullException(nameof(jsonSerializerSettings));
@@ -50,12 +51,23 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
             return Json(DeserializeStreamFunction);
         }
 
-        public IJsonResponse<TResponse> Json<TResponse>(Func<string, TResponse> deserializeStreamFunction)
+        public IJsonResponse<TResponse> Json<TResponse>(TextJson.JsonSerializerOptions jsonSerializerOptions)
+            where TResponse : class
+        {
+            _ = jsonSerializerOptions ?? throw new ArgumentNullException(nameof(jsonSerializerOptions));
+
+            TResponse DeserializeStreamFunction(Stream stream) => stream.FromJsonAsync<TResponse>(jsonSerializerOptions)
+                                                                        .GetAwaiter()
+                                                                        .GetResult();
+            return Json(DeserializeStreamFunction);
+        }
+
+        public IJsonResponse<TResponse> Json<TResponse>(Func<string, TResponse> deserializeStringFunction)
              where TResponse : class
         {
-            _ = deserializeStreamFunction ?? throw new ArgumentNullException(nameof(deserializeStreamFunction));
+            _ = deserializeStringFunction ?? throw new ArgumentNullException(nameof(deserializeStringFunction));
 
-            return new JsonResponse<TResponse>(this, deserializeStreamFunction);
+            return new JsonResponse<TResponse>(this, deserializeStringFunction);
         }
 
         public IJsonResponse<TResponse> Json<TResponse>(Func<Stream, TResponse> deserializeStringFunction)
