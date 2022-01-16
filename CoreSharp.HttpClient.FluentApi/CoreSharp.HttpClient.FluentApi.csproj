@@ -10,14 +10,13 @@
         <RepositoryUrl>CoreSharp.HttpClient.FluentApi</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>Http, Web, Rest, Client, Api, Request, Fluent</PackageTags>
-        <PackageReleaseNotes>-DelegateHandlers, Added `HttpResponseErrorHandler`.
--Updated packages.</PackageReleaseNotes>
+        <PackageReleaseNotes>-Code clean-up.</PackageReleaseNotes>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <PackageIcon>icon.png</PackageIcon>
         <PackageIconUrl />
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>1.8.5</Version>
+        <Version>1.8.6</Version>
         <AssemblyVersion>1.0.0.0</AssemblyVersion>
         <FileVersion>1.0.0.0</FileVersion>
     </PropertyGroup>
@@ -39,7 +38,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="CoreSharp" Version="1.7.1" />
+        <PackageReference Include="CoreSharp" Version="1.8.0" />
         <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
     </ItemGroup>
 

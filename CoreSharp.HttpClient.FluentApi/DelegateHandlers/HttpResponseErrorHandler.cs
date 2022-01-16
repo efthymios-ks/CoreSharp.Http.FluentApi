@@ -1,6 +1,7 @@
 ﻿using CoreSharp.Models.Exceptions;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,18 +23,24 @@ namespace CoreSharp.HttpClient.FluentApi.DelegateHandlers
         {
             var response = await base.SendAsync(request, cancellationToken);
 
-            if (!response.IsSuccessStatusCode)
-            {
-                //To allow rewind 
-                await response.Content.LoadIntoBufferAsync();
-                var exception = await HttpResponseException.CreateAsync(response);
-                if (_options.HandleError is not null)
-                    _options.HandleError(exception);
-                if (_options.RethrowError)
-                    throw exception;
-            }
+            if (response.IsSuccessStatusCode)
+                return response;
 
-            return response;
+            //Allow rewind 
+            await response.Content.LoadIntoBufferAsync();
+
+            //Create exception 
+            var exception = await HttpResponseException.CreateAsync(response);
+            response.Dispose();
+
+            //Handle exception 
+            _options.HandleError(exception);
+
+            //Return "204 NoContent"
+            return new(HttpStatusCode.NoContent)
+            {
+                RequestMessage = request
+            };
         }
     }
 }
