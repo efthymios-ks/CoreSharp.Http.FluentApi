@@ -18,27 +18,16 @@
 		<PackageIcon>icon.png</PackageIcon>
 		<PackageIconUrl />
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>1.8.7</Version>
+		<Version>1.8.8</Version>
 		<AssemblyVersion>1.0.0.0</AssemblyVersion>
 		<FileVersion>1.0.0.0</FileVersion>
 	</PropertyGroup>
 
 	<ItemGroup Label="Package references">
-		<PackageReference Include="CoreSharp" Version="1.8.9">
-			<PrivateAssets>true</PrivateAssets>
-		</PackageReference>
-
-		<PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="6.0.0">
-			<PrivateAssets>true</PrivateAssets>
-		</PackageReference>
-
-		<PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0">
-			<PrivateAssets>all</PrivateAssets>
-		</PackageReference>
-
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.1">
-			<PrivateAssets>true</PrivateAssets>
-		</PackageReference>
+		<PackageReference Include="CoreSharp" Version="1.8.10" />
+		<PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" PrivateAssets="All" />
 	</ItemGroup>
 
 	<ItemGroup Label="Assets">
