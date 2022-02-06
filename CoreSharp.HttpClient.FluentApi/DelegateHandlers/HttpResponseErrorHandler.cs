@@ -1,4 +1,4 @@
-﻿using CoreSharp.Models.Exceptions;
+﻿using CoreSharp.HttpClient.FluentApi.Exceptions;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
 using System.Net;

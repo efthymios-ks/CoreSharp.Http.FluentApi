@@ -1,7 +1,6 @@
-﻿using CoreSharp.Extensions;
-using CoreSharp.HttpClient.FluentApi.Domain.Models;
+﻿using CoreSharp.HttpClient.FluentApi.Domain.Models;
+using CoreSharp.HttpClient.FluentApi.Exceptions;
 using CoreSharp.HttpClient.FluentApi.Extensions;
-using CoreSharp.Models.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -20,7 +19,7 @@ namespace CoreSharp.HttpClient.FluentApi.Examples
             try
             {
                 //"Inject" IHttpClientFactory
-                var factory = services.GetService<IHttpClientFactory>();
+                var factory = services.GetService(typeof(IHttpClientFactory)) as IHttpClientFactory;
 
                 //Create your HttpClient 
                 var client = factory.CreateClient("Default");

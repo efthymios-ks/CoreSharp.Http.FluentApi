@@ -1,4 +1,4 @@
-﻿using CoreSharp.Models.Exceptions;
+﻿using CoreSharp.HttpClient.FluentApi.Exceptions;
 using System;
 
 namespace CoreSharp.HttpClient.FluentApi.DelegateHandlers

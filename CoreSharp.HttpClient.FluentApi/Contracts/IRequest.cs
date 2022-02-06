@@ -1,4 +1,5 @@
-﻿using CoreSharp.Models.Exceptions;
+﻿using CoreSharp.Exceptions;
+using CoreSharp.HttpClient.FluentApi.Exceptions;
 using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;

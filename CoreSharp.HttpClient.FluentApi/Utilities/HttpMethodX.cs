@@ -15,7 +15,7 @@ namespace CoreSharp.HttpClient.FluentApi.Utilities
             _ = httpMethod ?? throw new ArgumentNullException(nameof(httpMethod));
 
             var validMethods = new[] { HttpMethod.Get };
-            if (httpMethod.IsIn(validMethods))
+            if (httpMethod.EqualsAny(validMethods))
                 return;
 
             //Throw exception
@@ -29,7 +29,7 @@ namespace CoreSharp.HttpClient.FluentApi.Utilities
             _ = httpMethod ?? throw new ArgumentNullException(nameof(httpMethod));
 
             var validMethods = new[] { HttpMethod.Post, HttpMethod.Put, HttpMethod.Patch };
-            if (httpMethod.IsIn(validMethods))
+            if (httpMethod.EqualsAny(validMethods))
                 return;
 
             //Throw exception
