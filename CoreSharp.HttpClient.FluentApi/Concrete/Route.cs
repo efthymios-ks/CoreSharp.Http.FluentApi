@@ -20,19 +20,27 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         }
 
         //Properties 
-        private IRoute Me => this;
+        private IRoute Me
+            => this;
+
         IRequest IRoute.Request { get; set; }
+
         string IRoute.Route { get; set; }
 
         //Methods 
-        public IQueryMethod Get() => new QueryMethod(this, HttpMethod.Get);
+        public IQueryMethod Get()
+            => new QueryMethod(this, HttpMethod.Get);
 
-        public IContentMethod Post() => new ContentMethod(this, HttpMethod.Post);
+        public IContentMethod Post()
+            => new ContentMethod(this, HttpMethod.Post);
 
-        public IContentMethod Put() => new ContentMethod(this, HttpMethod.Put);
+        public IContentMethod Put()
+            => new ContentMethod(this, HttpMethod.Put);
 
-        public IContentMethod Patch() => new ContentMethod(this, HttpMethod.Patch);
+        public IContentMethod Patch()
+            => new ContentMethod(this, HttpMethod.Patch);
 
-        public IMethod Delete() => new Method(this, HttpMethod.Delete);
+        public IMethod Delete()
+            => new Method(this, HttpMethod.Delete);
     }
 }

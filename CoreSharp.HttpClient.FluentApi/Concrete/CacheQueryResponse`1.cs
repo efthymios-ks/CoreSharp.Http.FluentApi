@@ -22,7 +22,9 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         }
 
         //Properties 
-        private ICacheQueryResponse<TResponse> Me => this;
+        private ICacheQueryResponse<TResponse> Me
+            => this;
+
         TimeSpan? ICacheQueryResponse<TResponse>.Duration { get; set; }
 
         //Methods 

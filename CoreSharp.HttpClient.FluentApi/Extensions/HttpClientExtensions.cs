@@ -1,6 +1,7 @@
 ﻿using CoreSharp.HttpClient.FluentApi.Concrete;
 using CoreSharp.HttpClient.FluentApi.Contracts;
 using System;
+using Http = System.Net.Http;
 
 namespace CoreSharp.HttpClient.FluentApi.Extensions
 {
@@ -13,7 +14,7 @@ namespace CoreSharp.HttpClient.FluentApi.Extensions
         /// <summary>
         /// Start a chained configuration for a new http request.
         /// </summary>
-        public static IRequest Request(this System.Net.Http.HttpClient httpClient)
+        public static IRequest Request(this Http.HttpClient httpClient)
         {
             _ = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 

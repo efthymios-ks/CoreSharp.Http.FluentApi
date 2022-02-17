@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Mime;
 using static System.FormattableString;
+using Http = System.Net.Http;
 
 namespace CoreSharp.HttpClient.FluentApi.Concrete
 {
@@ -14,15 +15,21 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
     internal class Request : IRequest
     {
         //Constructors 
-        public Request(System.Net.Http.HttpClient httpClient)
+        public Request(Http.HttpClient httpClient)
             => Me.HttpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
         //Properties 
-        private IRequest Me => this;
-        System.Net.Http.HttpClient IRequest.HttpClient { get; set; }
+        private IRequest Me
+            => this;
+
+        Http.HttpClient IRequest.HttpClient { get; set; }
+
         bool IRequest.ThrowOnError { get; set; } = true;
+
         HttpCompletionOption IRequest.CompletionOptionInternal { get; set; } = HttpCompletionOption.ResponseHeadersRead;
+
         IDictionary<string, string> IRequest.HeadersInternal { get; } = new Dictionary<string, string>();
+
         TimeSpan? IRequest.TimeoutInternal { get; set; }
 
         //Methods 
@@ -107,7 +114,7 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         }
 
         public void Deconstruct(
-            out System.Net.Http.HttpClient httpClient,
+            out Http.HttpClient httpClient,
             out IDictionary<string, string> headers,
             out HttpCompletionOption httpCompletionOption,
             out TimeSpan timeout,

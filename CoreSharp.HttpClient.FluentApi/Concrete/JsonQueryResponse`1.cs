@@ -20,13 +20,17 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
             : this(queryMethod)
             => Me.DeserializeStringFunction = deserializeStringFunction ?? throw new ArgumentNullException(nameof(deserializeStringFunction));
 
-        public JsonQueryResponse(IQueryMethod queryMethod) : base(queryMethod)
+        public JsonQueryResponse(IQueryMethod queryMethod)
+            : base(queryMethod)
         {
         }
 
         //Properties 
-        private IJsonQueryResponse<TResponse> Me => this;
+        private IJsonQueryResponse<TResponse> Me
+            => this;
+
         Func<Stream, TResponse> IJsonResponse<TResponse>.DeserializeStreamFunction { get; set; }
+
         Func<string, TResponse> IJsonResponse<TResponse>.DeserializeStringFunction { get; set; }
 
         //Methods 

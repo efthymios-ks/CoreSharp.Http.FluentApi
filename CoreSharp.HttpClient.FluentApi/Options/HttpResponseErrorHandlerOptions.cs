@@ -1,7 +1,7 @@
 ﻿using CoreSharp.HttpClient.FluentApi.Exceptions;
 using System;
 
-namespace CoreSharp.HttpClient.FluentApi.DelegateHandlers
+namespace CoreSharp.HttpClient.FluentApi.Options
 {
     public class HttpResponseErrorHandlerOptions
     {

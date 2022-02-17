@@ -10,7 +10,8 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
         where TResponse : class
     {
         //Constructors
-        public GenericResponse(IMethod method) : base(method)
+        public GenericResponse(IMethod method)
+            : base(method)
         {
         }
 

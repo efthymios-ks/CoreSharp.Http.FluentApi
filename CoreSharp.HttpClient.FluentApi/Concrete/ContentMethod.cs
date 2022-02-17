@@ -21,11 +21,14 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         private const int DefaultBufferSize = 4096;
 
         //Constructors 
-        public ContentMethod(IRoute route, HttpMethod httpMethod) : base(route, httpMethod)
+        public ContentMethod(IRoute route, HttpMethod httpMethod)
+            : base(route, httpMethod)
             => HttpMethodX.ValidateContentMethod(httpMethod);
 
         //Properties 
-        private IContentMethod Me => this;
+        private IContentMethod Me
+            => this;
+
         HttpContent IContentMethod.HttpContent { get; set; }
 
         //Methods 
@@ -39,7 +42,7 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         {
             _ = stream ?? throw new ArgumentNullException(nameof(stream));
 
-            var content = ToStreamContentJson(stream);
+            var content = ToJsonStreamContent(stream);
             Content(content);
             return this;
         }
@@ -48,7 +51,7 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         {
             _ = entity ?? throw new ArgumentNullException(nameof(entity));
 
-            var content = ToStreamContentJson(entity);
+            var content = ToJsonStreamContent(entity);
             Content(content);
             return this;
         }
@@ -60,7 +63,7 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         {
             _ = stream ?? throw new ArgumentNullException(nameof(stream));
 
-            var content = ToStreamContentXml(stream);
+            var content = ToXmlStreamContent(stream);
             Content(content);
             return this;
         }
@@ -90,7 +93,7 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         /// <summary>
         /// Convert object to json <see cref="Stream"/>.
         /// </summary>
-        private static Stream ToStreamJson(object entity, int bufferSize = DefaultBufferSize)
+        private static Stream ToJsonStream(object entity, int bufferSize = DefaultBufferSize)
         {
             _ = entity ?? throw new ArgumentNullException(nameof(entity));
 
@@ -112,12 +115,12 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         /// to <see cref="StreamContent" />
         /// with <see cref="MediaTypeNames.Application.Json"/>.
         /// </summary>
-        private static StreamContent ToStreamContentJson(object entity, int bufferSize = DefaultBufferSize)
+        private static StreamContent ToJsonStreamContent(object entity, int bufferSize = DefaultBufferSize)
         {
             _ = entity ?? throw new ArgumentNullException(nameof(entity));
 
-            var stream = ToStreamJson(entity);
-            return ToStreamContent(stream, MediaTypeNames.Application.Json, bufferSize);
+            var stream = ToJsonStream(entity);
+            return ToJsonStreamContent(stream, bufferSize);
         }
 
         /// <summary>
@@ -125,7 +128,7 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         /// from given <see cref="Stream"/>
         /// with <see cref="MediaTypeNames.Application.Json"/>.
         /// </summary>
-        private static StreamContent ToStreamContentJson(Stream stream, int bufferSize = DefaultBufferSize)
+        private static StreamContent ToJsonStreamContent(Stream stream, int bufferSize = DefaultBufferSize)
         {
             _ = stream ?? throw new ArgumentNullException(nameof(stream));
 
@@ -137,7 +140,7 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         /// from given <see cref="Stream"/>
         /// with <see cref="MediaTypeNames.Application.Xml"/>.
         /// </summary>
-        private static StreamContent ToStreamContentXml(Stream stream, int bufferSize = DefaultBufferSize)
+        private static StreamContent ToXmlStreamContent(Stream stream, int bufferSize = DefaultBufferSize)
         {
             _ = stream ?? throw new ArgumentNullException(nameof(stream));
 

@@ -1,4 +1,5 @@
 ﻿using CoreSharp.HttpClient.FluentApi.Exceptions;
+using CoreSharp.HttpClient.FluentApi.Options;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
 using System.Net;

@@ -17,11 +17,14 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
     internal class QueryMethod : Method, IQueryMethod
     {
         //Constructors 
-        public QueryMethod(IRoute route, HttpMethod httpMethod) : base(route, httpMethod)
+        public QueryMethod(IRoute route, HttpMethod httpMethod)
+            : base(route, httpMethod)
             => HttpMethodX.ValidateQueryMethod(httpMethod);
 
         //Properties 
-        private IQueryMethod Me => this;
+        private IQueryMethod Me
+            => this;
+
         IDictionary<string, object> IQueryMethod.QueryParameters { get; } = new Dictionary<string, object>();
 
         //Methods 

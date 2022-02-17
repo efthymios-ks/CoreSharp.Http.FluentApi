@@ -47,8 +47,7 @@ namespace CoreSharp.HttpClient.FluentApi.Utilities
             };
             foreach (var (key, value) in headers)
             {
-                if (request.Headers.Contains(key))
-                    request.Headers.Remove(key);
+                request.Headers.Remove(key);
                 request.Headers.Add(key, value);
             }
 

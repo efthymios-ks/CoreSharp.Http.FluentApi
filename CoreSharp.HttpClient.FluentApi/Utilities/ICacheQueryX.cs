@@ -24,7 +24,7 @@ namespace CoreSharp.HttpClient.FluentApi.Utilities
                 throw new ArgumentNullException(nameof(route));
 
             //Prepare caching fields 
-            var memoryCache = Options.MemoryCache;
+            var memoryCache = Settings.MemoryCache;
             var shouldCache = cacheDuration is not null && cacheDuration != TimeSpan.Zero;
             var cacheKey = shouldCache ? $"{route} > {typeof(TResponse).FullName}" : string.Empty;
 

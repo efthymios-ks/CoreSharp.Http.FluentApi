@@ -1,4 +1,4 @@
-﻿using CoreSharp.HttpClient.FluentApi.Domain;
+﻿using CoreSharp.HttpClient.FluentApi.Domain.Constants;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
@@ -14,7 +14,7 @@ namespace CoreSharp.HttpClient.FluentApi.Examples
         {
             var services = new ServiceCollection();
 
-            services.AddHttpClient("Default", http => http.BaseAddress = new Uri(Options.EndpointUrl));
+            services.AddHttpClient("Default", http => http.BaseAddress = new Uri(Endpoints.EndpointUrl));
 
             return services.BuildServiceProvider();
         }

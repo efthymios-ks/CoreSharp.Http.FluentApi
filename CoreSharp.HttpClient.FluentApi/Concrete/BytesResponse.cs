@@ -9,7 +9,8 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
     public class BytesResponse : Response, IBytesResponse
     {
         //Constructors
-        public BytesResponse(IMethod method) : base(method)
+        public BytesResponse(IMethod method)
+            : base(method)
         {
         }
 

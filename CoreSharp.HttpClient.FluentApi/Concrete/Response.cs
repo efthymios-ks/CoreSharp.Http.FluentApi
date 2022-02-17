@@ -14,7 +14,9 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
             => Me.Method = method ?? throw new ArgumentNullException(nameof(method));
 
         //Properties
-        private IResponse Me => this;
+        private IResponse Me
+            => this;
+
         IMethod IResponse.Method { get; set; }
 
         //Methods 

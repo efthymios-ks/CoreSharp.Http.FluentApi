@@ -8,7 +8,8 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
         where TResponse : class
     {
         //Constructors
-        public GenericQueryResponse(IQueryMethod queryMethod) : base(queryMethod)
+        public GenericQueryResponse(IQueryMethod queryMethod)
+            : base(queryMethod)
         {
         }
 

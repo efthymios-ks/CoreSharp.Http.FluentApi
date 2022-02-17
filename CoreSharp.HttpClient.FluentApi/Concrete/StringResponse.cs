@@ -9,7 +9,8 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
     public class StringResponse : Response, IStringResponse
     {
         //Constructors
-        public StringResponse(IMethod method) : base(method)
+        public StringResponse(IMethod method)
+            : base(method)
         {
         }
 

@@ -20,13 +20,17 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
             : this(method)
             => Me.DeserializeStringFunction = deserializeStringFunction ?? throw new ArgumentNullException(nameof(deserializeStringFunction));
 
-        public XmlResponse(IMethod method) : base(method)
+        public XmlResponse(IMethod method)
+            : base(method)
         {
         }
 
         //Properties 
-        private IXmlResponse<TResponse> Me => this;
+        private IXmlResponse<TResponse> Me
+            => this;
+
         Func<Stream, TResponse> IXmlResponse<TResponse>.DeserializeStreamFunction { get; set; }
+
         Func<string, TResponse> IXmlResponse<TResponse>.DeserializeStringFunction { get; set; }
 
         //Methods 

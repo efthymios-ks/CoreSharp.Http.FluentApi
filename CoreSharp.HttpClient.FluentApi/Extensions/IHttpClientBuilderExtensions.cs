@@ -1,4 +1,5 @@
 ﻿using CoreSharp.HttpClient.FluentApi.DelegateHandlers;
+using CoreSharp.HttpClient.FluentApi.Options;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;

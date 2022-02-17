@@ -26,8 +26,11 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         }
 
         //Properties 
-        private IMethod Me => this;
+        private IMethod Me
+            => this;
+
         IRoute IMethod.Route { get; set; }
+
         HttpMethod IMethod.HttpMethod { get; set; }
 
         //Methods 
@@ -47,7 +50,8 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         {
             _ = jsonSerializerSettings ?? throw new ArgumentNullException(nameof(jsonSerializerSettings));
 
-            TResponse DeserializeStreamFunction(Stream stream) => stream.FromJson<TResponse>(jsonSerializerSettings);
+            TResponse DeserializeStreamFunction(Stream stream)
+                => stream.FromJson<TResponse>(jsonSerializerSettings);
             return Json(DeserializeStreamFunction);
         }
 
@@ -56,9 +60,10 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         {
             _ = jsonSerializerOptions ?? throw new ArgumentNullException(nameof(jsonSerializerOptions));
 
-            TResponse DeserializeStreamFunction(Stream stream) => stream.FromJsonAsync<TResponse>(jsonSerializerOptions)
-                                                                        .GetAwaiter()
-                                                                        .GetResult();
+            TResponse DeserializeStreamFunction(Stream stream)
+                => stream.FromJsonAsync<TResponse>(jsonSerializerOptions)
+                         .GetAwaiter()
+                         .GetResult();
             return Json(DeserializeStreamFunction);
         }
 
@@ -81,7 +86,8 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
         public IXmlResponse<TResponse> Xml<TResponse>()
             where TResponse : class
         {
-            static TResponse DeserializeStringFunction(string xml) => xml.FromXml<TResponse>();
+            static TResponse DeserializeStringFunction(string xml)
+                => xml.FromXml<TResponse>();
             return Xml(DeserializeStringFunction);
         }
 
