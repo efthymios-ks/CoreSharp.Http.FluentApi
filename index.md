@@ -4,9 +4,9 @@
 `CoreSharp.HttpClient.FluentApi` allows fluent http request building.  
 
 ## Features 
-- Automatic json conversions using `Json.NET`. 
+- Automatic json conversions using `Text.Json` or `Json.NET`. 
 - Optional in-memory response caching for GET requests. 
-- Specific and more meaningful exceptions (HttpResponseException, TimeoutException). 
+- Specific and more meaningful exceptions (`HttpResponseException`, `TimeoutException`). 
 - Use of `Stream` where applicable instead of eager converting entities to string. **[Optimizes memory consumption]** 
 - Use of `HttpCompletionOption.ResponseHeadersRead` by default to all requests. **[Optimizes memory consumption and response times]** 
 - Easily expandable. 
@@ -19,15 +19,15 @@ Building the request involves several configurable steps.
 From initiating the request builder the request to sending the request. 
 ```
 HttpClient
-└── IRequest (Headers, ThrowOnError)
+└── IRequest (Headers, ThrowOnError, Timeout) 
     └── IRoute (Route) 
         └── IMethod (GET, POST, PUT, PATCH, DELETE) 
             |   └── GET 
             |   |   └── IQueryMethod (QueryParameters) 
-            |   └── POST, PUT, PATCH  
+            |   └── POST, PUT, PATCH 
             |       └── IContentResponse (Content) 
             └── IGenericResponse (Cache) 
-                └── IJsonResponse  
+                └── IJsonResponse 
                 └── IXmlResponse 
 ```
 
@@ -59,26 +59,26 @@ Include `using CoreSharp.HttpClient.FluentApi.Extensions;`
 ```
 ```
     var responseAsBytes = await httpClient.Request()
-                                           .Route("albums", 1)
-                                           .Get()
-                                           .Bytes()
-                                           .SendAsync();
+                                          .Route("albums", 1)
+                                          .Get()
+                                          .Bytes()
+                                          .SendAsync();
 ```
 ```
     var albums = await httpClient.Request()
                                  .Route("albums")
                                  .Get()
-                                 // Check Content-Type response header
+                                 // Check Content-Type response header 
                                  .To<IEnumerable<Album>()
                                  .SendAsync();
 ```
 ```
     var albums = await httpClient.Request()
-                                  .Route("albums")
-                                  .Get()
-                                  // Forced json deserialization 
-                                  .Json<IEnumerable<Album>()
-                                  .SendAsync();
+                                 .Route("albums")
+                                 .Get()
+                                 // Forced json deserialization 
+                                 .Json<IEnumerable<Album>()
+                                 .SendAsync();
 ```
 ```
     var albums = await httpClient.Request()
@@ -168,7 +168,7 @@ Include `using CoreSharp.HttpClient.FluentApi.Extensions;`
                     .SendAsync();
 ```
 
-### Add header AUTHORIZATION
+### Add header AUTHORIZATION 
 ```
     await httpClient.Request()
                     // Authorization > Bearer accessTokenValue 
@@ -182,21 +182,23 @@ Include `using CoreSharp.HttpClient.FluentApi.Extensions;`
 ```
     await httpClient.Request()
                     // /albums/1 
-                    .Route("albums", 1)
-                    .Get()
-                    .SendAsync();
-```
-```
-    await httpClient.Request()
-                    // /albums/1 
                     .Route("albums/1")
                     .Get()
                     .SendAsync();
 ```
 ```
+    var id = 1;
     await httpClient.Request()
                     // /albums/1 
-                    .Route($"albums/{1}")
+                    .Route("albums", id)
+                    .Get()
+                    .SendAsync();
+```
+``` 
+    var id = 1;
+    await httpClient.Request()
+                    // /albums/1 
+                    .Route($"albums/{id}")
                     .Get()
                     .SendAsync();
 ```
@@ -247,23 +249,34 @@ Include `using CoreSharp.HttpClient.FluentApi.Extensions;`
 
 ### Content (POST, PUT, PATCH) 
 ```
+    HttpContent content = GetHttpContent(...);
     await httpClient.Request()
                     .Route("albums")
                     .Post()
-                    .JsonContent(new { Id = 1, UserId = 1, Title = "My Title" })
+                    .Content(content)
                     .SendAsync();
 ```
 ```
+    var dynamicContent = new { Id = 1, UserId = 1, Title = "My Title" };
     await httpClient.Request()
                     .Route("albums")
                     .Post()
-                    .JsonContent(new Album { Id = 1, UserId = 1, Title = "My Title" })
+                    .JsonContent(dynamicContent)
                     .SendAsync();
 ```
 ```
+    var album = new Album { Id = 1, UserId = 1, Title = "My Title" };
     await httpClient.Request()
                     .Route("albums")
                     .Post()
-                    .JsonContent(@"{ ""Id"" = 1, ""UserId"" = 1, ""Title"" = ""My Title"" }")
+                    .JsonContent(album)
+                    .SendAsync();
+```
+```
+    var stringContent = @"{ ""Id"" = 1, ""UserId"" = 1, ""Title"" = ""My Title"" }";
+    await httpClient.Request()
+                    .Route("albums")
+                    .Post()
+                    .JsonContent(stringContent)
                     .SendAsync();
 ```
