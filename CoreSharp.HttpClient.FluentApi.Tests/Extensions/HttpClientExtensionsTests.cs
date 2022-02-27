@@ -9,6 +9,7 @@ namespace CoreSharp.HttpClient.FluentApi.Extensions.Tests
     [TestFixture]
     public class HttpClientExtensionsTests
     {
+        //Methods
         [Test]
         public void Request_ClienItNull_ThrowArgumentNullException()
         {

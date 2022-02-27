@@ -27,10 +27,10 @@ namespace CoreSharp.HttpClient.FluentApi.Extensions.Tests
         [Test]
         [TestCase(HttpStatusCode.OK)]
         [TestCase(HttpStatusCode.Created)]
-        public async Task EnsureSuccessAsync_StatusIsOk_Return(HttpStatusCode code)
+        public async Task EnsureSuccessAsync_StatusIsOk_Return(HttpStatusCode httpStatusCode)
         {
             //Arrange
-            using var response = new HttpResponseMessage(code);
+            using var response = new HttpResponseMessage(httpStatusCode);
 
             //Act
             Func<Task> task = () => response.EnsureSuccessAsync();
@@ -44,16 +44,29 @@ namespace CoreSharp.HttpClient.FluentApi.Extensions.Tests
         [TestCase(HttpStatusCode.Unauthorized)]
         [TestCase(HttpStatusCode.InternalServerError)]
         [TestCase(HttpStatusCode.NotImplemented)]
-        public async Task EnsureSuccessAsync_StatusHasError_ThrowHttpResponseException(HttpStatusCode code)
+        public async Task EnsureSuccessAsync_StatusHasError_ThrowHttpResponseException(HttpStatusCode httpStatusCode)
         {
             //Arrange
-            using var response = new HttpResponseMessage(code);
+            var method = HttpMethod.Get;
+            const string requestUrl = "http://www.tests.com/api/";
+            const string content = "123";
+            using var request = new HttpRequestMessage(method, requestUrl);
+            using var response = new HttpResponseMessage(httpStatusCode)
+            {
+                RequestMessage = request,
+                Content = new StringContent(content)
+            };
 
             //Act
             Func<Task> task = () => response.EnsureSuccessAsync();
 
             //Assert 
-            await task.Should().ThrowAsync<HttpResponseException>();
+            var assertion = await task.Should().ThrowAsync<HttpResponseException>();
+            var exception = assertion.Which;
+            exception.RequestUrl.Should().Be(requestUrl);
+            exception.RequestMethod.Should().Contain(method.Method);
+            exception.ResponseStatusCode.Should().Be(httpStatusCode);
+            exception.ResponseContent.Should().Be(content);
         }
     }
 }

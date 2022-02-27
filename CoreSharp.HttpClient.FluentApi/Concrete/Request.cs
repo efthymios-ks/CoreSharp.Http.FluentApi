@@ -45,9 +45,9 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
 
         public IRequest Header(string key, string value)
         {
-            if (string.IsNullOrWhiteSpace(nameof(key)))
+            if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentNullException(nameof(key));
-            if (string.IsNullOrWhiteSpace(nameof(value)))
+            if (string.IsNullOrWhiteSpace(value))
                 throw new ArgumentNullException(nameof(value));
 
             Me.HeadersInternal.AddOrUpdate(key, value);
