@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace CoreSharp.HttpClient.FluentApi.Concrete
 {
     /// <inheritdoc cref="IContentMethod"/>
-    internal class ContentMethod : Method, IContentMethod
+    internal class ContentMethod : MethodWithResponse, IContentMethod
     {
         //Fields
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

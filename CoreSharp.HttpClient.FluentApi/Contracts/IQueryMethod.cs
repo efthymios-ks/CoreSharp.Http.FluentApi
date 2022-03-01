@@ -6,7 +6,7 @@ using TextJson = System.Text.Json;
 
 namespace CoreSharp.HttpClient.FluentApi.Contracts
 {
-    public interface IQueryMethod : IMethod
+    public interface IQueryMethod : IMethodWithResponse
     {
         //Properties 
         internal IDictionary<string, object> QueryParameters { get; }
@@ -24,7 +24,7 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
         /// </summary>
         public IQueryMethod Query(string key, object value);
 
-        /// <inheritdoc cref="IMethod.To{TResponse}" />
+        /// <inheritdoc cref="IMethodWithResponse.To{TResponse}" />
         public new IGenericQueryResponse<TResponse> To<TResponse>()
             where TResponse : class;
 
@@ -44,7 +44,7 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
         public new IJsonQueryResponse<TResponse> Json<TResponse>(Func<string, TResponse> deserializeStringFunction)
             where TResponse : class;
 
-        /// <inheritdoc cref="IMethod.Json{TResponse}(Func{Stream, TResponse})" />
+        /// <inheritdoc cref="IMethodWithResponse.Json{TResponse}(Func{Stream, TResponse})" />
         public new IJsonQueryResponse<TResponse> Json<TResponse>(Func<Stream, TResponse> deserializeStreamFunction)
             where TResponse : class;
 
@@ -56,7 +56,7 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
         public new IXmlQueryResponse<TResponse> Xml<TResponse>(Func<Stream, TResponse> deserializeStreamFunction)
             where TResponse : class;
 
-        /// <inheritdoc cref="IMethod.Xml{TResponse}(Func{string, TResponse})" />
+        /// <inheritdoc cref="IMethodWithResponse.Xml{TResponse}(Func{string, TResponse})" />
         public new IXmlQueryResponse<TResponse> Xml<TResponse>(Func<string, TResponse> deserializeStringFunction)
             where TResponse : class;
     }

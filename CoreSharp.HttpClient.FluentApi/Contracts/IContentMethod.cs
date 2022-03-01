@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CoreSharp.HttpClient.FluentApi.Contracts
 {
-    public interface IContentMethod : IMethod
+    public interface IContentMethod : IMethodWithResponse
     {
         //Properties
         internal HttpContent HttpContent { get; set; }

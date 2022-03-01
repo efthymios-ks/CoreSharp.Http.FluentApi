@@ -32,7 +32,6 @@ namespace CoreSharp.HttpClient.FluentApi.Tests.Contracts
 
             //Assert
             result.Should().NotBeNull();
-            result.Should().BeAssignableTo<IMethod>();
             result.Should().BeAssignableTo<IQueryMethod>();
         }
 
@@ -49,7 +48,7 @@ namespace CoreSharp.HttpClient.FluentApi.Tests.Contracts
         }
 
         [Test]
-        public void Post_WhenCalled_ReturnIQueryMethod()
+        public void Post_WhenCalled_ReturnIContentMethod()
         {
             //Act
             var result = Client.Request()
@@ -58,7 +57,6 @@ namespace CoreSharp.HttpClient.FluentApi.Tests.Contracts
 
             //Assert
             result.Should().NotBeNull();
-            result.Should().BeAssignableTo<IMethod>();
             result.Should().BeAssignableTo<IContentMethod>();
         }
 
@@ -75,7 +73,7 @@ namespace CoreSharp.HttpClient.FluentApi.Tests.Contracts
         }
 
         [Test]
-        public void Put_WhenCalled_ReturnIQueryMethod()
+        public void Put_WhenCalled_ReturnIContentMethod()
         {
             //Act
             var result = Client.Request()
@@ -84,7 +82,6 @@ namespace CoreSharp.HttpClient.FluentApi.Tests.Contracts
 
             //Assert
             result.Should().NotBeNull();
-            result.Should().BeAssignableTo<IMethod>();
             result.Should().BeAssignableTo<IContentMethod>();
         }
 
@@ -101,7 +98,7 @@ namespace CoreSharp.HttpClient.FluentApi.Tests.Contracts
         }
 
         [Test]
-        public void Patch_WhenCalled_ReturnIQueryMethod()
+        public void Patch_WhenCalled_ReturnIContentMethod()
         {
             //Act
             var result = Client.Request()
@@ -110,7 +107,6 @@ namespace CoreSharp.HttpClient.FluentApi.Tests.Contracts
 
             //Assert
             result.Should().NotBeNull();
-            result.Should().BeAssignableTo<IMethod>();
             result.Should().BeAssignableTo<IContentMethod>();
         }
 
@@ -127,7 +123,7 @@ namespace CoreSharp.HttpClient.FluentApi.Tests.Contracts
         }
 
         [Test]
-        public void Delete_WhenCalled_ReturnIQueryMethod()
+        public void Delete_WhenCalled_ReturnIMethod()
         {
             //Act
             var result = Client.Request()
