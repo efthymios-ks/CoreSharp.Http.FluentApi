@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace CoreSharp.HttpClient.FluentApi.Concrete
 {
     /// <inheritdoc cref="IStreamResponse" />
-    public class StreamResponse : Response, IStreamResponse
+    internal class StreamResponse : Response, IStreamResponse
     {
         //Constructors
         public StreamResponse(IMethod method) : base(method)

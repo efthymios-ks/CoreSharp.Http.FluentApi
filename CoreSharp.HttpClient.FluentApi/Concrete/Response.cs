@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace CoreSharp.HttpClient.FluentApi.Concrete
 {
     /// <inheritdoc cref="IResponse" />
-    public class Response : IResponse
+    internal abstract class Response : IResponse
     {
         //Constructors 
         protected Response(IMethod method)

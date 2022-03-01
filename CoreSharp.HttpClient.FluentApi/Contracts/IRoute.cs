@@ -11,27 +11,30 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
 
         //Methods 
         /// <summary>
-        /// Set request to <see cref="HttpMethod.Get"/>.
+        /// The HTTP GET method requests a representation of the specified resource. <br/>
+        /// Requests using GET should only be used to request data (they shouldn't include data).
         /// </summary>
         IQueryMethod Get();
 
         /// <summary>
-        /// Set request to <see cref="HttpMethod.Post"/>.
+        /// The HTTP POST method sends data to the server. <br/>
+        /// The type of the body of the request is indicated by the Content-Type header.
         /// </summary>
         IContentMethod Post();
 
         /// <summary>
-        /// Set request to <see cref="HttpMethod.Put"/>.
+        /// The HTTP PUT request method creates a new resource or replaces a
+        /// representation of the target resource with the request payload.
         /// </summary>
         IContentMethod Put();
 
         /// <summary>
-        /// Set request to <see cref="HttpMethod.Patch"/>.
+        /// The PATCH method applies partial modifications to a resource.
         /// </summary>
         IContentMethod Patch();
 
         /// <summary>
-        /// Set request to <see cref="HttpMethod.Delete"/>.
+        /// The DELETE method deletes the specified resource.
         /// </summary>
         IMethod Delete();
     }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace CoreSharp.HttpClient.FluentApi.Concrete
 {
     /// <inheritdoc cref="IStringResponse" />
-    public class StringResponse : Response, IStringResponse
+    internal class StringResponse : Response, IStringResponse
     {
         //Constructors
         public StringResponse(IMethod method)

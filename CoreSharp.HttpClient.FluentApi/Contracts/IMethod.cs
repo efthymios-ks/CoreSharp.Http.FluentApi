@@ -68,13 +68,20 @@ namespace CoreSharp.HttpClient.FluentApi.Contracts
         IXmlResponse<TResponse> Xml<TResponse>(Func<string, TResponse> deserializeStringFunction)
             where TResponse : class;
 
-        /// <inheritdoc cref="HttpContent.ReadAsStringAsync(CancellationToken)"/>
+        /// <summary>
+        /// Serialize the HTTP content to a string.
+        /// </summary>
         IStringResponse String();
 
-        /// <inheritdoc cref="HttpContent.ReadAsStreamAsync(CancellationToken)"/>
+        /// <summary>
+        /// Serialize the HTTP content and return a
+        /// stream that represents the content.
+        /// </summary>
         IStreamResponse Stream();
 
-        /// <inheritdoc cref="HttpContent.ReadAsByteArrayAsync(CancellationToken)"/>
+        /// <summary>
+        /// Serialize the HTTP content to a byte array.
+        /// </summary>
         IBytesResponse Bytes();
     }
 }

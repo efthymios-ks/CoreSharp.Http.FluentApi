@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace CoreSharp.HttpClient.FluentApi.Concrete
 {
     /// <inheritdoc cref="IBytesResponse" />
-    public class BytesResponse : Response, IBytesResponse
+    internal class BytesResponse : Response, IBytesResponse
     {
         //Constructors
         public BytesResponse(IMethod method)
