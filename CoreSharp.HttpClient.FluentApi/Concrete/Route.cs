@@ -42,5 +42,14 @@ namespace CoreSharp.HttpClient.FluentApi.Concrete
 
         public IMethod Delete()
             => new Method(this, HttpMethod.Delete);
+
+        public IMethod Head()
+            => new Method(this, HttpMethod.Head);
+
+        public IMethodWithResponse Options()
+            => new MethodWithResponse(this, HttpMethod.Options);
+
+        public IMethod Trace()
+            => new Method(this, HttpMethod.Trace);
     }
 }

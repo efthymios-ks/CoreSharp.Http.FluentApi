@@ -10,16 +10,14 @@
 		<RepositoryUrl>CoreSharp.HttpClient.FluentApi</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>Http, Web, Rest, Client, Api, Request, Fluent</PackageTags>
-		<PackageReleaseNotes>
-			-Code clean-up.
-			-Packages update.
-		</PackageReleaseNotes>
+		<PackageReleaseNotes>-Contracts, IRoute, Added `Head`, `Options` and `Trace` http methods.
+-Added unit tests.</PackageReleaseNotes>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<PackageIcon>icon.png</PackageIcon>
 		<PackageIconUrl />
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>5.0.0</Version>
+		<Version>5.0.1</Version>
 		<AssemblyVersion>1.0.0.0</AssemblyVersion>
 		<FileVersion>1.0.0.0</FileVersion>
 	</PropertyGroup>

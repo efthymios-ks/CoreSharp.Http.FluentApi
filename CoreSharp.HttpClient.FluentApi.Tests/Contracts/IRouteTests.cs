@@ -2,8 +2,12 @@
 using CoreSharp.HttpClient.FluentApi.Extensions;
 using CoreSharp.HttpClient.FluentApi.Tests.Abstracts;
 using FluentAssertions;
+using Moq.Contrib.HttpClient;
 using NUnit.Framework;
 using System;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace CoreSharp.HttpClient.FluentApi.Tests.Contracts
 {
@@ -36,6 +40,22 @@ namespace CoreSharp.HttpClient.FluentApi.Tests.Contracts
         }
 
         [Test]
+        public async Task Get_WhenCalled_PerformsGetRequest()
+        {
+            //Arrange
+            static bool AssertRequest(HttpRequestMessage request)
+               => AssertRequestMethod(request, HttpMethod.Get);
+            MockHandler.SetupRequest(request => AssertRequest(request))
+                       .ReturnsResponse(HttpStatusCode.OK);
+
+            //Act
+            await Client.Request()
+                        .Route("tests")
+                        .Get()
+                        .SendAsync();
+        }
+
+        [Test]
         public void Post_ClientIsNull_ThrowArgumentNullException()
         {
             //Act
@@ -58,6 +78,22 @@ namespace CoreSharp.HttpClient.FluentApi.Tests.Contracts
             //Assert
             result.Should().NotBeNull();
             result.Should().BeAssignableTo<IContentMethod>();
+        }
+
+        [Test]
+        public async Task Post_WhenCalled_PerformsPostRequest()
+        {
+            //Arrange
+            static bool AssertRequest(HttpRequestMessage request)
+               => AssertRequestMethod(request, HttpMethod.Post);
+            MockHandler.SetupRequest(request => AssertRequest(request))
+                       .ReturnsResponse(HttpStatusCode.OK);
+
+            //Act
+            await Client.Request()
+                        .Route("tests")
+                        .Post()
+                        .SendAsync();
         }
 
         [Test]
@@ -86,6 +122,22 @@ namespace CoreSharp.HttpClient.FluentApi.Tests.Contracts
         }
 
         [Test]
+        public async Task Put_WhenCalled_PerformsPutRequest()
+        {
+            //Arrange
+            static bool AssertRequest(HttpRequestMessage request)
+               => AssertRequestMethod(request, HttpMethod.Put);
+            MockHandler.SetupRequest(request => AssertRequest(request))
+                       .ReturnsResponse(HttpStatusCode.OK);
+
+            //Act
+            await Client.Request()
+                        .Route("tests")
+                        .Put()
+                        .SendAsync();
+        }
+
+        [Test]
         public void Patch_ClientIsNull_ThrowArgumentNullException()
         {
             //Act
@@ -111,6 +163,22 @@ namespace CoreSharp.HttpClient.FluentApi.Tests.Contracts
         }
 
         [Test]
+        public async Task Patch_WhenCalled_PerformsPatchRequest()
+        {
+            //Arrange
+            static bool AssertRequest(HttpRequestMessage request)
+               => AssertRequestMethod(request, HttpMethod.Patch);
+            MockHandler.SetupRequest(request => AssertRequest(request))
+                       .ReturnsResponse(HttpStatusCode.OK);
+
+            //Act
+            await Client.Request()
+                        .Route("tests")
+                        .Patch()
+                        .SendAsync();
+        }
+
+        [Test]
         public void Delete_ClientIsNull_ThrowArgumentNullException()
         {
             //Act
@@ -133,6 +201,163 @@ namespace CoreSharp.HttpClient.FluentApi.Tests.Contracts
             //Assert
             result.Should().NotBeNull();
             result.Should().BeAssignableTo<IMethod>();
+        }
+
+        [Test]
+        public async Task Delete_WhenCalled_PerformsDeleteRequest()
+        {
+            //Arrange
+            static bool AssertRequest(HttpRequestMessage request)
+               => AssertRequestMethod(request, HttpMethod.Delete);
+            MockHandler.SetupRequest(request => AssertRequest(request))
+                       .ReturnsResponse(HttpStatusCode.OK);
+
+            //Act
+            await Client.Request()
+                        .Route("tests")
+                        .Delete()
+                        .SendAsync();
+        }
+
+        [Test]
+        public void Head_ClientIsNull_ThrowArgumentNullException()
+        {
+            //Act
+            Action action = () => ClientNull.Request()
+                                            .Route("tests")
+                                            .Head();
+
+            //Assert
+            action.Should().ThrowExactly<ArgumentNullException>();
+        }
+
+        [Test]
+        public void Head_WhenCalled_ReturnIMethod()
+        {
+            //Act
+            var result = Client.Request()
+                               .Route("tests")
+                               .Head();
+
+            //Assert
+            result.Should().NotBeNull();
+            result.Should().BeAssignableTo<IMethod>();
+        }
+
+        [Test]
+        public async Task Head_WhenCalled_PerformsHeadRequest()
+        {
+            //Arrange
+            static bool AssertRequest(HttpRequestMessage request)
+               => AssertRequestMethod(request, HttpMethod.Head);
+            MockHandler.SetupRequest(request => AssertRequest(request))
+                       .ReturnsResponse(HttpStatusCode.OK);
+
+            //Act
+            await Client.Request()
+                        .Route("tests")
+                        .Head()
+                        .SendAsync();
+        }
+
+        [Test]
+        public void Options_ClientIsNull_ThrowArgumentNullException()
+        {
+            //Act
+            Action action = () => ClientNull.Request()
+                                            .Route("tests")
+                                            .Options();
+
+            //Assert
+            action.Should().ThrowExactly<ArgumentNullException>();
+        }
+
+        [Test]
+        public void Options_WhenCalled_ReturnIMethodWithResponse()
+        {
+            //Act
+            var result = Client.Request()
+                               .Route("tests")
+                               .Options();
+
+            //Assert
+            result.Should().NotBeNull();
+            result.Should().BeAssignableTo<IMethodWithResponse>();
+        }
+
+        [Test]
+        public async Task Options_WhenCalled_PerformsOptionsRequest()
+        {
+            //Arrange
+            static bool AssertRequest(HttpRequestMessage request)
+               => AssertRequestMethod(request, HttpMethod.Options);
+            MockHandler.SetupRequest(request => AssertRequest(request))
+                       .ReturnsResponse(HttpStatusCode.OK);
+
+            //Act
+            await Client.Request()
+                        .Route("tests")
+                        .Options()
+                        .SendAsync();
+        }
+
+        [Test]
+        public void Trace_ClientIsNull_ThrowArgumentNullException()
+        {
+            //Act
+            Action action = () => ClientNull.Request()
+                                            .Route("tests")
+                                            .Trace();
+
+            //Assert
+            action.Should().ThrowExactly<ArgumentNullException>();
+        }
+
+        [Test]
+        public void Trace_WhenCalled_ReturnIMethodWithResponse()
+        {
+            //Act
+            var result = Client.Request()
+                               .Route("tests")
+                               .Trace();
+
+            //Assert
+            result.Should().NotBeNull();
+            result.Should().BeAssignableTo<IMethod>();
+        }
+
+        [Test]
+        public async Task Trace_WhenCalled_PerformsTraceRequest()
+        {
+            //Arrange
+            static bool AssertRequest(HttpRequestMessage request)
+               => AssertRequestMethod(request, HttpMethod.Trace);
+            MockHandler.SetupRequest(request => AssertRequest(request))
+                       .ReturnsResponse(HttpStatusCode.OK);
+
+            //Act
+            await Client.Request()
+                        .Route("tests")
+                        .Trace()
+                        .SendAsync();
+        }
+
+        //Private 
+        /// <summary>
+        /// Make sure <see cref="HttpRequestMessage.Method"/>
+        /// is set correctly.
+        /// </summary>
+        private static bool AssertRequestMethod(HttpRequestMessage request, HttpMethod httpMethod)
+        {
+            _ = request ?? throw new ArgumentNullException(nameof(request));
+            _ = httpMethod ?? throw new ArgumentNullException(nameof(httpMethod));
+
+            var expectedMethod = httpMethod.Method;
+            var actualMethod = request.Method.Method;
+            if (actualMethod != expectedMethod)
+                throw new Exception($"{nameof(HttpMethod)} missmatch (`{actualMethod}` != `{expectedMethod}`).");
+
+            return true;
         }
     }
 }

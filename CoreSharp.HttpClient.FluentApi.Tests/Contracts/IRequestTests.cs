@@ -253,11 +253,11 @@ namespace CoreSharp.HttpClient.FluentApi.Tests.Contracts
 
             var headers = request.Headers;
             if (!headers.Contains(headerKey))
-                ThrowHeaderNotFoundException(headerKey);
+                throw new KeyNotFoundException($"Header key ({headerKey}) not found.");
 
             var actualValue = headers.GetValues(headerKey).FirstOrDefault();
             if (actualValue != headerValue)
-                ThrowHeaderValueMissmatchException(headerKey, headerValue, actualValue);
+                throw new Exception($"Header=`{headerKey}` value missmatch ({actualValue} != {headerValue}).");
 
             return true;
         }
@@ -280,11 +280,5 @@ namespace CoreSharp.HttpClient.FluentApi.Tests.Contracts
 
             return true;
         }
-
-        private static void ThrowHeaderNotFoundException(string headerName)
-            => throw new KeyNotFoundException($"Header key ({headerName}) not found.");
-
-        private static void ThrowHeaderValueMissmatchException(string headerName, string expectedValue, string actualValue)
-            => throw new Exception($"Header=`{headerName}` value missmatch ({actualValue} != {expectedValue}).");
     }
 }
