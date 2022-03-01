@@ -10,11 +10,12 @@ namespace CoreSharp.HttpClient.FluentApi.Tests.Abstracts
     public class HttpClientTestsBase
     {
         //Fields 
-        public const string BaseUri = "https://www.tests.com/api/";
+        private const string BaseUri = "https://www.tests.com/api/";
 
         //Properties
-        protected Http.HttpClient Client { get; set; }
-        protected Mock<HttpMessageHandler> MockHandler { get; set; }
+        protected Http.HttpClient Client { get; private set; }
+        protected Http.HttpClient ClientNull { get; }
+        protected Mock<HttpMessageHandler> MockHandler { get; private set; }
 
         //Methods
         [OneTimeSetUp]

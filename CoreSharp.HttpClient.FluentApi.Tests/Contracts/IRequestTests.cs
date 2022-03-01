@@ -14,7 +14,6 @@ using System.Net.Http;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using static System.FormattableString;
-using Http = System.Net.Http;
 
 namespace CoreSharp.HttpClient.FluentApi.Tests.Contracts
 {
@@ -30,11 +29,8 @@ namespace CoreSharp.HttpClient.FluentApi.Tests.Contracts
         [TestCase("h", " ")]
         public void Header_KeyOrValueIsEmpty_ThrowArgumentNullException(string headerKey, string headerValue)
         {
-            //Arrange
-            using var client = new Http.HttpClient();
-
             //Act
-            Action action = () => client.Request()
+            Action action = () => Client.Request()
                                         .Header(headerKey, headerValue);
 
             //Assert
@@ -162,6 +158,20 @@ namespace CoreSharp.HttpClient.FluentApi.Tests.Contracts
 
             //Assert
             await task.Should().NotThrowAsync<HttpResponseException>();
+        }
+
+        [Test]
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(" ")]
+        public void Route_ResourceNameIsEmpty_ThrowArgumentNullException(string resourceName)
+        {
+            //Act 
+            Action action = () => Client.Request()
+                                        .Route(resourceName);
+
+            //Assert
+            action.Should().ThrowExactly<ArgumentNullException>();
         }
 
         [Test]
