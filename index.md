@@ -21,7 +21,7 @@ From initiating the request builder the request to sending the request.
 HttpClient
 └── IRequest (Headers, ThrowOnError, Timeout) 
     └── IRoute (Route) 
-        └── IMethod (GET, POST, PUT, PATCH, DELETE) 
+        └── IMethod (GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS, TRACE) 
             |   └── GET 
             |   |   └── IQueryMethod (QueryParameters) 
             |   └── POST, PUT, PATCH 
