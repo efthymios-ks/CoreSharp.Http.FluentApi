@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup Label="Package">
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net5.0</TargetFramework>
+	</PropertyGroup>
+
+	<ItemGroup Label="Package references">
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
+	</ItemGroup>
+
+	<ItemGroup Label="Project references">
+		<ProjectReference Include="..\CoreSharp.Http.FluentApi.Domain\CoreSharp.Http.FluentApi.Domain.csproj" />
+		<ProjectReference Include="..\CoreSharp.Http.FluentApi\CoreSharp.Http.FluentApi.csproj" />
+	</ItemGroup>
+
+</Project>
