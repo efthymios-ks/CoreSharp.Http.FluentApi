@@ -1,7 +1,7 @@
-# CoreSharp.HttpClient.FluentApi 
+# CoreSharp.Http.FluentApi 
 
 ## Description 
-`CoreSharp.HttpClient.FluentApi` allows fluent http request building.  
+`CoreSharp.Http.FluentApi` allows fluent http request building.  
 
 ## Features 
 - Automatic json conversions using `Text.Json` or `Json.NET`. 
@@ -12,7 +12,7 @@
 - Easily expandable. 
 
 ## Installation 
-Install via [nuget](https://www.nuget.org/packages/CoreSharp.HttpClient.FluentApi/).
+Install via [nuget](https://www.nuget.org/packages/CoreSharp.Http.FluentApi/).
 
 ## Interface tree 
 Building the request involves several configurable steps.  
@@ -32,7 +32,7 @@ HttpClient
 ```
 
 ## Usage 
-Include `using CoreSharp.HttpClient.FluentApi.Extensions;` 
+Include `using CoreSharp.Http.FluentApi.Extensions;` 
 
 ## Examples 
 
