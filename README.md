@@ -1,5 +1,8 @@
 # CoreSharp.Http.FluentApi 
 
+[![Nuget](https://img.shields.io/nuget/v/CoreSharp.Http.FluentApi)](https://www.nuget.org/packages/CoreSharp.Http.FluentApi/)
+[![Nuget](https://img.shields.io/nuget/dt/CoreSharp.Http.FluentApi)](https://www.nuget.org/packages/CoreSharp.Http.FluentApi/)
+
 ## Description 
 `CoreSharp.Http.FluentApi` allows fluent http request building.  
 
@@ -10,9 +13,6 @@
 - Use of `Stream` where applicable instead of eager converting entities to string. **[Optimizes memory consumption]** 
 - Use of `HttpCompletionOption.ResponseHeadersRead` by default to all requests. **[Optimizes memory consumption and response times]** 
 - Easily expandable. 
-
-## Installation 
-Install via [nuget](https://www.nuget.org/packages/CoreSharp.Http.FluentApi/).
 
 ## Interface tree 
 Building the request involves several configurable steps.  
