@@ -1,6 +1,6 @@
 ﻿using CoreSharp.Extensions;
 using CoreSharp.Http.FluentApi.Contracts;
-using CoreSharp.Models.Newtonsoft.Settings;
+using CoreSharp.Json.JsonNet;
 using System;
 using System.IO;
 using System.Net.Http;
@@ -25,7 +25,7 @@ namespace CoreSharp.Http.FluentApi.Concrete
 
         public IJsonResponse<TResponse> Json<TResponse>()
             where TResponse : class
-            => Json<TResponse>(DefaultJsonSettings.Instance);
+            => Json<TResponse>(JsonSettings.Default);
 
         public IJsonResponse<TResponse> Json<TResponse>(JsonNet.JsonSerializerSettings jsonSerializerSettings)
             where TResponse : class
