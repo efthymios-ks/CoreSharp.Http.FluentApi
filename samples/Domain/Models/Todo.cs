@@ -1,11 +1,11 @@
-﻿namespace CoreSharp.Http.FluentApi.Domain.Models
+﻿namespace Samples.Domain.Models
 {
-    public class Post
+    public class Todo
     {
         //Properties 
         public int Id { get; set; }
         public int UserId { get; set; }
         public string Title { get; set; }
-        public string Body { get; set; }
+        public bool Completed { get; set; }
     }
 }

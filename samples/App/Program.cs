@@ -1,12 +1,12 @@
-﻿using CoreSharp.Http.FluentApi.Domain.Models;
-using CoreSharp.Http.FluentApi.Exceptions;
+﻿using CoreSharp.Http.FluentApi.Exceptions;
 using CoreSharp.Http.FluentApi.Extensions;
+using Samples.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace CoreSharp.Http.FluentApi.Examples
+namespace Samples.App
 {
     internal static class Program
     {

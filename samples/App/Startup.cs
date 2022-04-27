@@ -1,8 +1,8 @@
-﻿using CoreSharp.Http.FluentApi.Domain.Constants;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Samples.Domain.Constants;
 using System;
 
-namespace CoreSharp.Http.FluentApi.Examples
+namespace Samples.App
 {
     /// <summary>
     /// Pseudo-startup class.

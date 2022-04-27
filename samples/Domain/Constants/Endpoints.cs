@@ -1,4 +1,4 @@
-﻿namespace CoreSharp.Http.FluentApi.Domain.Constants
+﻿namespace Samples.Domain.Constants
 {
     public static class Endpoints
     {

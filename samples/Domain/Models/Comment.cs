@@ -1,4 +1,4 @@
-﻿namespace CoreSharp.Http.FluentApi.Domain.Models
+﻿namespace Samples.Domain.Models
 {
     public class Comment
     {

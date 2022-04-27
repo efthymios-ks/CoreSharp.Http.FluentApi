@@ -7,7 +7,6 @@ using System.Text.Json;
 
 namespace CoreSharp.Http.FluentApi.Contracts
 {
-
     public interface IMethodWithResponse : IMethod
     {
         //Methods 
