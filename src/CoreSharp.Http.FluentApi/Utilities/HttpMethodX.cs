@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 
@@ -17,10 +18,7 @@ namespace CoreSharp.Http.FluentApi.Utilities
             if (validMethods.Any(m => m == httpMethod))
                 return;
 
-            //Throw exception
-            var validMethodsAsString = string.Join(", ", validMethods.Select(m => m.Method));
-            var message = $"{nameof(httpMethod)} must be one of the following: {validMethodsAsString}.";
-            throw new ArgumentException(message, nameof(httpMethod));
+            ThrowInvalidHttpMethodException(httpMethod, validMethods);
         }
 
         public static void ValidateContentMethod(HttpMethod httpMethod)
@@ -31,7 +29,11 @@ namespace CoreSharp.Http.FluentApi.Utilities
             if (validMethods.Any(m => m == httpMethod))
                 return;
 
-            //Throw exception
+            ThrowInvalidHttpMethodException(httpMethod, validMethods);
+        }
+
+        private static void ThrowInvalidHttpMethodException(HttpMethod httpMethod, IEnumerable<HttpMethod> validMethods)
+        {
             var validMethodsAsString = string.Join(", ", validMethods.Select(m => m.Method));
             var message = $"{nameof(httpMethod)} must be one of the following: {validMethodsAsString}.";
             throw new ArgumentException(message, nameof(httpMethod));

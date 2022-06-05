@@ -25,8 +25,8 @@ namespace CoreSharp.Http.FluentApi.Utilities
 
             //Prepare caching fields 
             var memoryCache = Settings.MemoryCache;
-            var shouldCache = cacheDuration is not null && cacheDuration != TimeSpan.Zero;
-            var cacheKey = shouldCache ? $"{route} > {typeof(TResponse).FullName}" : string.Empty;
+            var shouldCache = cacheDuration is not null && cacheDuration > TimeSpan.Zero;
+            var cacheKey = shouldCache ? $"{route} > {typeof(TResponse).FullName}" : null;
 
             //Return cached value, if applicable 
             if (shouldCache && memoryCache.TryGetValue<TResponse>(cacheKey, out var cachedValue))
