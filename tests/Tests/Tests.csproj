@@ -2,7 +2,7 @@
 
 	<PropertyGroup Label="Package">
 		<AssemblyName>CoreSharp.Http.FluentApi.Tests</AssemblyName>
-		<TargetFramework>net5.0</TargetFramework>
+		<TargetFramework>net6.0</TargetFramework>
 		<IsPackable>false</IsPackable>
 	</PropertyGroup>
 

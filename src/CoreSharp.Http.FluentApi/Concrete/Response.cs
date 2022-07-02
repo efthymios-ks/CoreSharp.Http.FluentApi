@@ -4,23 +4,22 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CoreSharp.Http.FluentApi.Concrete
+namespace CoreSharp.Http.FluentApi.Concrete;
+
+/// <inheritdoc cref="IResponse" />
+internal abstract class Response : IResponse
 {
-    /// <inheritdoc cref="IResponse" />
-    internal abstract class Response : IResponse
-    {
-        //Constructors 
-        protected Response(IMethod method)
-            => Me.Method = method ?? throw new ArgumentNullException(nameof(method));
+    //Constructors 
+    protected Response(IMethod method)
+        => Me.Method = method ?? throw new ArgumentNullException(nameof(method));
 
-        //Properties
-        private IResponse Me
-            => this;
+    //Properties
+    private IResponse Me
+        => this;
 
-        IMethod IResponse.Method { get; set; }
+    IMethod IResponse.Method { get; set; }
 
-        //Methods 
-        public async Task<HttpResponseMessage> SendAsync(CancellationToken cancellationToken = default)
-            => await Me.Method.SendAsync(cancellationToken);
-    }
+    //Methods 
+    public async Task<HttpResponseMessage> SendAsync(CancellationToken cancellationToken = default)
+        => await Me.Method.SendAsync(cancellationToken);
 }

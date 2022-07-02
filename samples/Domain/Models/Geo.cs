@@ -1,9 +1,8 @@
-﻿namespace Samples.Domain.Models
+﻿namespace Samples.Domain.Models;
+
+public class Geo
 {
-    public class Geo
-    {
-        //Properties
-        public string Lat { get; set; }
-        public string Lng { get; set; }
-    }
+    //Properties
+    public string Lat { get; set; }
+    public string Lng { get; set; }
 }

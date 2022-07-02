@@ -2,21 +2,20 @@
 using Samples.Domain.Constants;
 using System;
 
-namespace Samples.App
+namespace Samples.App;
+
+/// <summary>
+/// Pseudo-startup class.
+/// </summary>
+public static class Startup
 {
-    /// <summary>
-    /// Pseudo-startup class.
-    /// </summary>
-    public static class Startup
+    //Methods
+    public static IServiceProvider ConfigureServices()
     {
-        //Methods
-        public static IServiceProvider ConfigureServices()
-        {
-            var services = new ServiceCollection();
+        var services = new ServiceCollection();
 
-            services.AddHttpClient("Default", http => http.BaseAddress = new Uri(Endpoints.EndpointUrl));
+        services.AddHttpClient("Default", http => http.BaseAddress = new Uri(Endpoints.EndpointUrl));
 
-            return services.BuildServiceProvider();
-        }
+        return services.BuildServiceProvider();
     }
 }

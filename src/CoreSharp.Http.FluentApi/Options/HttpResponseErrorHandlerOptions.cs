@@ -1,11 +1,10 @@
 ﻿using CoreSharp.Http.FluentApi.Exceptions;
 using System;
 
-namespace CoreSharp.Http.FluentApi.Options
+namespace CoreSharp.Http.FluentApi.Options;
+
+public class HttpResponseErrorHandlerOptions
 {
-    public class HttpResponseErrorHandlerOptions
-    {
-        //Properties 
-        public Action<HttpResponseException> HandleError { get; set; }
-    }
+    //Properties 
+    public Action<HttpResponseException> HandleError { get; set; }
 }
