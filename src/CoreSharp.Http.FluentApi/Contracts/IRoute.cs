@@ -1,11 +1,14 @@
-﻿using System.Net.Http;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Net.Http;
 
 namespace CoreSharp.Http.FluentApi.Contracts;
 
+[SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "<Pending>")]
 public interface IRoute
 {
     //Properties 
     internal IRequest Request { get; set; }
+
     /// <inheritdoc cref="HttpRequestMessage.RequestUri" />
     internal string Route { get; set; }
 

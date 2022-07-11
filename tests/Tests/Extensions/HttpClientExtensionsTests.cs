@@ -1,10 +1,11 @@
 ﻿using CoreSharp.Http.FluentApi.Contracts;
-using CoreSharp.Http.FluentApi.Tests.Abstracts;
+using CoreSharp.Http.FluentApi.Extensions;
 using FluentAssertions;
 using NUnit.Framework;
 using System;
+using Tests.Abstracts;
 
-namespace CoreSharp.Http.FluentApi.Extensions.Tests;
+namespace Tests.Extensions;
 
 public class HttpClientExtensionsTests : HttpClientTestsBase
 {

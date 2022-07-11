@@ -58,14 +58,14 @@ internal static class IMethodX
             await response.EnsureSuccessAsync();
             return response;
         }
-        //Throw if needed
         catch when (throwOnError)
         {
+            //Throw if needed
             throw;
         }
-        //Or "swallow" 
         catch
         {
+            //Or ignore 
         }
 
         return null;

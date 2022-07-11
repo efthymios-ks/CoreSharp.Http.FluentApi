@@ -47,12 +47,12 @@ internal class ContentMethod : MethodWithResponse, IContentMethod
         return this;
     }
 
-    public IContentMethod JsonContent(object entity)
+    public IContentMethod JsonContent(object content)
     {
-        _ = entity ?? throw new ArgumentNullException(nameof(entity));
+        _ = content ?? throw new ArgumentNullException(nameof(content));
 
-        var content = ToJsonStreamContent(entity);
-        Content(content);
+        var streamContent = ToJsonStreamContent(content);
+        Content(streamContent);
         return this;
     }
 
@@ -68,11 +68,11 @@ internal class ContentMethod : MethodWithResponse, IContentMethod
         return this;
     }
 
-    public IContentMethod XmlContent(object entity)
+    public IContentMethod XmlContent(object content)
     {
-        _ = entity ?? throw new ArgumentNullException(nameof(entity));
+        _ = content ?? throw new ArgumentNullException(nameof(content));
 
-        var xml = entity.ToXml();
+        var xml = content.ToXml();
         XmlContent(xml);
         return this;
     }

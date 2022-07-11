@@ -1,4 +1,4 @@
-﻿namespace Samples.Domain.Models;
+﻿namespace Domain.Models;
 
 public class User
 {

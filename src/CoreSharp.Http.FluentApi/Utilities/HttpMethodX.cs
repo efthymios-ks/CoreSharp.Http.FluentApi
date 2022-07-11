@@ -35,7 +35,7 @@ internal static class HttpMethodX
     private static void ThrowInvalidHttpMethodException(HttpMethod httpMethod, IEnumerable<HttpMethod> validMethods)
     {
         var validMethodsAsString = string.Join(", ", validMethods.Select(m => m.Method));
-        var message = $"{nameof(httpMethod)} must be one of the following: {validMethodsAsString}.";
+        var message = $"{nameof(httpMethod)} ({httpMethod}) must be one of the following: {validMethodsAsString}.";
         throw new ArgumentException(message, nameof(httpMethod));
     }
 }

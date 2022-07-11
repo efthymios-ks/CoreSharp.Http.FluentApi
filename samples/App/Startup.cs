@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Samples.Domain.Constants;
+﻿using Domain.Constants;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 
-namespace Samples.App;
+namespace App;
 
 /// <summary>
 /// Pseudo-startup class.

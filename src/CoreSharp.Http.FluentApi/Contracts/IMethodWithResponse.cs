@@ -1,12 +1,15 @@
 ﻿using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Net.Http;
 using System.Text.Json;
 
 namespace CoreSharp.Http.FluentApi.Contracts;
 
+[SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "<Pending>")]
+[SuppressMessage("Naming", "CA1720:Identifier contains type name", Justification = "<Pending>")]
 public interface IMethodWithResponse : IMethod
 {
     //Methods 
@@ -38,7 +41,7 @@ public interface IMethodWithResponse : IMethod
     /// Treat <see cref="HttpResponseMessage.Content"/>
     /// as json and deserialize to provided type.
     /// </summary>
-    IJsonResponse<TResponse> Json<TResponse>(Func<string, TResponse> deserializeStreamFunction)
+    IJsonResponse<TResponse> Json<TResponse>(Func<string, TResponse> deserializeStringFunction)
         where TResponse : class;
 
     /// <inheritdoc cref="Xml{TResponse}(Func{Stream, TResponse})" />

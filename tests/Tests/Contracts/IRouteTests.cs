@@ -1,6 +1,5 @@
 ﻿using CoreSharp.Http.FluentApi.Contracts;
 using CoreSharp.Http.FluentApi.Extensions;
-using CoreSharp.Http.FluentApi.Tests.Abstracts;
 using FluentAssertions;
 using Moq.Contrib.HttpClient;
 using NUnit.Framework;
@@ -8,8 +7,9 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Tests.Abstracts;
 
-namespace CoreSharp.Http.FluentApi.Tests.Contracts;
+namespace Tests.Contracts;
 
 public class IRouteTests : HttpClientTestsBase
 {

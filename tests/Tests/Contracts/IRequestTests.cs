@@ -1,7 +1,6 @@
 ﻿using CoreSharp.Http.FluentApi.Contracts;
 using CoreSharp.Http.FluentApi.Exceptions;
 using CoreSharp.Http.FluentApi.Extensions;
-using CoreSharp.Http.FluentApi.Tests.Abstracts;
 using FluentAssertions;
 using Microsoft.Net.Http.Headers;
 using Moq.Contrib.HttpClient;
@@ -13,9 +12,10 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Mime;
 using System.Threading.Tasks;
+using Tests.Abstracts;
 using static System.FormattableString;
 
-namespace CoreSharp.Http.FluentApi.Tests.Contracts;
+namespace Tests.Contracts;
 
 public class IRequestTests : HttpClientTestsBase
 {
@@ -275,7 +275,7 @@ public class IRequestTests : HttpClientTestsBase
 
         var expectedUriEnd = Invariant($"{resourceName}/{key}").Trim('/');
         var actualUri = request.RequestUri.AbsoluteUri.Trim('/');
-        if (!actualUri.EndsWith(expectedUriEnd))
+        if (!actualUri.EndsWith(expectedUriEnd, StringComparison.OrdinalIgnoreCase))
             throw new Exception($"`{actualUri}` does not end with `{expectedUriEnd}`.");
 
         return true;

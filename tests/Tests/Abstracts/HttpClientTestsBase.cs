@@ -3,9 +3,8 @@ using Moq.Contrib.HttpClient;
 using NUnit.Framework;
 using System.Net.Http;
 
-namespace CoreSharp.Http.FluentApi.Tests.Abstracts;
+namespace Tests.Abstracts;
 
-[TestFixture]
 public class HttpClientTestsBase
 {
     //Fields 

@@ -16,13 +16,19 @@ internal static class ICacheQueryX
     /// If not existing or timed-out,
     /// request new response and cache.
     /// </summary>
-    public static async ValueTask<TResponse> CachedRequestAsync<TResponse>(Task<TResponse> requestTask, string route, TimeSpan? cacheDuration)
+    public static ValueTask<TResponse> CachedRequestAsync<TResponse>(Task<TResponse> requestTask, string route, TimeSpan? cacheDuration)
         where TResponse : class
     {
         _ = requestTask ?? throw new ArgumentNullException(nameof(requestTask));
         if (string.IsNullOrWhiteSpace(route))
             throw new ArgumentNullException(nameof(route));
 
+        return CachedRequestInternalAsync(requestTask, route, cacheDuration);
+    }
+
+    private static async ValueTask<TResponse> CachedRequestInternalAsync<TResponse>(Task<TResponse> requestTask, string route, TimeSpan? cacheDuration)
+            where TResponse : class
+    {
         //Prepare caching fields 
         var memoryCache = Settings.MemoryCache;
         var shouldCache = cacheDuration is not null && cacheDuration > TimeSpan.Zero;

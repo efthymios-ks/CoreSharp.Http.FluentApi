@@ -1,16 +1,18 @@
 ﻿using CoreSharp.Http.FluentApi.Exceptions;
 using CoreSharp.Http.FluentApi.Extensions;
-using Samples.Domain.Models;
+using Domain.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Samples.App;
+namespace App;
 
 internal static class Program
 {
     //Methods 
+    [SuppressMessage("Minor Code Smell", "S1481:Unused local variables should be removed", Justification = "<Pending>")]
     private static async Task Main()
     {
         //Services

@@ -1,7 +1,7 @@
-﻿using CoreSharp.Http.FluentApi.Concrete;
+﻿using CoreSharp.Http.FluentApi.Contracts;
 using System;
 
-namespace CoreSharp.Http.FluentApi.Contracts;
+namespace CoreSharp.Http.FluentApi.Concrete;
 
 /// <inheritdoc cref="IGenericQueryResponse{TResponse}"/>
 internal class GenericQueryResponse<TResponse> : GenericResponse<TResponse>, IGenericQueryResponse<TResponse>

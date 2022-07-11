@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using JsonNet = Newtonsoft.Json;
 using TextJson = System.Text.Json;
 
 namespace CoreSharp.Http.FluentApi.Contracts;
 
+[SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "<Pending>")]
 public interface IQueryMethod : IMethodWithResponse
 {
     //Properties 

@@ -1,4 +1,5 @@
 ﻿using CoreSharp.Http.FluentApi.Exceptions;
+using CoreSharp.Http.FluentApi.Extensions;
 using FluentAssertions;
 using NUnit.Framework;
 using System;
@@ -6,7 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace CoreSharp.Http.FluentApi.Extensions.Tests;
+namespace Tests.Extensions;
 
 [TestFixture]
 public class HttpResponseMessageExtensionsTests

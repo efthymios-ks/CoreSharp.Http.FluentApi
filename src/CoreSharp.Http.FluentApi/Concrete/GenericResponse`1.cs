@@ -1,9 +1,9 @@
 ﻿using CoreSharp.Extensions;
-using CoreSharp.Http.FluentApi.Concrete;
+using CoreSharp.Http.FluentApi.Contracts;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CoreSharp.Http.FluentApi.Contracts;
+namespace CoreSharp.Http.FluentApi.Concrete;
 
 /// <inheritdoc cref="IGenericResponse{TResponse}"/>
 internal class GenericResponse<TResponse> : Response, IGenericResponse<TResponse>

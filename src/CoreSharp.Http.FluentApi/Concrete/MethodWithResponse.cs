@@ -70,6 +70,7 @@ internal class MethodWithResponse : Method, IMethodWithResponse
     {
         static TResponse DeserializeStringFunction(string xml)
             => xml.FromXml<TResponse>();
+
         return Xml(DeserializeStringFunction);
     }
 

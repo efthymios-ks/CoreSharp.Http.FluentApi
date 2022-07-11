@@ -24,4 +24,12 @@
 	<ItemGroup Label="Project references">
 		<ProjectReference Include="..\..\src\CoreSharp.Http.FluentApi\CoreSharp.Http.FluentApi.csproj" />
 	</ItemGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<NoWarn>CA1001;CA1707;CA2201;IDE0130;S3459;</NoWarn>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<NoWarn>CA1001;CA1707;CA2201;IDE0130;S3459;</NoWarn>
+	</PropertyGroup>
 </Project>
