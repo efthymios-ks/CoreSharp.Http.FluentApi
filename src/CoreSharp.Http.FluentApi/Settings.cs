@@ -4,7 +4,7 @@ namespace CoreSharp.Http.FluentApi;
 
 internal static class Settings
 {
-    //Properties
+    // Properties
     public static IMemoryCache MemoryCache { get; }
         = new MemoryCache(new MemoryCacheOptions());
 }

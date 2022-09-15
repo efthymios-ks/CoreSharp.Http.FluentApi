@@ -9,7 +9,7 @@ namespace App;
 /// </summary>
 public static class Startup
 {
-    //Methods
+    // Methods
     public static IServiceProvider ConfigureServices()
     {
         var services = new ServiceCollection();

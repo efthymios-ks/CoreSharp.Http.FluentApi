@@ -2,7 +2,7 @@
 
 public class Address
 {
-    //Properties
+    // Properties
     public string Street { get; set; }
     public string Suite { get; set; }
     public string City { get; set; }

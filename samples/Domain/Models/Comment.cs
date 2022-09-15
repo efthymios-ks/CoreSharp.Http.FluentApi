@@ -2,7 +2,7 @@
 
 public class Comment
 {
-    //Properties 
+    // Properties 
     public int Id { get; set; }
     public string PostId { get; set; }
     public string Name { get; set; }

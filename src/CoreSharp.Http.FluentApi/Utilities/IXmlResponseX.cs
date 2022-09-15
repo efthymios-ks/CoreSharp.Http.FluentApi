@@ -10,7 +10,7 @@ namespace CoreSharp.Http.FluentApi.Utilities;
 /// </summary>
 internal static class IXmlResponseX
 {
-    //Methods 
+    // Methods 
     /// <summary>
     /// Call <see cref="IMethod.SendAsync(CancellationToken)"/>
     /// and deserialize to provided type using either
@@ -26,21 +26,21 @@ internal static class IXmlResponseX
         if (response is null)
             return null;
 
-        //Stream deserialization
+        // Stream deserialization
         if (xmlResponse.DeserializeStreamFunction is not null)
         {
             await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
             return xmlResponse.DeserializeStreamFunction(stream);
         }
 
-        //String deserialization
+        // String deserialization
         else if (xmlResponse.DeserializeStringFunction is not null)
         {
             var xml = await response.Content.ReadAsStringAsync(cancellationToken);
             return xmlResponse.DeserializeStringFunction(xml);
         }
 
-        //Error
+        // Error
         throw new InvalidOperationException("No deserialization function has been provided.");
     }
 }

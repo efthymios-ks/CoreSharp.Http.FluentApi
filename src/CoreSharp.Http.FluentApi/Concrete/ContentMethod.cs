@@ -16,22 +16,22 @@ namespace CoreSharp.Http.FluentApi.Concrete;
 /// <inheritdoc cref="IContentMethod"/>
 internal class ContentMethod : MethodWithResponse, IContentMethod
 {
-    //Fields
+    // Fields
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     private const int DefaultBufferSize = 4096;
 
-    //Constructors 
+    // Constructors 
     public ContentMethod(IRoute route, HttpMethod httpMethod)
         : base(route, httpMethod)
         => HttpMethodX.ValidateContentMethod(httpMethod);
 
-    //Properties 
+    // Properties 
     private IContentMethod Me
         => this;
 
     HttpContent IContentMethod.HttpContent { get; set; }
 
-    //Methods 
+    // Methods 
     public override async Task<HttpResponseMessage> SendAsync(CancellationToken cancellationToken = default)
         => await IMethodX.SendAsync(this, httpContent: Me.HttpContent, cancellationToken: cancellationToken);
 
@@ -89,7 +89,7 @@ internal class ContentMethod : MethodWithResponse, IContentMethod
         return this;
     }
 
-    //Private 
+    // Private 
     /// <summary>
     /// Convert object to json <see cref="Stream"/>.
     /// </summary>

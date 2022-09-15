@@ -15,13 +15,13 @@ public class HttpResponseMessageExtensionsTests
     [Test]
     public async Task EnsureSuccessAsync_ResponseIsNull_ThrowArgumentNullException()
     {
-        //Arrange
+        // Arrange
         HttpResponseMessage response = null;
 
-        //Act
+        // Act
         Func<Task> task = () => response.EnsureSuccessAsync();
 
-        //Assert 
+        // Assert 
         await task.Should().ThrowExactlyAsync<ArgumentNullException>();
     }
 
@@ -30,13 +30,13 @@ public class HttpResponseMessageExtensionsTests
     [TestCase(HttpStatusCode.Created)]
     public async Task EnsureSuccessAsync_StatusIsOk_Return(HttpStatusCode httpStatusCode)
     {
-        //Arrange
+        // Arrange
         using var response = new HttpResponseMessage(httpStatusCode);
 
-        //Act
+        // Act
         Func<Task> task = () => response.EnsureSuccessAsync();
 
-        //Assert 
+        // Assert 
         await task.Should().NotThrowAsync<HttpResponseException>();
     }
 
@@ -47,7 +47,7 @@ public class HttpResponseMessageExtensionsTests
     [TestCase(HttpStatusCode.NotImplemented)]
     public async Task EnsureSuccessAsync_StatusHasError_ThrowHttpResponseException(HttpStatusCode httpStatusCode)
     {
-        //Arrange
+        // Arrange
         var method = HttpMethod.Get;
         const string requestUrl = "http://www.tests.com/api/";
         const string content = "123";
@@ -58,10 +58,10 @@ public class HttpResponseMessageExtensionsTests
             Content = new StringContent(content)
         };
 
-        //Act
+        // Act
         Func<Task> task = () => response.EnsureSuccessAsync();
 
-        //Assert 
+        // Assert 
         var assertion = await task.Should().ThrowAsync<HttpResponseException>();
         var exception = assertion.Which;
         exception.RequestUrl.Should().Be(requestUrl);

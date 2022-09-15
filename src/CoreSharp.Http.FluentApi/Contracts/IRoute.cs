@@ -6,13 +6,13 @@ namespace CoreSharp.Http.FluentApi.Contracts;
 [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "<Pending>")]
 public interface IRoute
 {
-    //Properties 
+    // Properties 
     internal IRequest Request { get; set; }
 
     /// <inheritdoc cref="HttpRequestMessage.RequestUri" />
     internal string Route { get; set; }
 
-    //Methods 
+    // Methods 
     /// <summary>
     /// The HTTP GET method requests a representation of the specified resource. <br/>
     /// Requests using GET should only be used to request data (they shouldn't include data).

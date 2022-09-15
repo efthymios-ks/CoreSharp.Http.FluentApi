@@ -13,7 +13,7 @@ namespace CoreSharp.Http.FluentApi.Exceptions;
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class HttpResponseException : Exception
 {
-    //Constructors 
+    // Constructors 
     public HttpResponseException(
         string requestUrl,
         string requestMethod,
@@ -27,7 +27,7 @@ public class HttpResponseException : Exception
         ResponseStatusCode = responseStatusCode;
     }
 
-    //Properties 
+    // Properties 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     private string DebuggerDisplay
         => ResponseStatus;
@@ -39,7 +39,7 @@ public class HttpResponseException : Exception
     public string ResponseStatus
         => $"{RequestMethod} > {RequestUrl} > {(int)ResponseStatusCode} {ResponseStatusCode}";
 
-    //Methods
+    // Methods
     public override string ToString()
     {
         if (JsonX.IsEmpty(ResponseContent))

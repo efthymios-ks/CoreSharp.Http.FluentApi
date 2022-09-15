@@ -12,7 +12,7 @@ namespace CoreSharp.Http.FluentApi.Contracts;
 [SuppressMessage("Naming", "CA1720:Identifier contains type name", Justification = "<Pending>")]
 public interface IMethodWithResponse : IMethod
 {
-    //Methods 
+    // Methods 
     /// <summary>
     /// Check <see cref="HeaderNames.ContentType"/>
     /// in <see cref="HttpResponseMessage.Headers"/>

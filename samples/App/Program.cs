@@ -11,43 +11,43 @@ namespace App;
 
 internal static class Program
 {
-    //Methods 
+    // Methods 
     [SuppressMessage("Minor Code Smell", "S1481:Unused local variables should be removed", Justification = "<Pending>")]
     private static async Task Main()
     {
-        //Services
+        // Services
         var services = Startup.ConfigureServices();
 
         try
         {
-            //"Inject" IHttpClientFactory
+            // "Inject" IHttpClientFactory
             var factory = services.GetService(typeof(IHttpClientFactory)) as IHttpClientFactory;
 
-            //Create your HttpClient 
+            // Create your HttpClient 
             var client = factory.CreateClient("Default");
 
-            //GET /albums and map to IEnumerable 
+            // GET /albums and map to IEnumerable 
             var albums = await client.Request()
                                      .Route("albums")
                                      .Get()
                                      .Json<IEnumerable<Album>>()
                                      .SendAsync();
 
-            //GET /albums to string 
+            // GET /albums to string 
             var albumsJson = await client.Request()
                                          .Route("albums")
                                          .Get()
                                          .String()
                                          .SendAsync();
 
-            //GET /albums to byte[] 
+            // GET /albums to byte[] 
             var albumsBytes = await client.Request()
                                           .Route("albums")
                                           .Get()
                                           .Bytes()
                                           .SendAsync();
 
-            //GET /posts, map to array and cache 
+            // GET /posts, map to array and cache 
             for (var i = 0; i < 3; i++)
             {
                 var posts = await client.Request()
@@ -58,14 +58,14 @@ internal static class Program
                                         .SendAsync();
             }
 
-            //GET /users/2 and map to class automatically based on Content-Type header
+            // GET /users/2 and map to class automatically based on Content-Type header
             var user = await client.Request()
                                    .Route("users", 2)
                                    .Get()
                                    .To<User>()
                                    .SendAsync();
 
-            //PATCH /users/2 and get HttpResponseMessage 
+            // PATCH /users/2 and get HttpResponseMessage 
             user.Name = "Efthymios";
             using var response = await client.Request()
                                              .Route("users", user.Id)
@@ -75,18 +75,18 @@ internal static class Program
             var success = response.IsSuccessStatusCode;
             var json = await response.Content.ReadAsStringAsync();
 
-            //Throw on failed request 
+            // Throw on failed request 
             await client.Request()
                         .Route("wrong/url")
                         .Get()
                         .SendAsync();
         }
-        //Timeout
+        // Timeout
         catch (TimeoutException ex)
         {
             Console.WriteLine(ex);
         }
-        //Http request specific exception 
+        // Http request specific exception 
         catch (HttpResponseException ex)
         {
             var method = ex.RequestMethod;
@@ -97,7 +97,7 @@ internal static class Program
             var summary = ex.ToString();
             Console.WriteLine(summary);
         }
-        //Other exceptions 
+        // Other exceptions 
         catch (Exception ex)
         {
             Console.WriteLine(ex.Message);

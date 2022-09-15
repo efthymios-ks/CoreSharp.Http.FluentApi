@@ -7,7 +7,7 @@ namespace CoreSharp.Http.FluentApi.Concrete;
 /// <inheritdoc cref="IRoute"/>
 internal class Route : IRoute
 {
-    //Constructors  
+    // Constructors  
     public Route(IRequest request, string resourceName)
     {
         _ = request ?? throw new ArgumentNullException(nameof(request));
@@ -19,7 +19,7 @@ internal class Route : IRoute
         me.Route = resourceName;
     }
 
-    //Properties 
+    // Properties 
     private IRoute Me
         => this;
 
@@ -27,7 +27,7 @@ internal class Route : IRoute
 
     string IRoute.Route { get; set; }
 
-    //Methods 
+    // Methods 
     public IQueryMethod Get()
         => new QueryMethod(this, HttpMethod.Get);
 

@@ -9,24 +9,24 @@ namespace Tests.Extensions;
 
 public class HttpClientExtensionsTests : HttpClientTestsBase
 {
-    //Methods
+    // Methods
     [Test]
     public void Request_ClienItNull_ThrowArgumentNullException()
     {
-        //Act
+        // Act
         Action action = () => ClientNull.Request();
 
-        //Assert
+        // Assert
         action.Should().ThrowExactly<ArgumentNullException>();
     }
 
     [Test]
     public void Request_WhenCalled_ReturnRequest()
     {
-        //Act 
+        // Act 
         var request = Client.Request();
 
-        //Assert
+        // Assert
         request.Should().NotBeNull();
         request.Should().BeAssignableTo<IRequest>();
     }

@@ -9,13 +9,13 @@ namespace CoreSharp.Http.FluentApi.Concrete;
 internal class GenericResponse<TResponse> : Response, IGenericResponse<TResponse>
     where TResponse : class
 {
-    //Constructors
+    // Constructors
     public GenericResponse(IMethod method)
         : base(method)
     {
     }
 
-    //Methods
+    // Methods
     public new virtual async Task<TResponse> SendAsync(CancellationToken cancellationToken = default)
     {
         using var response = await base.SendAsync(cancellationToken);

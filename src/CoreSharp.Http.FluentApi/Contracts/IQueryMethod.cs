@@ -10,10 +10,10 @@ namespace CoreSharp.Http.FluentApi.Contracts;
 [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "<Pending>")]
 public interface IQueryMethod : IMethodWithResponse
 {
-    //Properties 
+    // Properties 
     internal IDictionary<string, object> QueryParameters { get; }
 
-    //Methods
+    // Methods
     /// <inheritdoc cref="Query(IDictionary{string, object})" />
     public IQueryMethod Query<TQueryParameter>(TQueryParameter queryParameter)
         where TQueryParameter : class;

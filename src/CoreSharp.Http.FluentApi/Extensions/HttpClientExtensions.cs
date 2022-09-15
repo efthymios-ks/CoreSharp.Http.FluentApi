@@ -10,7 +10,7 @@ namespace CoreSharp.Http.FluentApi.Extensions;
 /// </summary>
 public static class HttpClientExtensions
 {
-    //Methods
+    // Methods
     /// <summary>
     /// Start a chained configuration for a new http request.
     /// </summary>

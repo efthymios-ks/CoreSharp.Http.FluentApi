@@ -10,7 +10,7 @@ namespace CoreSharp.Http.FluentApi.Utilities;
 /// </summary>
 internal static class IJsonResponseX
 {
-    //Methods 
+    // Methods 
     /// <summary>
     /// Call <see cref="IMethod.SendAsync(CancellationToken)"/>
     /// and deserialize to provided type using either
@@ -26,21 +26,21 @@ internal static class IJsonResponseX
         if (response is null)
             return null;
 
-        //Stream deserialization 
+        // Stream deserialization 
         if (jsonResponse.DeserializeStreamFunction is not null)
         {
             await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
             return jsonResponse.DeserializeStreamFunction(stream);
         }
 
-        //String deserialization 
+        // String deserialization 
         else if (jsonResponse.DeserializeStringFunction is not null)
         {
             var json = await response.Content.ReadAsStringAsync(cancellationToken);
             return jsonResponse.DeserializeStringFunction(json);
         }
 
-        //Error
+        // Error
         throw new InvalidOperationException("No deserialization function has been provided.");
     }
 }

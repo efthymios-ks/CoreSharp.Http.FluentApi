@@ -11,7 +11,7 @@ namespace CoreSharp.Http.FluentApi.Concrete;
 internal class JsonResponse<TResponse> : GenericResponse<TResponse>, IJsonResponse<TResponse>
     where TResponse : class
 {
-    //Constructors
+    // Constructors
     public JsonResponse(IMethod method, Func<Stream, TResponse> deserializeStreamFunction)
         : this(method)
         => Me.DeserializeStreamFunction = deserializeStreamFunction ?? throw new ArgumentNullException(nameof(deserializeStreamFunction));
@@ -25,7 +25,7 @@ internal class JsonResponse<TResponse> : GenericResponse<TResponse>, IJsonRespon
     {
     }
 
-    //Properties 
+    // Properties 
     private IJsonResponse<TResponse> Me
         => this;
 
@@ -33,7 +33,7 @@ internal class JsonResponse<TResponse> : GenericResponse<TResponse>, IJsonRespon
 
     Func<string, TResponse> IJsonResponse<TResponse>.DeserializeStringFunction { get; set; }
 
-    //Methods 
+    // Methods 
     public override async Task<TResponse> SendAsync(CancellationToken cancellationToken = default)
         => await IJsonResponseX.SendAsync(this, cancellationToken);
 }

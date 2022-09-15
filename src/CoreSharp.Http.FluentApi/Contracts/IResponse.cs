@@ -6,10 +6,10 @@ namespace CoreSharp.Http.FluentApi.Contracts;
 
 public interface IResponse
 {
-    //Properties
+    // Properties
     internal IMethod Method { get; set; }
 
-    //Methods 
+    // Methods 
     /// <inheritdoc cref="IMethod.SendAsync(CancellationToken)"/>
     public Task<HttpResponseMessage> SendAsync(CancellationToken cancellationToken = default);
 }

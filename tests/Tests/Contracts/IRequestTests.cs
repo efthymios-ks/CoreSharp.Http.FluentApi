@@ -19,7 +19,7 @@ namespace Tests.Contracts;
 
 public class IRequestTests : HttpClientTestsBase
 {
-    //Methods
+    // Methods
     [Test]
     [TestCase(null, "1")]
     [TestCase("", "1")]
@@ -29,11 +29,11 @@ public class IRequestTests : HttpClientTestsBase
     [TestCase("h", " ")]
     public void Header_KeyOrValueIsEmpty_ThrowArgumentNullException(string headerKey, string headerValue)
     {
-        //Act
+        // Act
         Action action = () => Client.Request()
                                     .Header(headerKey, headerValue);
 
-        //Assert
+        // Assert
         action.Should().ThrowExactly<ArgumentNullException>();
     }
 
@@ -41,13 +41,13 @@ public class IRequestTests : HttpClientTestsBase
     [TestCase("h", "1")]
     public async Task Header_WhenCalled_AddHeaderToRequest(string headerKey, string headerValue)
     {
-        //Arrange 
+        // Arrange 
         bool AssertRequest(HttpRequestMessage request)
             => AssertRequestHeader(request, headerKey, headerValue);
         MockHandler.SetupRequest(request => AssertRequest(request))
                    .ReturnsResponse(HttpStatusCode.OK);
 
-        //Act
+        // Act
         await Client.Request()
                     .Header(headerKey, headerValue)
                     .Route("tests")
@@ -59,13 +59,13 @@ public class IRequestTests : HttpClientTestsBase
     [TestCase(MediaTypeNames.Application.Json)]
     public async Task Accept_WhenCalled_AddAcceptHeaderToRequest(string acceptHeaderValue)
     {
-        //Arrange 
+        // Arrange 
         bool AssertRequest(HttpRequestMessage request)
             => AssertRequestHeader(request, HeaderNames.Accept, acceptHeaderValue);
         MockHandler.SetupRequest(request => AssertRequest(request))
                    .ReturnsResponse(HttpStatusCode.OK);
 
-        //Act
+        // Act
         await Client.Request()
                     .Accept(acceptHeaderValue)
                     .Route("tests")
@@ -76,13 +76,13 @@ public class IRequestTests : HttpClientTestsBase
     [Test]
     public async Task AcceptJson_WhenCalled_AddJsonAcceptHeaderToRequest()
     {
-        //Arrange 
+        // Arrange 
         static bool AssertRequest(HttpRequestMessage request)
             => AssertRequestHeader(request, HeaderNames.Accept, MediaTypeNames.Application.Json);
         MockHandler.SetupRequest(request => AssertRequest(request))
                    .ReturnsResponse(HttpStatusCode.OK);
 
-        //Act
+        // Act
         await Client.Request()
                     .AcceptJson()
                     .Route("tests")
@@ -93,13 +93,13 @@ public class IRequestTests : HttpClientTestsBase
     [Test]
     public async Task AcceptXml_WhenCalled_AddXmlAcceptHeaderToRequest()
     {
-        //Arrange 
+        // Arrange 
         static bool AssertRequest(HttpRequestMessage request)
             => AssertRequestHeader(request, HeaderNames.Accept, MediaTypeNames.Application.Xml);
         MockHandler.SetupRequest(request => AssertRequest(request))
                    .ReturnsResponse(HttpStatusCode.OK);
 
-        //Act
+        // Act
         await Client.Request()
                     .AcceptXml()
                     .Route("tests")
@@ -111,13 +111,13 @@ public class IRequestTests : HttpClientTestsBase
     [TestCase("123")]
     public async Task Bearer_WhenCalled_AddAuthorizationHeaderToRequest(string authorizationHeaderValue)
     {
-        //Arrange 
+        // Arrange 
         bool AssertRequest(HttpRequestMessage request)
             => AssertRequestHeader(request, HeaderNames.Authorization, $"Bearer {authorizationHeaderValue}");
         MockHandler.SetupRequest(request => AssertRequest(request))
                    .ReturnsResponse(HttpStatusCode.OK);
 
-        //Act
+        // Act
         await Client.Request()
                     .Bearer(authorizationHeaderValue)
                     .Route("tests")
@@ -128,35 +128,35 @@ public class IRequestTests : HttpClientTestsBase
     [Test]
     public async Task IgnoreError_HasErrorAndNotCalled_ThrowHttpResponseException()
     {
-        //Arrange 
+        // Arrange 
         MockHandler.SetupAnyRequest()
                    .ReturnsResponse(HttpStatusCode.InternalServerError);
 
-        //Act
+        // Act
         Func<Task> task = () => Client.Request()
                                       .Route("tests")
                                       .Get()
                                       .SendAsync();
 
-        //Assert
+        // Assert
         await task.Should().ThrowExactlyAsync<HttpResponseException>();
     }
 
     [Test]
     public async Task IgnoreError_HasErrorAndCalled_DoNotThrowHttpResponseException()
     {
-        //Arrange 
+        // Arrange 
         MockHandler.SetupAnyRequest()
                    .ReturnsResponse(HttpStatusCode.InternalServerError);
 
-        //Act
+        // Act
         Func<Task> task = () => Client.Request()
                                       .IgnoreError()
                                       .Route("tests")
                                       .Get()
                                       .SendAsync();
 
-        //Assert
+        // Assert
         await task.Should().NotThrowAsync<HttpResponseException>();
     }
 
@@ -166,22 +166,22 @@ public class IRequestTests : HttpClientTestsBase
     [TestCase(" ")]
     public void Route_ResourceNameIsEmpty_ThrowArgumentNullException(string resourceName)
     {
-        //Act 
+        // Act 
         Action action = () => Client.Request()
                                     .Route(resourceName);
 
-        //Assert
+        // Assert
         action.Should().ThrowExactly<ArgumentNullException>();
     }
 
     [Test]
     public void Route_WhenCalled_ReturnRoute()
     {
-        //Act 
+        // Act 
         var route = Client.Request()
                           .Route("tests");
 
-        //Assert
+        // Assert
         route.Should().NotBeNull();
         route.Should().BeAssignableTo<IRoute>();
     }
@@ -190,13 +190,13 @@ public class IRequestTests : HttpClientTestsBase
     [TestCase("tests", 1)]
     public async Task Route_ProvidedKeyAsInt_BuildUrl(string resourceName, int key)
     {
-        //Arrange  
+        // Arrange  
         bool AssertRequest(HttpRequestMessage request)
             => AssertRequestUrlWithKey(request, resourceName, key);
         MockHandler.SetupRequest(request => AssertRequest(request))
                    .ReturnsResponse(HttpStatusCode.OK);
 
-        //Act
+        // Act
         await Client.Request()
                     .Route(resourceName, key)
                     .Get()
@@ -207,13 +207,13 @@ public class IRequestTests : HttpClientTestsBase
     [TestCase("tests", 1)]
     public async Task Route_ProvidedKeyAsLong_BuildUrl(string resourceName, long key)
     {
-        //Arrange  
+        // Arrange  
         bool AssertRequest(HttpRequestMessage request)
             => AssertRequestUrlWithKey(request, resourceName, key);
         MockHandler.SetupRequest(request => AssertRequest(request))
                    .ReturnsResponse(HttpStatusCode.OK);
 
-        //Act
+        // Act
         await Client.Request()
                     .Route(resourceName, key)
                     .Get()
@@ -224,21 +224,21 @@ public class IRequestTests : HttpClientTestsBase
     [TestCase("tests")]
     public async Task Route_ProvidedKeyAsGuid_BuildUrl(string resourceName)
     {
-        //Arrange 
+        // Arrange 
         var key = Guid.NewGuid();
         bool AssertRequest(HttpRequestMessage request)
             => AssertRequestUrlWithKey(request, resourceName, key);
         MockHandler.SetupRequest(request => AssertRequest(request))
                    .ReturnsResponse(HttpStatusCode.OK);
 
-        //Act
+        // Act
         await Client.Request()
                     .Route(resourceName, key)
                     .Get()
                     .SendAsync();
     }
 
-    //Private 
+    // Private 
     /// <summary>
     /// Make sure <see cref="HttpRequestMessage"/>
     /// contains given header.

@@ -8,13 +8,13 @@ namespace CoreSharp.Http.FluentApi.Concrete;
 /// <inheritdoc cref="IStringResponse" />
 internal class StringResponse : Response, IStringResponse
 {
-    //Constructors
+    // Constructors
     public StringResponse(IMethod method)
         : base(method)
     {
     }
 
-    //Methods
+    // Methods
     async Task<string> IStringResponse.SendAsync(CancellationToken cancellationtoken)
     {
         using var response = await SendAsync(cancellationtoken);

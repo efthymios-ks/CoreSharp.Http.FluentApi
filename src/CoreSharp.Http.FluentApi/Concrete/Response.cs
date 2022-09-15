@@ -9,17 +9,17 @@ namespace CoreSharp.Http.FluentApi.Concrete;
 /// <inheritdoc cref="IResponse" />
 internal abstract class Response : IResponse
 {
-    //Constructors 
+    // Constructors 
     protected Response(IMethod method)
         => Me.Method = method ?? throw new ArgumentNullException(nameof(method));
 
-    //Properties
+    // Properties
     private IResponse Me
         => this;
 
     IMethod IResponse.Method { get; set; }
 
-    //Methods 
+    // Methods 
     public async Task<HttpResponseMessage> SendAsync(CancellationToken cancellationToken = default)
         => await Me.Method.SendAsync(cancellationToken);
 }

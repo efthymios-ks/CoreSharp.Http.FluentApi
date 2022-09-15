@@ -24,12 +24,12 @@ internal static class IMethodX
         HttpContent httpContent = null,
         CancellationToken cancellationToken = default)
     {
-        //Extract values 
+        // Extract values 
         var (httpClient, headers, httpCompletionMode, timeout, throwOnError) = method.Route.Request;
         var route = method.Route.Route;
         var httpMethod = method.HttpMethod;
 
-        //Add query parameter
+        // Add query parameter
         if (httpMethod == HttpMethod.Get && queryParameters.Count > 0)
         {
             var queryBuilder = new UrlQueryBuilder
@@ -40,7 +40,7 @@ internal static class IMethodX
             route += queryParameter;
         }
 
-        //Create request 
+        // Create request 
         using var request = new HttpRequestMessage(httpMethod, route)
         {
             Content = httpContent
@@ -51,7 +51,7 @@ internal static class IMethodX
             request.Headers.Add(key, value);
         }
 
-        //Send request
+        // Send request
         try
         {
             var response = await httpClient.SendAsync(request, httpCompletionMode, timeout, cancellationToken);
@@ -60,12 +60,12 @@ internal static class IMethodX
         }
         catch when (throwOnError)
         {
-            //Throw if needed
+            // Throw if needed
             throw;
         }
         catch
         {
-            //Or ignore 
+            // Or ignore 
         }
 
         return null;

@@ -13,28 +13,28 @@ namespace Tests.Contracts;
 
 public class IRouteTests : HttpClientTestsBase
 {
-    //Methods
+    // Methods
     [Test]
     public void Get_ClientIsNull_ThrowArgumentNullException()
     {
-        //Act
+        // Act
         Action action = () => ClientNull.Request()
                                         .Route("tests")
                                         .Get();
 
-        //Assert
+        // Assert
         action.Should().ThrowExactly<ArgumentNullException>();
     }
 
     [Test]
     public void Get_WhenCalled_ReturnIQueryMethod()
     {
-        //Act
+        // Act
         var result = Client.Request()
                            .Route("tests")
                            .Get();
 
-        //Assert
+        // Assert
         result.Should().NotBeNull();
         result.Should().BeAssignableTo<IQueryMethod>();
     }
@@ -42,13 +42,13 @@ public class IRouteTests : HttpClientTestsBase
     [Test]
     public async Task Get_WhenCalled_PerformsGetRequest()
     {
-        //Arrange
+        // Arrange
         static bool AssertRequest(HttpRequestMessage request)
            => AssertRequestMethod(request, HttpMethod.Get);
         MockHandler.SetupRequest(request => AssertRequest(request))
                    .ReturnsResponse(HttpStatusCode.OK);
 
-        //Act
+        // Act
         await Client.Request()
                     .Route("tests")
                     .Get()
@@ -58,24 +58,24 @@ public class IRouteTests : HttpClientTestsBase
     [Test]
     public void Post_ClientIsNull_ThrowArgumentNullException()
     {
-        //Act
+        // Act
         Action action = () => ClientNull.Request()
                                         .Route("tests")
                                         .Post();
 
-        //Assert
+        // Assert
         action.Should().ThrowExactly<ArgumentNullException>();
     }
 
     [Test]
     public void Post_WhenCalled_ReturnIContentMethod()
     {
-        //Act
+        // Act
         var result = Client.Request()
                            .Route("tests")
                            .Post();
 
-        //Assert
+        // Assert
         result.Should().NotBeNull();
         result.Should().BeAssignableTo<IContentMethod>();
     }
@@ -83,13 +83,13 @@ public class IRouteTests : HttpClientTestsBase
     [Test]
     public async Task Post_WhenCalled_PerformsPostRequest()
     {
-        //Arrange
+        // Arrange
         static bool AssertRequest(HttpRequestMessage request)
            => AssertRequestMethod(request, HttpMethod.Post);
         MockHandler.SetupRequest(request => AssertRequest(request))
                    .ReturnsResponse(HttpStatusCode.OK);
 
-        //Act
+        // Act
         await Client.Request()
                     .Route("tests")
                     .Post()
@@ -99,24 +99,24 @@ public class IRouteTests : HttpClientTestsBase
     [Test]
     public void Put_ClientIsNull_ThrowArgumentNullException()
     {
-        //Act
+        // Act
         Action action = () => ClientNull.Request()
                                         .Route("tests")
                                         .Put();
 
-        //Assert
+        // Assert
         action.Should().ThrowExactly<ArgumentNullException>();
     }
 
     [Test]
     public void Put_WhenCalled_ReturnIContentMethod()
     {
-        //Act
+        // Act
         var result = Client.Request()
                            .Route("tests")
                            .Put();
 
-        //Assert
+        // Assert
         result.Should().NotBeNull();
         result.Should().BeAssignableTo<IContentMethod>();
     }
@@ -124,13 +124,13 @@ public class IRouteTests : HttpClientTestsBase
     [Test]
     public async Task Put_WhenCalled_PerformsPutRequest()
     {
-        //Arrange
+        // Arrange
         static bool AssertRequest(HttpRequestMessage request)
            => AssertRequestMethod(request, HttpMethod.Put);
         MockHandler.SetupRequest(request => AssertRequest(request))
                    .ReturnsResponse(HttpStatusCode.OK);
 
-        //Act
+        // Act
         await Client.Request()
                     .Route("tests")
                     .Put()
@@ -140,24 +140,24 @@ public class IRouteTests : HttpClientTestsBase
     [Test]
     public void Patch_ClientIsNull_ThrowArgumentNullException()
     {
-        //Act
+        // Act
         Action action = () => ClientNull.Request()
                                         .Route("tests")
                                         .Patch();
 
-        //Assert
+        // Assert
         action.Should().ThrowExactly<ArgumentNullException>();
     }
 
     [Test]
     public void Patch_WhenCalled_ReturnIContentMethod()
     {
-        //Act
+        // Act
         var result = Client.Request()
                            .Route("tests")
                            .Patch();
 
-        //Assert
+        // Assert
         result.Should().NotBeNull();
         result.Should().BeAssignableTo<IContentMethod>();
     }
@@ -165,13 +165,13 @@ public class IRouteTests : HttpClientTestsBase
     [Test]
     public async Task Patch_WhenCalled_PerformsPatchRequest()
     {
-        //Arrange
+        // Arrange
         static bool AssertRequest(HttpRequestMessage request)
            => AssertRequestMethod(request, HttpMethod.Patch);
         MockHandler.SetupRequest(request => AssertRequest(request))
                    .ReturnsResponse(HttpStatusCode.OK);
 
-        //Act
+        // Act
         await Client.Request()
                     .Route("tests")
                     .Patch()
@@ -181,24 +181,24 @@ public class IRouteTests : HttpClientTestsBase
     [Test]
     public void Delete_ClientIsNull_ThrowArgumentNullException()
     {
-        //Act
+        // Act
         Action action = () => ClientNull.Request()
                                         .Route("tests")
                                         .Delete();
 
-        //Assert
+        // Assert
         action.Should().ThrowExactly<ArgumentNullException>();
     }
 
     [Test]
     public void Delete_WhenCalled_ReturnIMethod()
     {
-        //Act
+        // Act
         var result = Client.Request()
                            .Route("tests")
                            .Delete();
 
-        //Assert
+        // Assert
         result.Should().NotBeNull();
         result.Should().BeAssignableTo<IMethod>();
     }
@@ -206,13 +206,13 @@ public class IRouteTests : HttpClientTestsBase
     [Test]
     public async Task Delete_WhenCalled_PerformsDeleteRequest()
     {
-        //Arrange
+        // Arrange
         static bool AssertRequest(HttpRequestMessage request)
            => AssertRequestMethod(request, HttpMethod.Delete);
         MockHandler.SetupRequest(request => AssertRequest(request))
                    .ReturnsResponse(HttpStatusCode.OK);
 
-        //Act
+        // Act
         await Client.Request()
                     .Route("tests")
                     .Delete()
@@ -222,24 +222,24 @@ public class IRouteTests : HttpClientTestsBase
     [Test]
     public void Head_ClientIsNull_ThrowArgumentNullException()
     {
-        //Act
+        // Act
         Action action = () => ClientNull.Request()
                                         .Route("tests")
                                         .Head();
 
-        //Assert
+        // Assert
         action.Should().ThrowExactly<ArgumentNullException>();
     }
 
     [Test]
     public void Head_WhenCalled_ReturnIMethod()
     {
-        //Act
+        // Act
         var result = Client.Request()
                            .Route("tests")
                            .Head();
 
-        //Assert
+        // Assert
         result.Should().NotBeNull();
         result.Should().BeAssignableTo<IMethod>();
     }
@@ -247,13 +247,13 @@ public class IRouteTests : HttpClientTestsBase
     [Test]
     public async Task Head_WhenCalled_PerformsHeadRequest()
     {
-        //Arrange
+        // Arrange
         static bool AssertRequest(HttpRequestMessage request)
            => AssertRequestMethod(request, HttpMethod.Head);
         MockHandler.SetupRequest(request => AssertRequest(request))
                    .ReturnsResponse(HttpStatusCode.OK);
 
-        //Act
+        // Act
         await Client.Request()
                     .Route("tests")
                     .Head()
@@ -263,24 +263,24 @@ public class IRouteTests : HttpClientTestsBase
     [Test]
     public void Options_ClientIsNull_ThrowArgumentNullException()
     {
-        //Act
+        // Act
         Action action = () => ClientNull.Request()
                                         .Route("tests")
                                         .Options();
 
-        //Assert
+        // Assert
         action.Should().ThrowExactly<ArgumentNullException>();
     }
 
     [Test]
     public void Options_WhenCalled_ReturnIMethodWithResponse()
     {
-        //Act
+        // Act
         var result = Client.Request()
                            .Route("tests")
                            .Options();
 
-        //Assert
+        // Assert
         result.Should().NotBeNull();
         result.Should().BeAssignableTo<IMethodWithResponse>();
     }
@@ -288,13 +288,13 @@ public class IRouteTests : HttpClientTestsBase
     [Test]
     public async Task Options_WhenCalled_PerformsOptionsRequest()
     {
-        //Arrange
+        // Arrange
         static bool AssertRequest(HttpRequestMessage request)
            => AssertRequestMethod(request, HttpMethod.Options);
         MockHandler.SetupRequest(request => AssertRequest(request))
                    .ReturnsResponse(HttpStatusCode.OK);
 
-        //Act
+        // Act
         await Client.Request()
                     .Route("tests")
                     .Options()
@@ -304,24 +304,24 @@ public class IRouteTests : HttpClientTestsBase
     [Test]
     public void Trace_ClientIsNull_ThrowArgumentNullException()
     {
-        //Act
+        // Act
         Action action = () => ClientNull.Request()
                                         .Route("tests")
                                         .Trace();
 
-        //Assert
+        // Assert
         action.Should().ThrowExactly<ArgumentNullException>();
     }
 
     [Test]
     public void Trace_WhenCalled_ReturnIMethodWithResponse()
     {
-        //Act
+        // Act
         var result = Client.Request()
                            .Route("tests")
                            .Trace();
 
-        //Assert
+        // Assert
         result.Should().NotBeNull();
         result.Should().BeAssignableTo<IMethod>();
     }
@@ -329,20 +329,20 @@ public class IRouteTests : HttpClientTestsBase
     [Test]
     public async Task Trace_WhenCalled_PerformsTraceRequest()
     {
-        //Arrange
+        // Arrange
         static bool AssertRequest(HttpRequestMessage request)
            => AssertRequestMethod(request, HttpMethod.Trace);
         MockHandler.SetupRequest(request => AssertRequest(request))
                    .ReturnsResponse(HttpStatusCode.OK);
 
-        //Act
+        // Act
         await Client.Request()
                     .Route("tests")
                     .Trace()
                     .SendAsync();
     }
 
-    //Private 
+    // Private 
     /// <summary>
     /// Make sure <see cref="HttpRequestMessage.Method"/>
     /// is set correctly.

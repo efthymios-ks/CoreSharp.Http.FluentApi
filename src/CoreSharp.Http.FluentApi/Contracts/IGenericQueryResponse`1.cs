@@ -6,7 +6,7 @@ namespace CoreSharp.Http.FluentApi.Contracts;
 public interface IGenericQueryResponse<TResponse> : IGenericResponse<TResponse>
     where TResponse : class
 {
-    //Methods 
+    // Methods 
     /// <summary>
     /// Enable in-memory, client-side response caching.
     /// Uses <see cref="IMemoryCache"/> internally.

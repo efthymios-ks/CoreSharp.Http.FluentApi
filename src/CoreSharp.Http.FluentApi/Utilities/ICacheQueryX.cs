@@ -10,7 +10,7 @@ namespace CoreSharp.Http.FluentApi.Utilities;
 /// </summary>
 internal static class ICacheQueryX
 {
-    //Methods 
+    // Methods 
     /// <summary>
     /// Return cached response.
     /// If not existing or timed-out,
@@ -29,19 +29,19 @@ internal static class ICacheQueryX
     private static async ValueTask<TResponse> CachedRequestInternalAsync<TResponse>(Task<TResponse> requestTask, string route, TimeSpan? cacheDuration)
             where TResponse : class
     {
-        //Prepare caching fields 
+        // Prepare caching fields 
         var memoryCache = Settings.MemoryCache;
         var shouldCache = cacheDuration is not null && cacheDuration > TimeSpan.Zero;
         var cacheKey = shouldCache ? $"{route} > {typeof(TResponse).FullName}" : null;
 
-        //Return cached value, if applicable 
+        // Return cached value, if applicable 
         if (shouldCache && memoryCache.TryGetValue<TResponse>(cacheKey, out var cachedValue))
             return cachedValue;
 
-        //Else request... 
+        // Else request... 
         var response = await requestTask;
 
-        //...and cache response, if needed 
+        // ...and cache response, if needed 
         if (shouldCache)
             memoryCache.Set(cacheKey, response, cacheDuration.Value);
 

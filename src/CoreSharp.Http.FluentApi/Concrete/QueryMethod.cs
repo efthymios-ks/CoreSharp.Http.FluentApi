@@ -16,18 +16,18 @@ namespace CoreSharp.Http.FluentApi.Concrete;
 /// <inheritdoc cref="IQueryMethod"/>
 internal class QueryMethod : MethodWithResponse, IQueryMethod
 {
-    //Constructors 
+    // Constructors 
     public QueryMethod(IRoute route, HttpMethod httpMethod)
         : base(route, httpMethod)
         => HttpMethodX.ValidateQueryMethod(httpMethod);
 
-    //Properties 
+    // Properties 
     private IQueryMethod Me
         => this;
 
     IDictionary<string, object> IQueryMethod.QueryParameters { get; } = new Dictionary<string, object>();
 
-    //Methods 
+    // Methods 
     public override async Task<HttpResponseMessage> SendAsync(CancellationToken cancellationToken = default)
         => await IMethodX.SendAsync(this, queryParameters: Me.QueryParameters, cancellationToken: cancellationToken);
 

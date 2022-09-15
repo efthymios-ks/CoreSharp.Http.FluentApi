@@ -2,7 +2,7 @@
 
 public class Photo
 {
-    //Properties 
+    // Properties 
     public int Id { get; set; }
     public int AlbumId { get; set; }
     public string Title { get; set; }

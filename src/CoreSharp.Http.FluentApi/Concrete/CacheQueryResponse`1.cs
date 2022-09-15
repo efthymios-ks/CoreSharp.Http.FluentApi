@@ -10,7 +10,7 @@ namespace CoreSharp.Http.FluentApi.Concrete;
 internal class CacheQueryResponse<TResponse> : GenericQueryResponse<TResponse>, ICacheQueryResponse<TResponse>
     where TResponse : class
 {
-    //Constructors
+    // Constructors
     public CacheQueryResponse(IGenericQueryResponse<TResponse> genericQueryResponse)
         : this(genericQueryResponse?.Method as IQueryMethod)
     {
@@ -21,13 +21,13 @@ internal class CacheQueryResponse<TResponse> : GenericQueryResponse<TResponse>, 
     {
     }
 
-    //Properties 
+    // Properties 
     private ICacheQueryResponse<TResponse> Me
         => this;
 
     TimeSpan? ICacheQueryResponse<TResponse>.Duration { get; set; }
 
-    //Methods 
+    // Methods 
     ICacheQueryResponse<TResponse> ICacheQueryResponse<TResponse>.Cache(TimeSpan duration)
     {
         Me.Duration = duration;

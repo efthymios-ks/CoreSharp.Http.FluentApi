@@ -7,7 +7,7 @@ namespace CoreSharp.Http.FluentApi.Contracts;
 public interface IJsonQueryResponse<TResponse> : IJsonResponse<TResponse>, ICacheQueryResponse<TResponse>
     where TResponse : class
 {
-    //Methods
+    // Methods
     /// <inheritdoc cref="ICacheQueryResponse{TResponse}.Cache(TimeSpan)"/>
     public new IJsonQueryResponse<TResponse> Cache(TimeSpan duration);
 

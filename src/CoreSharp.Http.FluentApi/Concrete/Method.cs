@@ -10,7 +10,7 @@ namespace CoreSharp.Http.FluentApi.Concrete;
 /// <inheritdoc cref="IMethod"/>
 internal class Method : IMethod
 {
-    //Constructors 
+    // Constructors 
     public Method(IRoute route, HttpMethod httpMethod)
     {
         _ = route ?? throw new ArgumentNullException(nameof(route));
@@ -20,7 +20,7 @@ internal class Method : IMethod
         Me.HttpMethod = httpMethod;
     }
 
-    //Properties 
+    // Properties 
     private IMethod Me
         => this;
 
@@ -28,7 +28,7 @@ internal class Method : IMethod
 
     HttpMethod IMethod.HttpMethod { get; set; }
 
-    //Methods 
+    // Methods 
     public virtual async Task<HttpResponseMessage> SendAsync(CancellationToken cancellationToken = default)
         => await IMethodX.SendAsync(this, cancellationToken: cancellationToken);
 }

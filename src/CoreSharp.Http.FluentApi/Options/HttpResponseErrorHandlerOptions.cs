@@ -5,6 +5,6 @@ namespace CoreSharp.Http.FluentApi.Options;
 
 public class HttpResponseErrorHandlerOptions
 {
-    //Properties 
+    // Properties 
     public Action<HttpResponseException> HandleError { get; set; }
 }

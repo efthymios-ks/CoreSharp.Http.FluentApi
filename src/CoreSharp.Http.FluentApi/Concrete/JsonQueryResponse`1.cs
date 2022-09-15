@@ -11,7 +11,7 @@ namespace CoreSharp.Http.FluentApi.Concrete;
 internal class JsonQueryResponse<TResponse> : CacheQueryResponse<TResponse>, IJsonQueryResponse<TResponse>
     where TResponse : class
 {
-    //Constructors
+    // Constructors
     public JsonQueryResponse(IQueryMethod queryMethod, Func<Stream, TResponse> deserializeStreamFunction)
         : this(queryMethod)
         => Me.DeserializeStreamFunction = deserializeStreamFunction ?? throw new ArgumentNullException(nameof(deserializeStreamFunction));
@@ -25,7 +25,7 @@ internal class JsonQueryResponse<TResponse> : CacheQueryResponse<TResponse>, IJs
     {
     }
 
-    //Properties 
+    // Properties 
     private IJsonQueryResponse<TResponse> Me
         => this;
 
@@ -33,7 +33,7 @@ internal class JsonQueryResponse<TResponse> : CacheQueryResponse<TResponse>, IJs
 
     Func<string, TResponse> IJsonResponse<TResponse>.DeserializeStringFunction { get; set; }
 
-    //Methods 
+    // Methods 
     IJsonQueryResponse<TResponse> IJsonQueryResponse<TResponse>.Cache(TimeSpan duration)
     {
         (this as ICacheQueryResponse<TResponse>)!.Cache(duration);

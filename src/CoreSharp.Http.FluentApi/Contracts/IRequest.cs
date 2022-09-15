@@ -9,7 +9,7 @@ namespace CoreSharp.Http.FluentApi.Contracts;
 
 public interface IRequest
 {
-    //Properties
+    // Properties
     /// <inheritdoc cref="HttpClient" />
     internal HttpClient HttpClient { get; set; }
 
@@ -27,7 +27,7 @@ public interface IRequest
     /// </summary>
     internal bool ThrowOnError { get; set; }
 
-    //Methods 
+    // Methods 
     /// <inheritdoc cref="Header(string, string)" />
     IRequest Headers(IDictionary<string, string> headers);
 

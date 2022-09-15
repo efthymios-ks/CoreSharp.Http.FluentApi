@@ -6,10 +6,10 @@ namespace CoreSharp.Http.FluentApi.Contracts;
 
 public interface IContentMethod : IMethodWithResponse
 {
-    //Properties
+    // Properties
     internal HttpContent HttpContent { get; set; }
 
-    //Methods
+    // Methods
     /// <inheritdoc cref="Content(string, string)" />
     public IContentMethod JsonContent(string json);
 

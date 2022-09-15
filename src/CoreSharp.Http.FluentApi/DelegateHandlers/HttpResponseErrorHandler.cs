@@ -11,15 +11,15 @@ namespace CoreSharp.Http.FluentApi.DelegateHandlers;
 
 internal class HttpResponseErrorHandler : DelegatingHandler
 {
-    //Fields
+    // Fields
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     private readonly HttpResponseErrorHandlerOptions _options;
 
-    //Constructors
+    // Constructors
     public HttpResponseErrorHandler(IOptions<HttpResponseErrorHandlerOptions> options)
         => _options = options.Value;
 
-    //Methods
+    // Methods
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         var response = await base.SendAsync(request, cancellationToken);
@@ -27,17 +27,17 @@ internal class HttpResponseErrorHandler : DelegatingHandler
         if (response.IsSuccessStatusCode)
             return response;
 
-        //Allow rewind 
+        // Allow rewind 
         await response.Content.LoadIntoBufferAsync();
 
-        //Create exception 
+        // Create exception 
         var exception = await HttpResponseException.CreateAsync(response);
         response.Dispose();
 
-        //Handle exception 
+        // Handle exception 
         _options.HandleError(exception);
 
-        //Return "204 NoContent"
+        // Return "204 NoContent"
         return new(HttpStatusCode.NoContent)
         {
             RequestMessage = request

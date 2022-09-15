@@ -11,7 +11,7 @@ namespace CoreSharp.Http.FluentApi.Concrete;
 internal class XmlQueryResponse<TResponse> : CacheQueryResponse<TResponse>, IXmlQueryResponse<TResponse>
     where TResponse : class
 {
-    //Constructors
+    // Constructors
     public XmlQueryResponse(IQueryMethod queryMethod, Func<Stream, TResponse> deserializeStreamFunction)
         : this(queryMethod)
         => Me.DeserializeStreamFunction = deserializeStreamFunction ?? throw new ArgumentNullException(nameof(deserializeStreamFunction));
@@ -25,7 +25,7 @@ internal class XmlQueryResponse<TResponse> : CacheQueryResponse<TResponse>, IXml
     {
     }
 
-    //Properties 
+    // Properties 
     private IXmlQueryResponse<TResponse> Me
         => this;
 
@@ -33,7 +33,7 @@ internal class XmlQueryResponse<TResponse> : CacheQueryResponse<TResponse>, IXml
 
     Func<string, TResponse> IXmlResponse<TResponse>.DeserializeStringFunction { get; set; }
 
-    //Methods 
+    // Methods 
     IXmlQueryResponse<TResponse> IXmlQueryResponse<TResponse>.Cache(TimeSpan duration)
     {
         (this as ICacheQueryResponse<TResponse>)!.Cache(duration);

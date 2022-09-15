@@ -7,15 +7,15 @@ namespace Tests.Abstracts;
 
 public class HttpClientTestsBase
 {
-    //Fields 
+    // Fields 
     private const string BaseUri = "https://www.tests.com/api/";
 
-    //Properties
+    // Properties
     protected HttpClient Client { get; private set; }
     protected HttpClient ClientNull { get; }
     protected Mock<HttpMessageHandler> MockHandler { get; private set; }
 
-    //Methods
+    // Methods
     [OneTimeSetUp]
     public void OneTimeSetUp()
     {

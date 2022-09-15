@@ -13,11 +13,11 @@ namespace CoreSharp.Http.FluentApi.Concrete;
 /// <inheritdoc cref="IRequest"/>
 internal class Request : IRequest
 {
-    //Constructors 
+    // Constructors 
     public Request(HttpClient httpClient)
         => Me.HttpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
-    //Properties 
+    // Properties 
     private IRequest Me
         => this;
 
@@ -31,7 +31,7 @@ internal class Request : IRequest
 
     TimeSpan? IRequest.TimeoutInternal { get; set; }
 
-    //Methods 
+    // Methods 
     public IRequest Headers(IDictionary<string, string> headers)
     {
         _ = headers ?? throw new ArgumentNullException(nameof(headers));
@@ -106,7 +106,7 @@ internal class Request : IRequest
         if (string.IsNullOrWhiteSpace(resourceName))
             throw new ArgumentNullException(nameof(resourceName));
 
-        //Fix resource name 
+        // Fix resource name 
         resourceName = UriX.JoinSegments(resourceName).TrimStart('/');
 
         return new Route(this, resourceName);

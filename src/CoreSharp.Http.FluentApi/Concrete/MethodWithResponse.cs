@@ -12,13 +12,13 @@ namespace CoreSharp.Http.FluentApi.Concrete;
 /// <inheritdoc cref="IMethod"/>
 internal class MethodWithResponse : Method, IMethodWithResponse
 {
-    //Constructors 
+    // Constructors 
     public MethodWithResponse(IRoute route, HttpMethod httpMethod)
         : base(route, httpMethod)
     {
     }
 
-    //Methods 
+    // Methods 
     public IGenericResponse<TResponse> To<TResponse>()
         where TResponse : class
         => new GenericResponse<TResponse>(this);

@@ -7,10 +7,10 @@ namespace CoreSharp.Http.FluentApi.Contracts;
 public interface ICacheQueryResponse<TResponse> : IGenericQueryResponse<TResponse>
     where TResponse : class
 {
-    //Properties
+    // Properties
     internal TimeSpan? Duration { get; set; }
 
-    //Methods 
+    // Methods 
     /// <inheritdoc cref="IGenericQueryResponse{TResponse}.Cache(TimeSpan)"/>
     public new ICacheQueryResponse<TResponse> Cache(TimeSpan duration);
 

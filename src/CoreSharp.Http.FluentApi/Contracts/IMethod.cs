@@ -8,12 +8,12 @@ namespace CoreSharp.Http.FluentApi.Contracts;
 
 public interface IMethod
 {
-    //Properties
+    // Properties
     internal IRoute Route { get; set; }
     /// <inheritdoc cref="HttpRequestMessage.Method" />
     internal HttpMethod HttpMethod { get; set; }
 
-    //Methods 
+    // Methods 
     /// <inheritdoc cref="IMethodX.SendAsync(IMethod, IDictionary{string, object}, HttpContent, CancellationToken)" />
     Task<HttpResponseMessage> SendAsync(CancellationToken cancellationToken = default);
 }

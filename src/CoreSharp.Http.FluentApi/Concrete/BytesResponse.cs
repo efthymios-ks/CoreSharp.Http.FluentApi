@@ -8,13 +8,13 @@ namespace CoreSharp.Http.FluentApi.Concrete;
 /// <inheritdoc cref="IBytesResponse" />
 internal class BytesResponse : Response, IBytesResponse
 {
-    //Constructors
+    // Constructors
     public BytesResponse(IMethod method)
         : base(method)
     {
     }
 
-    //Methods
+    // Methods
     async Task<byte[]> IBytesResponse.SendAsync(CancellationToken cancellationtoken)
     {
         using var response = await SendAsync(cancellationtoken);
