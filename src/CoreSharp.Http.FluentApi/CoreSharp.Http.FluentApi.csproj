@@ -10,7 +10,7 @@
 		<RepositoryUrl>CoreSharp.HttpClient.FluentApi</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>Http, Web, Rest, Client, Api, Request, Fluent</PackageTags>
-		<PackageReleaseNotes>-Migrated to .NET6.</PackageReleaseNotes>
+		<PackageReleaseNotes>-Sealed classes.</PackageReleaseNotes>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<PackageIcon>icon.png</PackageIcon>

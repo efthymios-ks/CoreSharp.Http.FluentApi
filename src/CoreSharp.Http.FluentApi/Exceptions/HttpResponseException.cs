@@ -11,7 +11,7 @@ namespace CoreSharp.Http.FluentApi.Exceptions;
 /// Simple <see cref="HttpResponseMessage"/> <see cref="Exception"/>.
 /// </summary>
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
-public class HttpResponseException : Exception
+public sealed class HttpResponseException : Exception
 {
     // Constructors 
     public HttpResponseException(

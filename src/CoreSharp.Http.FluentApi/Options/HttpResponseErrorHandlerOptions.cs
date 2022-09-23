@@ -3,7 +3,7 @@ using System;
 
 namespace CoreSharp.Http.FluentApi.Options;
 
-public class HttpResponseErrorHandlerOptions
+public sealed class HttpResponseErrorHandlerOptions
 {
     // Properties 
     public Action<HttpResponseException> HandleError { get; set; }
