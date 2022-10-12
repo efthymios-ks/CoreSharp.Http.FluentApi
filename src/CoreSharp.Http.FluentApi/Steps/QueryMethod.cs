@@ -59,7 +59,12 @@ internal class QueryMethod : MethodWithResponse, IQueryMethod
         if (string.IsNullOrWhiteSpace(key))
             throw new ArgumentNullException(nameof(key));
 
-        Me.QueryParameters.AddOrUpdate(key, value);
+        var queryParameters = Me.QueryParameters;
+        if (queryParameters.ContainsKey(key))
+            queryParameters[key] = value;
+        else
+            queryParameters.Add(key, value);
+
         return this;
     }
 
@@ -72,7 +77,9 @@ internal class QueryMethod : MethodWithResponse, IQueryMethod
     {
         _ = jsonSerializerSettings ?? throw new ArgumentNullException(nameof(jsonSerializerSettings));
 
-        TResponse DeserializeStreamFunction(Stream stream) => stream.FromJson<TResponse>(jsonSerializerSettings);
+        TResponse DeserializeStreamFunction(Stream stream)
+            => stream.FromJson<TResponse>(jsonSerializerSettings);
+
         return Json(DeserializeStreamFunction);
     }
 
@@ -81,9 +88,11 @@ internal class QueryMethod : MethodWithResponse, IQueryMethod
     {
         _ = jsonSerializerOptions ?? throw new ArgumentNullException(nameof(jsonSerializerOptions));
 
-        TResponse DeserializeStreamFunction(Stream stream) => stream.FromJsonAsync<TResponse>(jsonSerializerOptions)
-                                                                    .GetAwaiter()
-                                                                    .GetResult();
+        TResponse DeserializeStreamFunction(Stream stream)
+            => stream.FromJsonAsync<TResponse>(jsonSerializerOptions)
+                     .GetAwaiter()
+                     .GetResult();
+
         return Json(DeserializeStreamFunction);
     }
 
@@ -105,7 +114,11 @@ internal class QueryMethod : MethodWithResponse, IQueryMethod
 
     IXmlQueryResponse<TResponse> IQueryMethod.Xml<TResponse>()
     {
-        static TResponse DeserializeStreamFunction(Stream stream) => stream.FromXmlAsync<TResponse>().GetAwaiter().GetResult();
+        static TResponse DeserializeStreamFunction(Stream stream)
+            => stream.FromXmlAsync<TResponse>()
+                     .GetAwaiter()
+                     .GetResult();
+
         return Me.Xml(DeserializeStreamFunction);
     }
 

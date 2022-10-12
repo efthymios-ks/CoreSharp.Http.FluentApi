@@ -1,5 +1,4 @@
-﻿using CoreSharp.Extensions;
-using CoreSharp.Http.FluentApi.Steps.Interfaces;
+﻿using CoreSharp.Http.FluentApi.Steps.Interfaces;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,6 +17,9 @@ internal class StringResponse : Response, IStringResponse
     async Task<string> IStringResponse.SendAsync(CancellationToken cancellationtoken)
     {
         using var response = await SendAsync(cancellationtoken);
-        return await (response?.Content.ReadAsStringAsync(cancellationtoken)).OrDefault();
+        if (response is null)
+            return null;
+
+        return await response?.Content.ReadAsStringAsync(cancellationtoken);
     }
 }

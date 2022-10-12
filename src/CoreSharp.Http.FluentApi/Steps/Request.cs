@@ -81,9 +81,16 @@ internal class Request : IRequest
     public IRequest Timeout(TimeSpan timeout)
     {
         if (timeout.TotalMilliseconds <= 0)
-            throw new ArgumentOutOfRangeException(nameof(timeout), $"{nameof(timeout)} ({timeout.ToStringReadable()}) has to be positive and non-zero.");
-        else if (timeout == System.Threading.Timeout.InfiniteTimeSpan)
-            throw new ArgumentOutOfRangeException(nameof(timeout), $"{nameof(timeout)} cannot be {nameof(System.Threading.Timeout.InfiniteTimeSpan)}.");
+        {
+            throw new ArgumentOutOfRangeException(nameof(timeout),
+                $"{nameof(timeout)} ({timeout.ToStringReadable()}) has to be positive and non-zero.");
+        }
+
+        if (timeout == System.Threading.Timeout.InfiniteTimeSpan)
+        {
+            throw new ArgumentOutOfRangeException(nameof(timeout),
+                $"{nameof(timeout)} cannot be {nameof(System.Threading.Timeout.InfiniteTimeSpan)}.");
+        }
 
         Me.TimeoutInternal = timeout;
         return this;

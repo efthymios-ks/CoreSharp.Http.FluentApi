@@ -19,6 +19,9 @@ internal class GenericResponse<TResponse> : Response, IGenericResponse<TResponse
     public new virtual async Task<TResponse> SendAsync(CancellationToken cancellationToken = default)
     {
         using var response = await base.SendAsync(cancellationToken);
-        return await (response?.Content.DeserializeAsync<TResponse>(cancellationToken)).OrDefault();
+        if (response is null)
+            return null;
+
+        return await response.Content.DeserializeAsync<TResponse>(cancellationToken);
     }
 }

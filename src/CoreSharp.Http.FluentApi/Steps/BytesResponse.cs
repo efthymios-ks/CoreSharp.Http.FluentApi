@@ -1,5 +1,4 @@
-﻿using CoreSharp.Extensions;
-using CoreSharp.Http.FluentApi.Steps.Interfaces;
+﻿using CoreSharp.Http.FluentApi.Steps.Interfaces;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,6 +17,9 @@ internal class BytesResponse : Response, IBytesResponse
     async Task<byte[]> IBytesResponse.SendAsync(CancellationToken cancellationtoken)
     {
         using var response = await SendAsync(cancellationtoken);
-        return await (response?.Content.ReadAsByteArrayAsync(cancellationtoken)).OrDefault();
+        if (response is null)
+            return null;
+
+        return await response.Content.ReadAsByteArrayAsync(cancellationtoken);
     }
 }
