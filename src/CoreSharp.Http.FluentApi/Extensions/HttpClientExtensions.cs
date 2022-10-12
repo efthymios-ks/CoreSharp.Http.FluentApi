@@ -1,5 +1,5 @@
-﻿using CoreSharp.Http.FluentApi.Concrete;
-using CoreSharp.Http.FluentApi.Contracts;
+﻿using CoreSharp.Http.FluentApi.Steps;
+using CoreSharp.Http.FluentApi.Steps.Interfaces;
 using System;
 using System.Net.Http;
 

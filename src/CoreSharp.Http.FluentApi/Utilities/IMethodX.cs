@@ -1,6 +1,6 @@
 ﻿using CoreSharp.Extensions;
-using CoreSharp.Http.FluentApi.Contracts;
 using CoreSharp.Http.FluentApi.Extensions;
+using CoreSharp.Http.FluentApi.Steps.Interfaces;
 using CoreSharp.Models;
 using System.Collections.Generic;
 using System.Net.Http;

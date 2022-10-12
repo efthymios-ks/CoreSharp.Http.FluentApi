@@ -1,4 +1,4 @@
-﻿using CoreSharp.Http.FluentApi.Contracts;
+﻿using CoreSharp.Http.FluentApi.Steps.Interfaces;
 using System;
 using System.Threading;
 using System.Threading.Tasks;

@@ -1,6 +1,6 @@
-﻿using CoreSharp.Http.FluentApi.Contracts;
-using CoreSharp.Http.FluentApi.Exceptions;
+﻿using CoreSharp.Http.FluentApi.Exceptions;
 using CoreSharp.Http.FluentApi.Extensions;
+using CoreSharp.Http.FluentApi.Steps.Interfaces;
 using FluentAssertions;
 using Microsoft.Net.Http.Headers;
 using Moq.Contrib.HttpClient;
