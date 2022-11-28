@@ -10,7 +10,8 @@
 		<RepositoryUrl>CoreSharp.HttpClient.FluentApi</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>Http, Web, Rest, Client, Api, Request, Fluent</PackageTags>
-		<PackageReleaseNotes>-Sealed classes.</PackageReleaseNotes>
+		<PackageReleaseNotes>-Sealed classes.
+-Refactored CacheQueryResponse step.</PackageReleaseNotes>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<PackageIcon>icon.png</PackageIcon>

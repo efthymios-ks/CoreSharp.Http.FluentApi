@@ -43,9 +43,7 @@ internal class JsonQueryResponse<TResponse> : CacheQueryResponse<TResponse>, IJs
     async ValueTask<TResponse> IJsonQueryResponse<TResponse>.SendAsync(CancellationToken cancellationToken)
     {
         var requestTask = SendAsync(cancellationToken);
-        var route = Me.Method.Route.Route;
-        var cacheDuration = Me.Duration;
-        return await ICacheQueryX.CachedRequestAsync(requestTask, route, cacheDuration);
+        return await ICacheQueryResponseX.RequestWithCacheAsync(this, requestTask);
     }
 
     public override async Task<TResponse> SendAsync(CancellationToken cancellationToken = default)

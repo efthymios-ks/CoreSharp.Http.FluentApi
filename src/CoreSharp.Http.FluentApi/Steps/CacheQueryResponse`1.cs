@@ -37,8 +37,6 @@ internal class CacheQueryResponse<TResponse> : GenericQueryResponse<TResponse>, 
     async ValueTask<TResponse> ICacheQueryResponse<TResponse>.SendAsync(CancellationToken cancellationToken)
     {
         var requestTask = (this as IGenericQueryResponse<TResponse>)!.SendAsync(cancellationToken);
-        var route = Me.Method.Route.Route;
-        var cacheDuration = Me.Duration;
-        return await ICacheQueryX.CachedRequestAsync(requestTask, route, cacheDuration);
+        return await ICacheQueryResponseX.RequestWithCacheAsync(this, requestTask);
     }
 }
