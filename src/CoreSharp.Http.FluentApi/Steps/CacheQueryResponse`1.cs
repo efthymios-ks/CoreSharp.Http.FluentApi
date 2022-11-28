@@ -25,12 +25,26 @@ internal class CacheQueryResponse<TResponse> : GenericQueryResponse<TResponse>, 
     private ICacheQueryResponse<TResponse> Me
         => this;
 
-    TimeSpan? ICacheQueryResponse<TResponse>.Duration { get; set; }
+    TimeSpan ICacheQueryResponse<TResponse>.Duration { get; set; }
+
+    Func<Task<bool>> ICacheQueryResponse<TResponse>.ForceNewRequestConditionFactory { get; set; }
 
     // Methods 
     ICacheQueryResponse<TResponse> ICacheQueryResponse<TResponse>.Cache(TimeSpan duration)
     {
         Me.Duration = duration;
+        return this;
+    }
+
+    ICacheQueryResponse<TResponse> ICacheQueryResponse<TResponse>.ForceNew(bool forceNewRequest)
+      => Me.ForceNew(() => forceNewRequest);
+
+    ICacheQueryResponse<TResponse> ICacheQueryResponse<TResponse>.ForceNew(Func<bool> forceNewRequestConditionFactory)
+      => Me.ForceNew(async () => await Task.FromResult(forceNewRequestConditionFactory()));
+
+    ICacheQueryResponse<TResponse> ICacheQueryResponse<TResponse>.ForceNew(Func<Task<bool>> forceNewRequestConditionFactory)
+    {
+        Me.ForceNewRequestConditionFactory = forceNewRequestConditionFactory ?? throw new ArgumentNullException(nameof(forceNewRequestConditionFactory));
         return this;
     }
 

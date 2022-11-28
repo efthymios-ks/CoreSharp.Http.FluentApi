@@ -36,19 +36,21 @@ internal static class ICacheQueryResponseX
         // Prepare caching fields 
         var memoryCache = Settings.MemoryCache;
         var cacheDuration = cacheQueryResponse.Duration;
-        var shouldCache = cacheDuration > TimeSpan.Zero;
-        var cacheKey = GenerateRequestHash(cacheQueryResponse);
+        var hasValidDuration = cacheDuration > TimeSpan.Zero;
+        var cacheKey = hasValidDuration ? GenerateRequestHash(cacheQueryResponse) : null;
+        var forceNewRequest = hasValidDuration && cacheQueryResponse is not null
+                            && await cacheQueryResponse.ForceNewRequestConditionFactory();
 
         // Return cached value, if applicable 
-        if (shouldCache && memoryCache.TryGetValue<TResponse>(cacheKey, out var cachedValue))
+        if (!forceNewRequest && hasValidDuration && memoryCache.TryGetValue<TResponse>(cacheKey, out var cachedValue))
             return cachedValue;
 
         // Else request... 
         var response = await requestTask;
 
         // ...and cache response, if needed 
-        if (shouldCache)
-            memoryCache.Set(cacheKey, response, cacheDuration.Value);
+        if (hasValidDuration)
+            memoryCache.Set(cacheKey, response, cacheDuration);
 
         return response;
     }

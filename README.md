@@ -37,34 +37,34 @@ Include `using CoreSharp.Http.FluentApi.Extensions;`
 ## Examples 
 
 ### Responses
-```
+```CSharp 
     var response = await httpClient.Request()
                                    .Route("albums", 1)
                                    .Get()
                                    .SendAsync();
 ``` 
-```
+```CSharp 
     var responseAsString = await httpClient.Request()
                                            .Route("albums", 1)
                                            .Get()
                                            .String()
                                            .SendAsync();
 ``` 
-```
+```CSharp 
    using var responseAsStream = await httpClient.Request()
                                                 .Route("albums", 1)
                                                 .Get()
                                                 .Stream()
                                                 .SendAsync();
 ```
-```
+```CSharp 
     var responseAsBytes = await httpClient.Request()
                                           .Route("albums", 1)
                                           .Get()
                                           .Bytes()
                                           .SendAsync();
 ```
-```
+```CSharp 
     var albums = await httpClient.Request()
                                  .Route("albums")
                                  .Get()
@@ -72,7 +72,7 @@ Include `using CoreSharp.Http.FluentApi.Extensions;`
                                  .To<IEnumerable<Album>()
                                  .SendAsync();
 ```
-```
+```CSharp 
     var albums = await httpClient.Request()
                                  .Route("albums")
                                  .Get()
@@ -80,7 +80,7 @@ Include `using CoreSharp.Http.FluentApi.Extensions;`
                                  .Json<IEnumerable<Album>()
                                  .SendAsync();
 ```
-```
+```CSharp 
     var albums = await httpClient.Request()
                                  .Route("albums")
                                  .Get()
@@ -90,7 +90,7 @@ Include `using CoreSharp.Http.FluentApi.Extensions;`
 ``` 
 
 ### HttpCompletionOption
-```
+```CSharp 
     await httpClient.Request()
                     .CompletionOption(HttpCompletionOption.ResponseContentRead)
                     .Route("albums")
@@ -99,7 +99,7 @@ Include `using CoreSharp.Http.FluentApi.Extensions;`
 ```
 
 ### Timeout
-```
+```CSharp 
     try
     {
         await httpClient.Request()
@@ -114,7 +114,7 @@ Include `using CoreSharp.Http.FluentApi.Extensions;`
 ```
 
 ### Error handling
-```
+```CSharp 
     try
     {
         // Throws by default 
@@ -132,7 +132,7 @@ Include `using CoreSharp.Http.FluentApi.Extensions;`
         var summary = ex.ToString(); 
     }
 ``` 
-```
+```CSharp 
     await httpClient.Request()
                     .IgnoreError()
                     .Route("wrong/url")
@@ -141,7 +141,7 @@ Include `using CoreSharp.Http.FluentApi.Extensions;`
 ```
 
 ### Add header 
-```
+```CSharp 
     await httpClient.Request()
                     // Cache-Control > max-age=604800 
                     .Header(HeaderNames.CacheControl, "max-age=604800")
@@ -151,7 +151,7 @@ Include `using CoreSharp.Http.FluentApi.Extensions;`
 ```
 
 ### Add header ACCEPT 
-```
+```CSharp 
     await httpClient.Request()
                     // Accept > application/json 
                     .Accept(MediaTypeNames.Application.Json)
@@ -159,7 +159,7 @@ Include `using CoreSharp.Http.FluentApi.Extensions;`
                     .Get()
                     .SendAsync();
 ```
-```
+```CSharp 
     await httpClient.Request()
                     // Accept > application/json 
                     .AcceptJson()
@@ -169,7 +169,7 @@ Include `using CoreSharp.Http.FluentApi.Extensions;`
 ```
 
 ### Add header AUTHORIZATION 
-```
+```CSharp 
     await httpClient.Request()
                     // Authorization > Bearer accessTokenValue 
                     .Bearer("accessTokenValue")
@@ -186,7 +186,7 @@ Include `using CoreSharp.Http.FluentApi.Extensions;`
                     .Get()
                     .SendAsync();
 ```
-```
+```CSharp 
     var id = 1;
     await httpClient.Request()
                     // /albums/1 
@@ -194,7 +194,7 @@ Include `using CoreSharp.Http.FluentApi.Extensions;`
                     .Get()
                     .SendAsync();
 ```
-``` 
+```CSharp 
     var id = 1;
     await httpClient.Request()
                     // /albums/1 
@@ -204,7 +204,7 @@ Include `using CoreSharp.Http.FluentApi.Extensions;`
 ```
 
 ### Query parameter (GET)
-```
+```CSharp 
     await httpClient.Request()
                     .Route("albums")
                     .Get()
@@ -212,7 +212,7 @@ Include `using CoreSharp.Http.FluentApi.Extensions;`
                     .Query("Id", 1).Query("Color", "Black").Query("CreationDate", DateTime.Now)
                     .SendAsync();
 ```
-```
+```CSharp 
     await httpClient.Request()
                     .Route("albums")
                     .Get()
@@ -220,7 +220,7 @@ Include `using CoreSharp.Http.FluentApi.Extensions;`
                     .Query(new { Id = 1, Color = "Black", CreationDate = DateTime.Now })
                     .SendAsync();
 ``` 
-```
+```CSharp 
     await httpClient.Request()
                     .Route("albums")
                     .Get()
@@ -230,7 +230,7 @@ Include `using CoreSharp.Http.FluentApi.Extensions;`
 ```
  
 ### Cache response (GET generic requests) 
-```
+```CSharp
     await httpClient.Request()
                     .Route("albums", 1)
                     .Get()
@@ -238,7 +238,7 @@ Include `using CoreSharp.Http.FluentApi.Extensions;`
                     .Cache(TimeSpan.FromMinutes(15))
                     .SendAsync();
 ```
-```
+```CSharp
     await httpClient.Request()
                     .Route("albums")
                     .Get()
@@ -247,8 +247,63 @@ Include `using CoreSharp.Http.FluentApi.Extensions;`
                     .SendAsync();
 ```
 
-### Content (POST, PUT, PATCH) 
+### Clear cached response 
+```CSharp
+    var shouldForceNew = GetShouldForceNew();
+    await httpClient.Request()
+                    .Route("albums")
+                    .Get()
+                    .To<Album>()
+                    .Cache(TimeSpan.FromMinutes(15))
+                    // Variable 
+                    .ForceNew(shouldForceNew)
+                    .SendAsync();
+					
+    static bool GetShouldForceNew()
+        => ...;
 ```
+```CSharp
+    await httpClient.Request()
+                    .Route("albums")
+                    .Get()
+                    .To<Album>()
+                    .Cache(TimeSpan.FromMinutes(15))
+                    // Func<bool>
+                    .ForceNew(() => GetShouldForceNew())
+                    .SendAsync();
+					
+    static bool GetShouldForceNew()
+        => ...;
+```
+```CSharp
+    await httpClient.Request()
+                    .Route("albums")
+                    .Get()
+                    .To<Album>()
+                    .Cache(TimeSpan.FromMinutes(15))
+                    // Func<bool>
+                    .ForceNew(GetShouldForceNew)
+                    .SendAsync();
+					
+    static bool GetShouldForceNew()
+        => ...;
+```
+```CSharp
+    await httpClient.Request()
+                    .Route("albums")
+                    .Get()
+                    .To<Album>()
+                    .Cache(TimeSpan.FromMinutes(15))
+                    // Task<Func<bool>>
+                    .ForceNew(() => GetShouldForceNewAsync())
+                    .SendAsync();
+					
+    static async Task<bool> GetShouldForceNewAsync()
+        => ...;
+```
+
+### Content (POST, PUT, PATCH) 
+```CSharp
     HttpContent content = GetHttpContent(...);
     await httpClient.Request()
                     .Route("albums")
@@ -256,7 +311,7 @@ Include `using CoreSharp.Http.FluentApi.Extensions;`
                     .Content(content)
                     .SendAsync();
 ```
-```
+```CSharp
     var dynamicContent = new { Id = 1, UserId = 1, Title = "My Title" };
     await httpClient.Request()
                     .Route("albums")
@@ -264,7 +319,7 @@ Include `using CoreSharp.Http.FluentApi.Extensions;`
                     .JsonContent(dynamicContent)
                     .SendAsync();
 ```
-```
+```CSharp
     var album = new Album { Id = 1, UserId = 1, Title = "My Title" };
     await httpClient.Request()
                     .Route("albums")
@@ -272,7 +327,7 @@ Include `using CoreSharp.Http.FluentApi.Extensions;`
                     .JsonContent(album)
                     .SendAsync();
 ```
-```
+```CSharp
     var stringContent = @"{ ""Id"" = 1, ""UserId"" = 1, ""Title"" = ""My Title"" }";
     await httpClient.Request()
                     .Route("albums")

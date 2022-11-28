@@ -47,14 +47,15 @@ internal static class Program
                                           .Bytes()
                                           .SendAsync();
 
-            // GET /posts, map to array and cache 
-            for (var i = 0; i < 3; i++)
+            // GET /posts, map to array and cache  
+            for (var i = 0; i < 5; i++)
             {
                 var posts = await client.Request()
                                         .Route("posts")
                                         .Get()
                                         .Json<Post[]>()
                                         .Cache(TimeSpan.FromMinutes(5))
+                                        .ForceNew(i % 2 == 0)
                                         .SendAsync();
             }
 

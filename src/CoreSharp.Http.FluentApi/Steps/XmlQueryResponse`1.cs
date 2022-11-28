@@ -40,6 +40,18 @@ internal class XmlQueryResponse<TResponse> : CacheQueryResponse<TResponse>, IXml
         return this;
     }
 
+    IXmlQueryResponse<TResponse> IXmlQueryResponse<TResponse>.ForceNew(bool forceNewRequest)
+      => Me.ForceNew(() => forceNewRequest);
+
+    IXmlQueryResponse<TResponse> IXmlQueryResponse<TResponse>.ForceNew(Func<bool> forceNewRequestConditionFactory)
+      => Me.ForceNew(async () => await Task.FromResult(forceNewRequestConditionFactory()));
+
+    IXmlQueryResponse<TResponse> IXmlQueryResponse<TResponse>.ForceNew(Func<Task<bool>> forceNewRequestConditionFactory)
+    {
+        (this as ICacheQueryResponse<TResponse>)!.ForceNew(forceNewRequestConditionFactory);
+        return this;
+    }
+
     async ValueTask<TResponse> IXmlQueryResponse<TResponse>.SendAsync(CancellationToken cancellationToken)
     {
         var requestTask = SendAsync(cancellationToken);

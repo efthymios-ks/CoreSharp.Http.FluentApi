@@ -40,6 +40,18 @@ internal class JsonQueryResponse<TResponse> : CacheQueryResponse<TResponse>, IJs
         return this;
     }
 
+    IJsonQueryResponse<TResponse> IJsonQueryResponse<TResponse>.ForceNew(bool forceNewRequest)
+      => Me.ForceNew(() => forceNewRequest);
+
+    IJsonQueryResponse<TResponse> IJsonQueryResponse<TResponse>.ForceNew(Func<bool> forceNewRequestConditionFactory)
+      => Me.ForceNew(async () => await Task.FromResult(forceNewRequestConditionFactory()));
+
+    IJsonQueryResponse<TResponse> IJsonQueryResponse<TResponse>.ForceNew(Func<Task<bool>> forceNewRequestConditionFactory)
+    {
+        (this as ICacheQueryResponse<TResponse>)!.ForceNew(forceNewRequestConditionFactory);
+        return this;
+    }
+
     async ValueTask<TResponse> IJsonQueryResponse<TResponse>.SendAsync(CancellationToken cancellationToken)
     {
         var requestTask = SendAsync(cancellationToken);
@@ -48,4 +60,5 @@ internal class JsonQueryResponse<TResponse> : CacheQueryResponse<TResponse>, IJs
 
     public override async Task<TResponse> SendAsync(CancellationToken cancellationToken = default)
         => await IJsonResponseX.SendAsync(this, cancellationToken);
+
 }
