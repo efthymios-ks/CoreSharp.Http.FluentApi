@@ -179,7 +179,7 @@ Include `using CoreSharp.Http.FluentApi.Extensions;`
 ```
 
 ### Request with key 
-```
+```CSharp 
     await httpClient.Request()
                     // /albums/1 
                     .Route("albums/1")

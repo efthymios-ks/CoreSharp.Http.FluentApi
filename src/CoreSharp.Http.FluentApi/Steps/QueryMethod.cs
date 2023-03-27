@@ -35,7 +35,8 @@ internal class QueryMethod : MethodWithResponse, IQueryMethod
         where TResponse : class
         => new GenericQueryResponse<TResponse>(this);
 
-    public IQueryMethod Query<TQueryParameter>(TQueryParameter queryParameter) where TQueryParameter : class
+    public IQueryMethod Query<TQueryParameter>(TQueryParameter queryParameter)
+        where TQueryParameter : class
     {
         _ = queryParameter ?? throw new ArgumentNullException(nameof(queryParameter));
 
@@ -55,16 +56,13 @@ internal class QueryMethod : MethodWithResponse, IQueryMethod
 
     public IQueryMethod Query(string key, object value)
     {
-        _ = value ?? throw new ArgumentNullException(nameof(value));
         if (string.IsNullOrWhiteSpace(key))
             throw new ArgumentNullException(nameof(key));
+        if (value is null)
+            return this;
 
         var queryParameters = Me.QueryParameters;
-        if (queryParameters.ContainsKey(key))
-            queryParameters[key] = value;
-        else
-            queryParameters.Add(key, value);
-
+        queryParameters[key] = value;
         return this;
     }
 
