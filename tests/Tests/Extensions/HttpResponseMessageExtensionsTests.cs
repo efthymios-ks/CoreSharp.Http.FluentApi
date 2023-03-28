@@ -19,7 +19,7 @@ public class HttpResponseMessageExtensionsTests
         HttpResponseMessage response = null;
 
         // Act
-        Func<Task> task = () => response.EnsureSuccessAsync();
+        Func<Task> task = response.EnsureSuccessAsync;
 
         // Assert 
         await task.Should().ThrowExactlyAsync<ArgumentNullException>();
@@ -34,7 +34,7 @@ public class HttpResponseMessageExtensionsTests
         using var response = new HttpResponseMessage(httpStatusCode);
 
         // Act
-        Func<Task> task = () => response.EnsureSuccessAsync();
+        Func<Task> task = response.EnsureSuccessAsync;
 
         // Assert 
         await task.Should().NotThrowAsync<HttpResponseException>();
@@ -59,7 +59,7 @@ public class HttpResponseMessageExtensionsTests
         };
 
         // Act
-        Func<Task> task = () => response.EnsureSuccessAsync();
+        Func<Task> task = response.EnsureSuccessAsync;
 
         // Assert 
         var assertion = await task.Should().ThrowAsync<HttpResponseException>();

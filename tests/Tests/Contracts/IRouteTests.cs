@@ -45,7 +45,7 @@ public class IRouteTests : HttpClientTestsBase
         // Arrange
         static bool AssertRequest(HttpRequestMessage request)
            => AssertRequestMethod(request, HttpMethod.Get);
-        MockHandler.SetupRequest(request => AssertRequest(request))
+        MockHandler.SetupRequest(AssertRequest)
                    .ReturnsResponse(HttpStatusCode.OK);
 
         // Act
@@ -86,7 +86,7 @@ public class IRouteTests : HttpClientTestsBase
         // Arrange
         static bool AssertRequest(HttpRequestMessage request)
            => AssertRequestMethod(request, HttpMethod.Post);
-        MockHandler.SetupRequest(request => AssertRequest(request))
+        MockHandler.SetupRequest(AssertRequest)
                    .ReturnsResponse(HttpStatusCode.OK);
 
         // Act
@@ -127,7 +127,7 @@ public class IRouteTests : HttpClientTestsBase
         // Arrange
         static bool AssertRequest(HttpRequestMessage request)
            => AssertRequestMethod(request, HttpMethod.Put);
-        MockHandler.SetupRequest(request => AssertRequest(request))
+        MockHandler.SetupRequest(AssertRequest)
                    .ReturnsResponse(HttpStatusCode.OK);
 
         // Act
@@ -168,7 +168,7 @@ public class IRouteTests : HttpClientTestsBase
         // Arrange
         static bool AssertRequest(HttpRequestMessage request)
            => AssertRequestMethod(request, HttpMethod.Patch);
-        MockHandler.SetupRequest(request => AssertRequest(request))
+        MockHandler.SetupRequest(AssertRequest)
                    .ReturnsResponse(HttpStatusCode.OK);
 
         // Act
@@ -209,7 +209,7 @@ public class IRouteTests : HttpClientTestsBase
         // Arrange
         static bool AssertRequest(HttpRequestMessage request)
            => AssertRequestMethod(request, HttpMethod.Delete);
-        MockHandler.SetupRequest(request => AssertRequest(request))
+        MockHandler.SetupRequest(AssertRequest)
                    .ReturnsResponse(HttpStatusCode.OK);
 
         // Act
@@ -250,7 +250,7 @@ public class IRouteTests : HttpClientTestsBase
         // Arrange
         static bool AssertRequest(HttpRequestMessage request)
            => AssertRequestMethod(request, HttpMethod.Head);
-        MockHandler.SetupRequest(request => AssertRequest(request))
+        MockHandler.SetupRequest(AssertRequest)
                    .ReturnsResponse(HttpStatusCode.OK);
 
         // Act
@@ -291,7 +291,7 @@ public class IRouteTests : HttpClientTestsBase
         // Arrange
         static bool AssertRequest(HttpRequestMessage request)
            => AssertRequestMethod(request, HttpMethod.Options);
-        MockHandler.SetupRequest(request => AssertRequest(request))
+        MockHandler.SetupRequest(AssertRequest)
                    .ReturnsResponse(HttpStatusCode.OK);
 
         // Act
@@ -332,7 +332,7 @@ public class IRouteTests : HttpClientTestsBase
         // Arrange
         static bool AssertRequest(HttpRequestMessage request)
            => AssertRequestMethod(request, HttpMethod.Trace);
-        MockHandler.SetupRequest(request => AssertRequest(request))
+        MockHandler.SetupRequest(AssertRequest)
                    .ReturnsResponse(HttpStatusCode.OK);
 
         // Act

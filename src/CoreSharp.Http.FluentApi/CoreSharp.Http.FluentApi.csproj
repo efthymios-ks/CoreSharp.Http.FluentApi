@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup Label="Package">
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net7.0</TargetFramework>
 		<Authors>Efthymios Koktsidis</Authors>
 		<Product>Efthymios Koktsidis</Product>
 		<Description>HttpClient extensions for fluent http request building.</Description>
@@ -10,14 +10,17 @@
 		<RepositoryUrl>CoreSharp.HttpClient.FluentApi</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>Http, Web, Rest, Client, Api, Request, Fluent</PackageTags>
-		<PackageReleaseNotes>-Sealed classes.
--Refactored CacheQueryResponse step.</PackageReleaseNotes>
+		<PackageReleaseNotes>
+			-Sealed classes.
+			-Refactored CacheQueryResponse step.-
+			-ΜιγραMigrated to NET7...
+		</PackageReleaseNotes>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<PackageIcon>icon.png</PackageIcon>
 		<PackageIconUrl />
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>6.0.0</Version>
+		<Version>7.0.0</Version>
 		<AssemblyVersion>1.0.0.0</AssemblyVersion>
 		<FileVersion>1.0.0.0</FileVersion>
 	</PropertyGroup>
@@ -30,10 +33,10 @@
 	</ItemGroup>
 
 	<ItemGroup Label="Package references">
-		<PackageReference Include="CoreSharp" Version="6.2.0" PrivateAssets="Compile" />
-		<PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="6.0.0" PrivateAssets="Compile" />
-		<PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="6.0.1" PrivateAssets="Compile" />
-		<PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" PrivateAssets="Compile" />
+		<PackageReference Include="CoreSharp" Version="7.0.1" PrivateAssets="Compile" />
+		<PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="7.0.0" PrivateAssets="Compile" />
+		<PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="7.0.0" PrivateAssets="Compile" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" PrivateAssets="Compile" />
 	</ItemGroup>
 
 </Project>

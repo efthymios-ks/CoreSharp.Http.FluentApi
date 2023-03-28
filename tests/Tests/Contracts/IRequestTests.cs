@@ -44,7 +44,7 @@ public class IRequestTests : HttpClientTestsBase
         // Arrange 
         bool AssertRequest(HttpRequestMessage request)
             => AssertRequestHeader(request, headerKey, headerValue);
-        MockHandler.SetupRequest(request => AssertRequest(request))
+        MockHandler.SetupRequest(AssertRequest)
                    .ReturnsResponse(HttpStatusCode.OK);
 
         // Act
@@ -62,7 +62,7 @@ public class IRequestTests : HttpClientTestsBase
         // Arrange 
         bool AssertRequest(HttpRequestMessage request)
             => AssertRequestHeader(request, HeaderNames.Accept, acceptHeaderValue);
-        MockHandler.SetupRequest(request => AssertRequest(request))
+        MockHandler.SetupRequest(AssertRequest)
                    .ReturnsResponse(HttpStatusCode.OK);
 
         // Act
@@ -79,7 +79,7 @@ public class IRequestTests : HttpClientTestsBase
         // Arrange 
         static bool AssertRequest(HttpRequestMessage request)
             => AssertRequestHeader(request, HeaderNames.Accept, MediaTypeNames.Application.Json);
-        MockHandler.SetupRequest(request => AssertRequest(request))
+        MockHandler.SetupRequest(AssertRequest)
                    .ReturnsResponse(HttpStatusCode.OK);
 
         // Act
@@ -96,7 +96,7 @@ public class IRequestTests : HttpClientTestsBase
         // Arrange 
         static bool AssertRequest(HttpRequestMessage request)
             => AssertRequestHeader(request, HeaderNames.Accept, MediaTypeNames.Application.Xml);
-        MockHandler.SetupRequest(request => AssertRequest(request))
+        MockHandler.SetupRequest(AssertRequest)
                    .ReturnsResponse(HttpStatusCode.OK);
 
         // Act
@@ -114,7 +114,7 @@ public class IRequestTests : HttpClientTestsBase
         // Arrange 
         bool AssertRequest(HttpRequestMessage request)
             => AssertRequestHeader(request, HeaderNames.Authorization, $"Bearer {authorizationHeaderValue}");
-        MockHandler.SetupRequest(request => AssertRequest(request))
+        MockHandler.SetupRequest(AssertRequest)
                    .ReturnsResponse(HttpStatusCode.OK);
 
         // Act
@@ -193,7 +193,7 @@ public class IRequestTests : HttpClientTestsBase
         // Arrange  
         bool AssertRequest(HttpRequestMessage request)
             => AssertRequestUrlWithKey(request, resourceName, key);
-        MockHandler.SetupRequest(request => AssertRequest(request))
+        MockHandler.SetupRequest(AssertRequest)
                    .ReturnsResponse(HttpStatusCode.OK);
 
         // Act
@@ -210,7 +210,7 @@ public class IRequestTests : HttpClientTestsBase
         // Arrange  
         bool AssertRequest(HttpRequestMessage request)
             => AssertRequestUrlWithKey(request, resourceName, key);
-        MockHandler.SetupRequest(request => AssertRequest(request))
+        MockHandler.SetupRequest(AssertRequest)
                    .ReturnsResponse(HttpStatusCode.OK);
 
         // Act
@@ -228,7 +228,7 @@ public class IRequestTests : HttpClientTestsBase
         var key = Guid.NewGuid();
         bool AssertRequest(HttpRequestMessage request)
             => AssertRequestUrlWithKey(request, resourceName, key);
-        MockHandler.SetupRequest(request => AssertRequest(request))
+        MockHandler.SetupRequest(AssertRequest)
                    .ReturnsResponse(HttpStatusCode.OK);
 
         // Act
