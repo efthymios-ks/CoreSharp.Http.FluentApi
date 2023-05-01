@@ -63,8 +63,11 @@ internal class Request : IRequest
     public IRequest AcceptXml()
         => Accept(MediaTypeNames.Application.Xml);
 
+    public IRequest Authorization(string authorization)
+         => Header(HeaderNames.Authorization, authorization);
+
     public IRequest Bearer(string accessToken)
-         => Header(HeaderNames.Authorization, $"Bearer {accessToken}");
+         => Authorization($"Bearer {accessToken}");
 
     public IRequest IgnoreError()
     {

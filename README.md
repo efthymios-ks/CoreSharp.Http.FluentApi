@@ -171,8 +171,17 @@ Include `using CoreSharp.Http.FluentApi.Extensions;`
 ### Add header AUTHORIZATION 
 ```CSharp 
     await httpClient.Request()
-                    // Authorization > Bearer accessTokenValue 
-                    .Bearer("accessTokenValue")
+                    // Authorization > {apiKey}
+                    .Authorization("{apiKey}")
+                    .Route("albums")
+                    .Get()
+                    .SendAsync();
+```
+
+```CSharp 
+    await httpClient.Request()
+                    // Authorization > Bearer {accessToken}
+                    .Bearer("{accessToken}")
                     .Route("albums")
                     .Get()
                     .SendAsync();

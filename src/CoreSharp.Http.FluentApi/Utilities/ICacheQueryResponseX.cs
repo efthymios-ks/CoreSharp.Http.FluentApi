@@ -18,7 +18,7 @@ internal static class ICacheQueryResponseX
     /// request new response and cache.
     /// </summary>
     public static ValueTask<TResponse> RequestWithCacheAsync<TResponse>(
-         ICacheQueryResponse<TResponse> cacheQueryResponse,
+        ICacheQueryResponse<TResponse> cacheQueryResponse,
         Task<TResponse> requestTask)
         where TResponse : class
     {
@@ -38,12 +38,14 @@ internal static class ICacheQueryResponseX
         var cacheDuration = cacheQueryResponse.Duration;
         var hasValidDuration = cacheDuration > TimeSpan.Zero;
         var cacheKey = hasValidDuration ? GenerateRequestHash(cacheQueryResponse) : null;
-        var forceNewRequest = hasValidDuration && cacheQueryResponse is not null
-                            && await cacheQueryResponse.ForceNewRequestConditionFactory();
+        var forceNewRequest = hasValidDuration && await cacheQueryResponse.ForceNewRequestConditionFactory();
 
         // Return cached value, if applicable 
-        if (!forceNewRequest && hasValidDuration && memoryCache.TryGetValue<TResponse>(cacheKey, out var cachedValue))
+        if (!forceNewRequest && hasValidDuration
+            && memoryCache.TryGetValue<TResponse>(cacheKey, out var cachedValue))
+        {
             return cachedValue;
+        }
 
         // Else request... 
         var response = await requestTask;
@@ -74,7 +76,8 @@ internal static class ICacheQueryResponseX
         }
 
         // Response type 
-        builder.Append(separator).Append(typeof(TResponse).FullName);
+        builder.Append(separator)
+               .Append(typeof(TResponse).FullName);
 
         return builder.ToString();
     }
