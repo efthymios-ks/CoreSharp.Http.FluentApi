@@ -16,7 +16,9 @@ internal static class HttpMethodX
 
         var validMethods = new[] { HttpMethod.Get };
         if (validMethods.Any(m => m == httpMethod))
+        {
             return;
+        }
 
         ThrowInvalidHttpMethodException(httpMethod, validMethods);
     }
@@ -27,7 +29,9 @@ internal static class HttpMethodX
 
         var validMethods = new[] { HttpMethod.Post, HttpMethod.Put, HttpMethod.Patch };
         if (validMethods.Any(m => m == httpMethod))
+        {
             return;
+        }
 
         ThrowInvalidHttpMethodException(httpMethod, validMethods);
     }

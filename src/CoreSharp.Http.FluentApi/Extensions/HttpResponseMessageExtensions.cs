@@ -22,7 +22,9 @@ public static class HttpResponseMessageExtensions
         _ = response ?? throw new ArgumentNullException(nameof(response));
 
         if (response.IsSuccessStatusCode)
+        {
             return;
+        }
 
         var exception = await HttpResponseException.CreateAsync(response);
         response.Content?.Dispose();

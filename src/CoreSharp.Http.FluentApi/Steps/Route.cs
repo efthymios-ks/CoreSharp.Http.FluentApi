@@ -12,7 +12,9 @@ internal class Route : IRoute
     {
         _ = request ?? throw new ArgumentNullException(nameof(request));
         if (string.IsNullOrWhiteSpace(resourceName))
+        {
             throw new ArgumentNullException(nameof(resourceName));
+        }
 
         var me = Me;
         me.Request = request;

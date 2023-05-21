@@ -37,7 +37,9 @@ internal class Request : IRequest
         _ = headers ?? throw new ArgumentNullException(nameof(headers));
 
         foreach (var header in headers)
+        {
             Header(header.Key, header.Value);
+        }
 
         return this;
     }
@@ -45,9 +47,14 @@ internal class Request : IRequest
     public IRequest Header(string key, string value)
     {
         if (string.IsNullOrWhiteSpace(key))
+        {
             throw new ArgumentNullException(nameof(key));
+        }
+
         if (string.IsNullOrWhiteSpace(value))
+        {
             throw new ArgumentNullException(nameof(value));
+        }
 
         Me.HeadersInternal.AddOrUpdate(key, value);
 
@@ -114,7 +121,9 @@ internal class Request : IRequest
     public IRoute Route(string resourceName)
     {
         if (string.IsNullOrWhiteSpace(resourceName))
+        {
             throw new ArgumentNullException(nameof(resourceName));
+        }
 
         // Fix resource name 
         resourceName = UriX.JoinSegments(resourceName).TrimStart('/');

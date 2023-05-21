@@ -106,7 +106,7 @@ csharp_prefer_static_local_function = true
 csharp_preferred_modifier_order = public,private,protected,internal,static,extern,new,virtual,abstract,sealed,override,readonly,unsafe,volatile,async
 
 # Code-block preferences
-csharp_prefer_braces = when_multiline
+csharp_prefer_braces = true
 csharp_prefer_simple_using_statement = true
 csharp_style_namespace_declarations = file_scoped
 csharp_style_prefer_method_group_conversion = true
@@ -224,7 +224,6 @@ dotnet_diagnostic.CA1305.severity = none
 dotnet_diagnostic.CA1710.severity = none
 dotnet_diagnostic.CA1711.severity = none
 dotnet_diagnostic.CA1848.severity = none
-dotnet_diagnostic.CA1852.severity = none
 dotnet_diagnostic.CA2254.severity = none
 dotnet_diagnostic.CS0649.severity = none
 dotnet_diagnostic.CS1591.severity = none
@@ -241,6 +240,7 @@ dotnet_diagnostic.S2368.severity = none
 dotnet_diagnostic.S3011.severity = none
 dotnet_diagnostic.S3433.severity = none
 dotnet_diagnostic.S3925.severity = none
+dotnet_diagnostic.SYSLIB1045.severity = none
 
 # Default severity level for analyzers
 dotnet_analyzer_diagnostic.severity = warning

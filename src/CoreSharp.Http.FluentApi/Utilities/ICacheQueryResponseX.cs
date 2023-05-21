@@ -52,7 +52,9 @@ internal static class ICacheQueryResponseX
 
         // ...and cache response, if needed 
         if (hasValidDuration)
+        {
             memoryCache.Set(cacheKey, response, cacheDuration);
+        }
 
         return response;
     }
@@ -72,7 +74,9 @@ internal static class ICacheQueryResponseX
         if (queryParameters?.Count is > 0)
         {
             foreach (var queryParameter in queryParameters)
+            {
                 builder.Append(separator).Append($"{queryParameter.Key}={queryParameter.Value}");
+            }
         }
 
         // Response type 

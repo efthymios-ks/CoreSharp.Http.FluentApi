@@ -24,7 +24,9 @@ internal static class IJsonResponseX
 
         using var response = await (jsonResponse as IResponse)!.SendAsync(cancellationToken);
         if (response is null)
+        {
             return null;
+        }
 
         // Stream deserialization 
         if (jsonResponse.DeserializeStreamFunction is not null)

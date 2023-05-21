@@ -19,7 +19,9 @@ internal class StreamResponse : Response, IStreamResponse
     {
         using var response = await SendAsync(cancellationtoken);
         if (response is null)
+        {
             return null;
+        }
 
         return await response?.Content.ReadAsStreamAsync(cancellationtoken);
     }

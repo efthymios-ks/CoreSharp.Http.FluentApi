@@ -24,7 +24,9 @@ internal static class IXmlResponseX
 
         using var response = await (xmlResponse as IResponse)!.SendAsync(cancellationToken);
         if (response is null)
+        {
             return null;
+        }
 
         // Stream deserialization
         if (xmlResponse.DeserializeStreamFunction is not null)

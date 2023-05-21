@@ -247,17 +247,25 @@ public class IRequestTests : HttpClientTestsBase
     {
         _ = request ?? throw new ArgumentNullException(nameof(request));
         if (string.IsNullOrWhiteSpace(headerKey))
+        {
             throw new ArgumentNullException(nameof(headerKey));
+        }
         else if (string.IsNullOrWhiteSpace(headerValue))
+        {
             throw new ArgumentNullException(nameof(headerValue));
+        }
 
         var headers = request.Headers;
         if (!headers.Contains(headerKey))
+        {
             throw new KeyNotFoundException($"Header key ({headerKey}) not found.");
+        }
 
         var actualValue = headers.GetValues(headerKey).FirstOrDefault();
         if (actualValue != headerValue)
+        {
             throw new Exception($"Header=`{headerKey}` value missmatch ({actualValue} != {headerValue}).");
+        }
 
         return true;
     }
@@ -271,12 +279,16 @@ public class IRequestTests : HttpClientTestsBase
         _ = request ?? throw new ArgumentNullException(nameof(request));
         _ = key ?? throw new ArgumentNullException(nameof(key));
         if (string.IsNullOrWhiteSpace(resourceName))
+        {
             throw new ArgumentNullException(nameof(resourceName));
+        }
 
         var expectedUriEnd = Invariant($"{resourceName}/{key}").Trim('/');
         var actualUri = request.RequestUri.AbsoluteUri.Trim('/');
         if (!actualUri.EndsWith(expectedUriEnd, StringComparison.OrdinalIgnoreCase))
+        {
             throw new Exception($"`{actualUri}` does not end with `{expectedUriEnd}`.");
+        }
 
         return true;
     }

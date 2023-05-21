@@ -105,7 +105,9 @@ internal class ContentMethod : MethodWithResponse, IContentMethod
         serializer.Serialize(jsonWriter, entity);
         streamWriter.Flush();
         if (stream.CanSeek)
+        {
             stream.Position = 0;
+        }
 
         return stream;
     }
@@ -156,7 +158,9 @@ internal class ContentMethod : MethodWithResponse, IContentMethod
     {
         _ = stream ?? throw new ArgumentNullException(nameof(stream));
         if (string.IsNullOrWhiteSpace(mediaTypeName))
+        {
             throw new ArgumentNullException(nameof(mediaTypeName));
+        }
 
         var streamContent = new StreamContent(stream, bufferSize);
         streamContent.Headers.ContentType = new(mediaTypeName);

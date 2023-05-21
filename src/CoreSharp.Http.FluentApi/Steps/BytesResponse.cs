@@ -18,7 +18,9 @@ internal class BytesResponse : Response, IBytesResponse
     {
         using var response = await SendAsync(cancellationtoken);
         if (response is null)
+        {
             return null;
+        }
 
         return await response.Content.ReadAsByteArrayAsync(cancellationtoken);
     }

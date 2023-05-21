@@ -355,7 +355,9 @@ public class IRouteTests : HttpClientTestsBase
         var expectedMethod = httpMethod.Method;
         var actualMethod = request.Method.Method;
         if (actualMethod != expectedMethod)
+        {
             throw new Exception($"{nameof(HttpMethod)} missmatch (`{actualMethod}` != `{expectedMethod}`).");
+        }
 
         return true;
     }

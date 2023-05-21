@@ -43,9 +43,13 @@ public sealed class HttpResponseException : Exception
     public override string ToString()
     {
         if (JsonX.IsEmpty(ResponseContent))
+        {
             return ResponseStatus;
+        }
         else
+        {
             return ResponseStatus + Environment.NewLine + ResponseContent;
+        }
     }
 
     /// <summary>

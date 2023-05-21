@@ -49,7 +49,9 @@ internal class QueryMethod : MethodWithResponse, IQueryMethod
         _ = parameters ?? throw new ArgumentNullException(nameof(parameters));
 
         foreach (var (key, value) in parameters)
+        {
             Query(key, value);
+        }
 
         return this;
     }
@@ -57,9 +59,14 @@ internal class QueryMethod : MethodWithResponse, IQueryMethod
     public IQueryMethod Query(string key, object value)
     {
         if (string.IsNullOrWhiteSpace(key))
+        {
             throw new ArgumentNullException(nameof(key));
+        }
+
         if (value is null)
+        {
             return this;
+        }
 
         var queryParameters = Me.QueryParameters;
         queryParameters[key] = value;

@@ -18,7 +18,9 @@ internal class StringResponse : Response, IStringResponse
     {
         using var response = await SendAsync(cancellationtoken);
         if (response is null)
+        {
             return null;
+        }
 
         return await response?.Content.ReadAsStringAsync(cancellationtoken);
     }

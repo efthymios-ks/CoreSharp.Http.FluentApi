@@ -25,7 +25,9 @@ internal class HttpResponseErrorHandler : DelegatingHandler
         var response = await base.SendAsync(request, cancellationToken);
 
         if (response.IsSuccessStatusCode)
+        {
             return response;
+        }
 
         // Allow rewind 
         await response.Content.LoadIntoBufferAsync();

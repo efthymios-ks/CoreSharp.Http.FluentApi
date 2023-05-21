@@ -20,7 +20,9 @@ internal class GenericResponse<TResponse> : Response, IGenericResponse<TResponse
     {
         using var response = await base.SendAsync(cancellationToken);
         if (response is null)
+        {
             return null;
+        }
 
         return await response.Content.DeserializeAsync<TResponse>(cancellationToken);
     }
