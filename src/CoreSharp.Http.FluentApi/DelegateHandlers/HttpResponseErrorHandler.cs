@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CoreSharp.Http.FluentApi.DelegateHandlers;
 
-internal class HttpResponseErrorHandler : DelegatingHandler
+internal sealed class HttpResponseErrorHandler : DelegatingHandler
 {
     // Fields
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]

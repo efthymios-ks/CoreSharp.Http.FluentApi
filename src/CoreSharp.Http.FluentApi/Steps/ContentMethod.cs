@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace CoreSharp.Http.FluentApi.Steps;
 
 /// <inheritdoc cref="IContentMethod"/>
-internal class ContentMethod : MethodWithResponse, IContentMethod
+internal sealed class ContentMethod : MethodWithResponse, IContentMethod
 {
     // Fields
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]

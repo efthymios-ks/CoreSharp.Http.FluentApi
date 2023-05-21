@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace CoreSharp.Http.FluentApi.Steps;
 
 /// <inheritdoc cref="IXmlResponse{TResponse}"/>
-internal class XmlResponse<TResponse> : GenericResponse<TResponse>, IXmlResponse<TResponse>
+internal sealed class XmlResponse<TResponse> : GenericResponse<TResponse>, IXmlResponse<TResponse>
     where TResponse : class
 {
     // Constructors

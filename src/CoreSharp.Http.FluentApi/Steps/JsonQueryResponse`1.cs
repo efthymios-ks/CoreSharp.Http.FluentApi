@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace CoreSharp.Http.FluentApi.Steps;
 
 /// <inheritdoc cref="IJsonQueryResponse{TResponse}"/>
-internal class JsonQueryResponse<TResponse> : CacheQueryResponse<TResponse>, IJsonQueryResponse<TResponse>
+internal sealed class JsonQueryResponse<TResponse> : CacheQueryResponse<TResponse>, IJsonQueryResponse<TResponse>
     where TResponse : class
 {
     // Constructors

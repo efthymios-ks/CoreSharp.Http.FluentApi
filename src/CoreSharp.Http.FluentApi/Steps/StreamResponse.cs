@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace CoreSharp.Http.FluentApi.Steps;
 
 /// <inheritdoc cref="IStreamResponse" />
-internal class StreamResponse : Response, IStreamResponse
+internal sealed class StreamResponse : Response, IStreamResponse
 {
     // Constructors
     public StreamResponse(IMethod method)

@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace CoreSharp.Http.FluentApi.Steps;
 
 /// <inheritdoc cref="IQueryMethod"/>
-internal class QueryMethod : MethodWithResponse, IQueryMethod
+internal sealed class QueryMethod : MethodWithResponse, IQueryMethod
 {
     // Constructors 
     public QueryMethod(IRoute route, HttpMethod httpMethod)

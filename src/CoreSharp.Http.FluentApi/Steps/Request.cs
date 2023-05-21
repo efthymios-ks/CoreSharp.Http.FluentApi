@@ -11,7 +11,7 @@ using static System.FormattableString;
 namespace CoreSharp.Http.FluentApi.Steps;
 
 /// <inheritdoc cref="IRequest"/>
-internal class Request : IRequest
+internal sealed class Request : IRequest
 {
     // Constructors 
     public Request(HttpClient httpClient)

@@ -5,7 +5,7 @@ using System.Net.Http;
 namespace CoreSharp.Http.FluentApi.Steps;
 
 /// <inheritdoc cref="IRoute"/>
-internal class Route : IRoute
+internal sealed class Route : IRoute
 {
     // Constructors  
     public Route(IRequest request, string resourceName)

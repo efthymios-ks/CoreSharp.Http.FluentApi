@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace CoreSharp.Http.FluentApi.Steps;
 
 /// <inheritdoc cref="IBytesResponse" />
-internal class BytesResponse : Response, IBytesResponse
+internal sealed class BytesResponse : Response, IBytesResponse
 {
     // Constructors
     public BytesResponse(IMethod method)
