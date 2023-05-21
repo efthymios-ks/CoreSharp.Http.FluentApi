@@ -13,8 +13,8 @@ internal class Method : IMethod
     // Constructors 
     public Method(IRoute route, HttpMethod httpMethod)
     {
-        _ = route ?? throw new ArgumentNullException(nameof(route));
-        _ = httpMethod ?? throw new ArgumentNullException(nameof(httpMethod));
+        ArgumentNullException.ThrowIfNull(route);
+        ArgumentNullException.ThrowIfNull(httpMethod);
 
         Me.Route = route;
         Me.HttpMethod = httpMethod;

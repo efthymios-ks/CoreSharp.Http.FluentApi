@@ -245,15 +245,9 @@ public class IRequestTests : HttpClientTestsBase
     /// </summary>
     private static bool AssertRequestHeader(HttpRequestMessage request, string headerKey, string headerValue)
     {
-        _ = request ?? throw new ArgumentNullException(nameof(request));
-        if (string.IsNullOrWhiteSpace(headerKey))
-        {
-            throw new ArgumentNullException(nameof(headerKey));
-        }
-        else if (string.IsNullOrWhiteSpace(headerValue))
-        {
-            throw new ArgumentNullException(nameof(headerValue));
-        }
+        ArgumentNullException.ThrowIfNull(request);
+        ArgumentException.ThrowIfNullOrEmpty(headerKey);
+        ArgumentException.ThrowIfNullOrEmpty(headerKey);
 
         var headers = request.Headers;
         if (!headers.Contains(headerKey))
@@ -264,7 +258,7 @@ public class IRequestTests : HttpClientTestsBase
         var actualValue = headers.GetValues(headerKey).FirstOrDefault();
         if (actualValue != headerValue)
         {
-            throw new Exception($"Header=`{headerKey}` value missmatch ({actualValue} != {headerValue}).");
+            throw new InvalidOperationException($"Header=`{headerKey}` value missmatch ({actualValue} != {headerValue}).");
         }
 
         return true;
@@ -276,18 +270,15 @@ public class IRequestTests : HttpClientTestsBase
     /// </summary>
     private static bool AssertRequestUrlWithKey(HttpRequestMessage request, string resourceName, object key)
     {
-        _ = request ?? throw new ArgumentNullException(nameof(request));
-        _ = key ?? throw new ArgumentNullException(nameof(key));
-        if (string.IsNullOrWhiteSpace(resourceName))
-        {
-            throw new ArgumentNullException(nameof(resourceName));
-        }
+        ArgumentNullException.ThrowIfNull(request);
+        ArgumentNullException.ThrowIfNull(key);
+        ArgumentException.ThrowIfNullOrEmpty(resourceName);
 
         var expectedUriEnd = Invariant($"{resourceName}/{key}").Trim('/');
         var actualUri = request.RequestUri.AbsoluteUri.Trim('/');
         if (!actualUri.EndsWith(expectedUriEnd, StringComparison.OrdinalIgnoreCase))
         {
-            throw new Exception($"`{actualUri}` does not end with `{expectedUriEnd}`.");
+            throw new InvalidOperationException($"`{actualUri}` does not end with `{expectedUriEnd}`.");
         }
 
         return true;

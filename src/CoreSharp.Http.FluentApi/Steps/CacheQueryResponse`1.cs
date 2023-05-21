@@ -44,7 +44,9 @@ internal class CacheQueryResponse<TResponse> : GenericQueryResponse<TResponse>, 
 
     ICacheQueryResponse<TResponse> ICacheQueryResponse<TResponse>.ForceNew(Func<Task<bool>> forceNewRequestConditionFactory)
     {
-        Me.ForceNewRequestConditionFactory = forceNewRequestConditionFactory ?? throw new ArgumentNullException(nameof(forceNewRequestConditionFactory));
+        ArgumentNullException.ThrowIfNull(forceNewRequestConditionFactory);
+
+        Me.ForceNewRequestConditionFactory = forceNewRequestConditionFactory;
         return this;
     }
 

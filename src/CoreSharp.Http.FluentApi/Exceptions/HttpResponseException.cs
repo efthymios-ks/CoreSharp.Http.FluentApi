@@ -59,7 +59,7 @@ public sealed class HttpResponseException : Exception
     /// </summary>
     public static async Task<HttpResponseException> CreateAsync(HttpResponseMessage response, Exception exception = null)
     {
-        _ = response ?? throw new ArgumentNullException(nameof(response));
+        ArgumentNullException.ThrowIfNull(response);
 
         var request = response.RequestMessage;
 

@@ -19,7 +19,7 @@ public static class HttpResponseMessageExtensions
     /// </summary>
     public static async Task EnsureSuccessAsync(this HttpResponseMessage response)
     {
-        _ = response ?? throw new ArgumentNullException(nameof(response));
+        ArgumentNullException.ThrowIfNull(response);
 
         if (response.IsSuccessStatusCode)
         {

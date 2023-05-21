@@ -10,11 +10,8 @@ internal sealed class Route : IRoute
     // Constructors  
     public Route(IRequest request, string resourceName)
     {
-        _ = request ?? throw new ArgumentNullException(nameof(request));
-        if (string.IsNullOrWhiteSpace(resourceName))
-        {
-            throw new ArgumentNullException(nameof(resourceName));
-        }
+        ArgumentNullException.ThrowIfNull(request);
+        ArgumentException.ThrowIfNullOrEmpty(resourceName);
 
         var me = Me;
         me.Request = request;

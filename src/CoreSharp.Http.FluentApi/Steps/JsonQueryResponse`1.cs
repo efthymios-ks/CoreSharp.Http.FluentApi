@@ -14,11 +14,19 @@ internal sealed class JsonQueryResponse<TResponse> : CacheQueryResponse<TRespons
     // Constructors
     public JsonQueryResponse(IQueryMethod queryMethod, Func<Stream, TResponse> deserializeStreamFunction)
         : this(queryMethod)
-        => Me.DeserializeStreamFunction = deserializeStreamFunction ?? throw new ArgumentNullException(nameof(deserializeStreamFunction));
+    {
+        ArgumentNullException.ThrowIfNull(deserializeStreamFunction);
+
+        Me.DeserializeStreamFunction = deserializeStreamFunction;
+    }
 
     public JsonQueryResponse(IQueryMethod queryMethod, Func<string, TResponse> deserializeStringFunction)
         : this(queryMethod)
-        => Me.DeserializeStringFunction = deserializeStringFunction ?? throw new ArgumentNullException(nameof(deserializeStringFunction));
+    {
+        ArgumentNullException.ThrowIfNull(deserializeStringFunction);
+
+        Me.DeserializeStringFunction = deserializeStringFunction;
+    }
 
     public JsonQueryResponse(IQueryMethod queryMethod)
         : base(queryMethod)

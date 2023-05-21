@@ -349,14 +349,14 @@ public class IRouteTests : HttpClientTestsBase
     /// </summary>
     private static bool AssertRequestMethod(HttpRequestMessage request, HttpMethod httpMethod)
     {
-        _ = request ?? throw new ArgumentNullException(nameof(request));
-        _ = httpMethod ?? throw new ArgumentNullException(nameof(httpMethod));
+        ArgumentNullException.ThrowIfNull(request);
+        ArgumentNullException.ThrowIfNull(httpMethod);
 
         var expectedMethod = httpMethod.Method;
         var actualMethod = request.Method.Method;
         if (actualMethod != expectedMethod)
         {
-            throw new Exception($"{nameof(HttpMethod)} missmatch (`{actualMethod}` != `{expectedMethod}`).");
+            throw new InvalidOperationException($"{nameof(HttpMethod)} missmatch (`{actualMethod}` != `{expectedMethod}`).");
         }
 
         return true;

@@ -20,7 +20,7 @@ internal static class IJsonResponseX
     public static async Task<TResponse> SendAsync<TResponse>(IJsonResponse<TResponse> jsonResponse, CancellationToken cancellationToken = default)
         where TResponse : class
     {
-        _ = jsonResponse ?? throw new ArgumentNullException(nameof(jsonResponse));
+        ArgumentNullException.ThrowIfNull(jsonResponse);
 
         using var response = await (jsonResponse as IResponse)!.SendAsync(cancellationToken);
         if (response is null)

@@ -15,8 +15,8 @@ public static class IHttpClientBuilderExtensions
         this IHttpClientBuilder httpClientBuilder,
         Action<HttpResponseErrorHandlerOptions> configure)
     {
-        _ = httpClientBuilder ?? throw new ArgumentNullException(nameof(httpClientBuilder));
-        _ = configure ?? throw new ArgumentNullException(nameof(configure));
+        ArgumentNullException.ThrowIfNull(httpClientBuilder);
+        ArgumentNullException.ThrowIfNull(configure);
 
         var services = httpClientBuilder.Services;
         if (!services.Any(service => service.ServiceType == typeof(HttpResponseErrorHandler)))

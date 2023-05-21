@@ -40,7 +40,7 @@ internal sealed class ContentMethod : MethodWithResponse, IContentMethod
 
     public IContentMethod JsonContent(Stream stream)
     {
-        _ = stream ?? throw new ArgumentNullException(nameof(stream));
+        ArgumentNullException.ThrowIfNull(stream);
 
         var content = ToJsonStreamContent(stream);
         Content(content);
@@ -49,7 +49,7 @@ internal sealed class ContentMethod : MethodWithResponse, IContentMethod
 
     public IContentMethod JsonContent(object content)
     {
-        _ = content ?? throw new ArgumentNullException(nameof(content));
+        ArgumentNullException.ThrowIfNull(content);
 
         var streamContent = ToJsonStreamContent(content);
         Content(streamContent);
@@ -61,7 +61,7 @@ internal sealed class ContentMethod : MethodWithResponse, IContentMethod
 
     public IContentMethod XmlContent(Stream stream)
     {
-        _ = stream ?? throw new ArgumentNullException(nameof(stream));
+        ArgumentNullException.ThrowIfNull(stream);
 
         var content = ToXmlStreamContent(stream);
         Content(content);
@@ -70,7 +70,7 @@ internal sealed class ContentMethod : MethodWithResponse, IContentMethod
 
     public IContentMethod XmlContent(object content)
     {
-        _ = content ?? throw new ArgumentNullException(nameof(content));
+        ArgumentNullException.ThrowIfNull(content);
 
         var xml = content.ToXml();
         XmlContent(xml);
@@ -95,7 +95,7 @@ internal sealed class ContentMethod : MethodWithResponse, IContentMethod
     /// </summary>
     private static Stream ToJsonStream(object entity, int bufferSize = DefaultBufferSize)
     {
-        _ = entity ?? throw new ArgumentNullException(nameof(entity));
+        ArgumentNullException.ThrowIfNull(entity);
 
         var serializer = JsonSerializer.Create();
         var stream = new MemoryStream();
@@ -119,7 +119,7 @@ internal sealed class ContentMethod : MethodWithResponse, IContentMethod
     /// </summary>
     private static StreamContent ToJsonStreamContent(object entity, int bufferSize = DefaultBufferSize)
     {
-        _ = entity ?? throw new ArgumentNullException(nameof(entity));
+        ArgumentNullException.ThrowIfNull(entity);
 
         var stream = ToJsonStream(entity);
         return ToJsonStreamContent(stream, bufferSize);
@@ -132,7 +132,7 @@ internal sealed class ContentMethod : MethodWithResponse, IContentMethod
     /// </summary>
     private static StreamContent ToJsonStreamContent(Stream stream, int bufferSize = DefaultBufferSize)
     {
-        _ = stream ?? throw new ArgumentNullException(nameof(stream));
+        ArgumentNullException.ThrowIfNull(stream);
 
         return ToStreamContent(stream, MediaTypeNames.Application.Json, bufferSize);
     }
@@ -144,7 +144,7 @@ internal sealed class ContentMethod : MethodWithResponse, IContentMethod
     /// </summary>
     private static StreamContent ToXmlStreamContent(Stream stream, int bufferSize = DefaultBufferSize)
     {
-        _ = stream ?? throw new ArgumentNullException(nameof(stream));
+        ArgumentNullException.ThrowIfNull(stream);
 
         return ToStreamContent(stream, MediaTypeNames.Application.Xml, bufferSize);
     }
@@ -156,11 +156,8 @@ internal sealed class ContentMethod : MethodWithResponse, IContentMethod
     /// </summary>
     private static StreamContent ToStreamContent(Stream stream, string mediaTypeName, int bufferSize = DefaultBufferSize)
     {
-        _ = stream ?? throw new ArgumentNullException(nameof(stream));
-        if (string.IsNullOrWhiteSpace(mediaTypeName))
-        {
-            throw new ArgumentNullException(nameof(mediaTypeName));
-        }
+        ArgumentNullException.ThrowIfNull(stream);
+        ArgumentException.ThrowIfNullOrEmpty(mediaTypeName);
 
         var streamContent = new StreamContent(stream, bufferSize);
         streamContent.Headers.ContentType = new(mediaTypeName);

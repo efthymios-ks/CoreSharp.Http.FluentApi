@@ -16,7 +16,7 @@ public static class HttpClientExtensions
     /// </summary>
     public static IRequest Request(this HttpClient httpClient)
     {
-        _ = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+        ArgumentNullException.ThrowIfNull(httpClient);
 
         return new Request(httpClient);
     }

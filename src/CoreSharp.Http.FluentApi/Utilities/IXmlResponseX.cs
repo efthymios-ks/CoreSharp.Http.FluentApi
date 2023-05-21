@@ -20,7 +20,7 @@ internal static class IXmlResponseX
     public static async Task<TResponse> SendAsync<TResponse>(IXmlResponse<TResponse> xmlResponse, CancellationToken cancellationToken = default)
         where TResponse : class
     {
-        _ = xmlResponse ?? throw new ArgumentNullException(nameof(xmlResponse));
+        ArgumentNullException.ThrowIfNull(xmlResponse);
 
         using var response = await (xmlResponse as IResponse)!.SendAsync(cancellationToken);
         if (response is null)

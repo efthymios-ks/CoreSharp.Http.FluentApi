@@ -22,8 +22,8 @@ internal static class ICacheQueryResponseX
         Task<TResponse> requestTask)
         where TResponse : class
     {
-        _ = requestTask ?? throw new ArgumentNullException(nameof(requestTask));
-        _ = cacheQueryResponse ?? throw new ArgumentNullException(nameof(cacheQueryResponse));
+        ArgumentNullException.ThrowIfNull(requestTask);
+        ArgumentNullException.ThrowIfNull(cacheQueryResponse);
 
         return RequestWithCacheInternalAsync(cacheQueryResponse, requestTask);
     }

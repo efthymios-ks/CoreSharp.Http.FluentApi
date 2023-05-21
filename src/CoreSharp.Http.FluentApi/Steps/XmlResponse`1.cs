@@ -14,11 +14,19 @@ internal sealed class XmlResponse<TResponse> : GenericResponse<TResponse>, IXmlR
     // Constructors
     public XmlResponse(IMethod method, Func<Stream, TResponse> deserializeStreamFunction)
         : this(method)
-        => Me.DeserializeStreamFunction = deserializeStreamFunction ?? throw new ArgumentNullException(nameof(deserializeStreamFunction));
+    {
+        ArgumentNullException.ThrowIfNull(deserializeStreamFunction);
+
+        Me.DeserializeStreamFunction = deserializeStreamFunction;
+    }
 
     public XmlResponse(IMethod method, Func<string, TResponse> deserializeStringFunction)
         : this(method)
-        => Me.DeserializeStringFunction = deserializeStringFunction ?? throw new ArgumentNullException(nameof(deserializeStringFunction));
+    {
+        ArgumentNullException.ThrowIfNull(deserializeStringFunction);
+
+        Me.DeserializeStringFunction = deserializeStringFunction;
+    }
 
     public XmlResponse(IMethod method)
         : base(method)

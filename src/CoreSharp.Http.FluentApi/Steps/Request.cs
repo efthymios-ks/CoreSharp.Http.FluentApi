@@ -15,7 +15,11 @@ internal sealed class Request : IRequest
 {
     // Constructors 
     public Request(HttpClient httpClient)
-        => Me.HttpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+    {
+        ArgumentNullException.ThrowIfNull(httpClient);
+
+        Me.HttpClient = httpClient;
+    }
 
     // Properties 
     private IRequest Me
@@ -34,7 +38,7 @@ internal sealed class Request : IRequest
     // Methods 
     public IRequest Headers(IDictionary<string, string> headers)
     {
-        _ = headers ?? throw new ArgumentNullException(nameof(headers));
+        ArgumentNullException.ThrowIfNull(headers);
 
         foreach (var header in headers)
         {
@@ -46,15 +50,8 @@ internal sealed class Request : IRequest
 
     public IRequest Header(string key, string value)
     {
-        if (string.IsNullOrWhiteSpace(key))
-        {
-            throw new ArgumentNullException(nameof(key));
-        }
-
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            throw new ArgumentNullException(nameof(value));
-        }
+        ArgumentException.ThrowIfNullOrEmpty(key);
+        ArgumentException.ThrowIfNullOrEmpty(value);
 
         Me.HeadersInternal.AddOrUpdate(key, value);
 
@@ -120,10 +117,7 @@ internal sealed class Request : IRequest
 
     public IRoute Route(string resourceName)
     {
-        if (string.IsNullOrWhiteSpace(resourceName))
-        {
-            throw new ArgumentNullException(nameof(resourceName));
-        }
+        ArgumentException.ThrowIfNullOrEmpty(resourceName);
 
         // Fix resource name 
         resourceName = UriX.JoinSegments(resourceName).TrimStart('/');

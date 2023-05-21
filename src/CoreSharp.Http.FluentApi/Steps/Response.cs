@@ -11,7 +11,11 @@ internal abstract class Response : IResponse
 {
     // Constructors 
     protected Response(IMethod method)
-        => Me.Method = method ?? throw new ArgumentNullException(nameof(method));
+    {
+        ArgumentNullException.ThrowIfNull(method);
+
+        Me.Method = method;
+    }
 
     // Properties
     private IResponse Me

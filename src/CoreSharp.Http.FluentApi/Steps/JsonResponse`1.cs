@@ -14,11 +14,19 @@ internal sealed class JsonResponse<TResponse> : GenericResponse<TResponse>, IJso
     // Constructors
     public JsonResponse(IMethod method, Func<Stream, TResponse> deserializeStreamFunction)
         : this(method)
-        => Me.DeserializeStreamFunction = deserializeStreamFunction ?? throw new ArgumentNullException(nameof(deserializeStreamFunction));
+    {
+        ArgumentNullException.ThrowIfNull(deserializeStreamFunction);
+
+        Me.DeserializeStreamFunction = deserializeStreamFunction;
+    }
 
     public JsonResponse(IMethod method, Func<string, TResponse> deserializeStringFunction)
         : this(method)
-        => Me.DeserializeStringFunction = deserializeStringFunction ?? throw new ArgumentNullException(nameof(deserializeStringFunction));
+    {
+        ArgumentNullException.ThrowIfNull(deserializeStringFunction);
+
+        Me.DeserializeStringFunction = deserializeStringFunction;
+    }
 
     public JsonResponse(IMethod method)
         : base(method)

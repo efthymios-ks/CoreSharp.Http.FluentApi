@@ -38,7 +38,7 @@ internal sealed class QueryMethod : MethodWithResponse, IQueryMethod
     public IQueryMethod Query<TQueryParameter>(TQueryParameter queryParameter)
         where TQueryParameter : class
     {
-        _ = queryParameter ?? throw new ArgumentNullException(nameof(queryParameter));
+        ArgumentNullException.ThrowIfNull(queryParameter);
 
         var parameters = queryParameter.GetPropertiesDictionary();
         return Query(parameters);
@@ -46,7 +46,7 @@ internal sealed class QueryMethod : MethodWithResponse, IQueryMethod
 
     public IQueryMethod Query(IDictionary<string, object> parameters)
     {
-        _ = parameters ?? throw new ArgumentNullException(nameof(parameters));
+        ArgumentNullException.ThrowIfNull(parameters);
 
         foreach (var (key, value) in parameters)
         {
@@ -58,10 +58,7 @@ internal sealed class QueryMethod : MethodWithResponse, IQueryMethod
 
     public IQueryMethod Query(string key, object value)
     {
-        if (string.IsNullOrWhiteSpace(key))
-        {
-            throw new ArgumentNullException(nameof(key));
-        }
+        ArgumentException.ThrowIfNullOrEmpty(key);
 
         if (value is null)
         {
@@ -80,31 +77,31 @@ internal sealed class QueryMethod : MethodWithResponse, IQueryMethod
     public new IJsonQueryResponse<TResponse> Json<TResponse>(JsonSerializerSettings jsonSerializerSettings)
         where TResponse : class
     {
-        _ = jsonSerializerSettings ?? throw new ArgumentNullException(nameof(jsonSerializerSettings));
+        ArgumentNullException.ThrowIfNull(jsonSerializerSettings);
+
+        return Json(DeserializeStreamFunction);
 
         TResponse DeserializeStreamFunction(Stream stream)
             => stream.FromJson<TResponse>(jsonSerializerSettings);
-
-        return Json(DeserializeStreamFunction);
     }
 
     public new IJsonQueryResponse<TResponse> Json<TResponse>(JsonSerializerOptions jsonSerializerOptions)
         where TResponse : class
     {
-        _ = jsonSerializerOptions ?? throw new ArgumentNullException(nameof(jsonSerializerOptions));
+        ArgumentNullException.ThrowIfNull(jsonSerializerOptions);
+
+        return Json(DeserializeStreamFunction);
 
         TResponse DeserializeStreamFunction(Stream stream)
             => stream.FromJsonAsync<TResponse>(jsonSerializerOptions)
                      .GetAwaiter()
                      .GetResult();
-
-        return Json(DeserializeStreamFunction);
     }
 
     public new IJsonQueryResponse<TResponse> Json<TResponse>(Func<string, TResponse> deserializeStringFunction)
         where TResponse : class
     {
-        _ = deserializeStringFunction ?? throw new ArgumentNullException(nameof(deserializeStringFunction));
+        ArgumentNullException.ThrowIfNull(deserializeStringFunction);
 
         return new JsonQueryResponse<TResponse>(this, deserializeStringFunction);
     }
@@ -112,31 +109,31 @@ internal sealed class QueryMethod : MethodWithResponse, IQueryMethod
     public new IJsonQueryResponse<TResponse> Json<TResponse>(Func<Stream, TResponse> deserializeStreamFunction)
         where TResponse : class
     {
-        _ = deserializeStreamFunction ?? throw new ArgumentNullException(nameof(deserializeStreamFunction));
+        ArgumentNullException.ThrowIfNull(deserializeStreamFunction);
 
         return new JsonQueryResponse<TResponse>(this, deserializeStreamFunction);
     }
 
     IXmlQueryResponse<TResponse> IQueryMethod.Xml<TResponse>()
     {
+        return Me.Xml(DeserializeStreamFunction);
+
         static TResponse DeserializeStreamFunction(Stream stream)
             => stream.FromXmlAsync<TResponse>()
                      .GetAwaiter()
                      .GetResult();
-
-        return Me.Xml(DeserializeStreamFunction);
     }
 
     IXmlQueryResponse<TResponse> IQueryMethod.Xml<TResponse>(Func<Stream, TResponse> deserializeStreamFunction)
     {
-        _ = deserializeStreamFunction ?? throw new ArgumentNullException(nameof(deserializeStreamFunction));
+        ArgumentNullException.ThrowIfNull(deserializeStreamFunction);
 
         return new XmlQueryResponse<TResponse>(this, deserializeStreamFunction);
     }
 
     IXmlQueryResponse<TResponse> IQueryMethod.Xml<TResponse>(Func<string, TResponse> deserializeStringFunction)
     {
-        _ = deserializeStringFunction ?? throw new ArgumentNullException(nameof(deserializeStringFunction));
+        ArgumentNullException.ThrowIfNull(deserializeStringFunction);
 
         return new XmlQueryResponse<TResponse>(this, deserializeStringFunction);
     }

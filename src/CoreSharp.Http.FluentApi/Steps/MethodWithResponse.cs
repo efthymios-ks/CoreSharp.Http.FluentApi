@@ -30,7 +30,7 @@ internal class MethodWithResponse : Method, IMethodWithResponse
     public IJsonResponse<TResponse> Json<TResponse>(JsonNet.JsonSerializerSettings jsonSerializerSettings)
         where TResponse : class
     {
-        _ = jsonSerializerSettings ?? throw new ArgumentNullException(nameof(jsonSerializerSettings));
+        ArgumentNullException.ThrowIfNull(jsonSerializerSettings);
 
         TResponse DeserializeStreamFunction(Stream stream)
             => stream.FromJson<TResponse>(jsonSerializerSettings);
@@ -40,7 +40,7 @@ internal class MethodWithResponse : Method, IMethodWithResponse
     public IJsonResponse<TResponse> Json<TResponse>(TextJson.JsonSerializerOptions jsonSerializerOptions)
         where TResponse : class
     {
-        _ = jsonSerializerOptions ?? throw new ArgumentNullException(nameof(jsonSerializerOptions));
+        ArgumentNullException.ThrowIfNull(jsonSerializerOptions);
 
         TResponse DeserializeStreamFunction(Stream stream)
             => stream.FromJsonAsync<TResponse>(jsonSerializerOptions)
@@ -52,7 +52,7 @@ internal class MethodWithResponse : Method, IMethodWithResponse
     public IJsonResponse<TResponse> Json<TResponse>(Func<string, TResponse> deserializeStringFunction)
          where TResponse : class
     {
-        _ = deserializeStringFunction ?? throw new ArgumentNullException(nameof(deserializeStringFunction));
+        ArgumentNullException.ThrowIfNull(deserializeStringFunction);
 
         return new JsonResponse<TResponse>(this, deserializeStringFunction);
     }
@@ -60,7 +60,7 @@ internal class MethodWithResponse : Method, IMethodWithResponse
     public IJsonResponse<TResponse> Json<TResponse>(Func<Stream, TResponse> deserializeStringFunction)
         where TResponse : class
     {
-        _ = deserializeStringFunction ?? throw new ArgumentNullException(nameof(deserializeStringFunction));
+        ArgumentNullException.ThrowIfNull(deserializeStringFunction);
 
         return new JsonResponse<TResponse>(this, deserializeStringFunction);
     }
@@ -76,7 +76,7 @@ internal class MethodWithResponse : Method, IMethodWithResponse
 
     public IXmlResponse<TResponse> Xml<TResponse>(Func<Stream, TResponse> deserializeStreamFunction) where TResponse : class
     {
-        _ = deserializeStreamFunction ?? throw new ArgumentNullException(nameof(deserializeStreamFunction));
+        ArgumentNullException.ThrowIfNull(deserializeStreamFunction);
 
         return new XmlResponse<TResponse>(this, deserializeStreamFunction);
     }
@@ -84,7 +84,7 @@ internal class MethodWithResponse : Method, IMethodWithResponse
     public IXmlResponse<TResponse> Xml<TResponse>(Func<string, TResponse> deserializeStringFunction)
         where TResponse : class
     {
-        _ = deserializeStringFunction ?? throw new ArgumentNullException(nameof(deserializeStringFunction));
+        ArgumentNullException.ThrowIfNull(deserializeStringFunction);
 
         return new XmlResponse<TResponse>(this, deserializeStringFunction);
     }
