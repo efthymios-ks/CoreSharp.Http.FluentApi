@@ -30,7 +30,7 @@ internal static class IMethodX
         var httpMethod = method.HttpMethod;
 
         // Add query parameter
-        if (httpMethod == HttpMethod.Get && queryParameters.Count > 0)
+        if (queryParameters.Count > 0)
         {
             var queryBuilder = new UrlQueryBuilder
             {
