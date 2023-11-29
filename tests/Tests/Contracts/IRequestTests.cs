@@ -139,7 +139,7 @@ public class IRequestTests : HttpClientTestsBase
                                       .SendAsync();
 
         // Assert
-        await task.Should().ThrowExactlyAsync<HttpResponseException>();
+        await task.Should().ThrowExactlyAsync<HttpOperationException>();
     }
 
     [Test]
@@ -157,7 +157,7 @@ public class IRequestTests : HttpClientTestsBase
                                       .SendAsync();
 
         // Assert
-        await task.Should().NotThrowAsync<HttpResponseException>();
+        await task.Should().NotThrowAsync<HttpOperationException>();
     }
 
     [Test]

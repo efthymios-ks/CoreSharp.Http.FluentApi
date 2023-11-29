@@ -13,7 +13,7 @@ public static class HttpResponseMessageExtensions
     /// <summary>
     /// Ensure <see cref="HttpResponseMessage" /> was successful using
     /// <see cref="HttpResponseMessage.IsSuccessStatusCode" />.
-    /// Throws <see cref="HttpResponseException" /> if not,
+    /// Throws <see cref="HttpOperationException" /> if not,
     /// including <see cref="HttpResponseMessage.StatusCode" />
     /// and <see cref="HttpResponseMessage.Content" />.
     /// </summary>
@@ -26,7 +26,7 @@ public static class HttpResponseMessageExtensions
             return;
         }
 
-        var exception = await HttpResponseException.CreateAsync(response);
+        var exception = await HttpOperationException.CreateAsync(response);
         response.Content?.Dispose();
         throw exception;
     }

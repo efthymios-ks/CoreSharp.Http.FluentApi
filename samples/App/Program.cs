@@ -86,12 +86,12 @@ catch (TimeoutException ex)
     Console.WriteLine(ex);
 }
 // Http request specific exception 
-catch (HttpResponseException ex)
+catch (HttpOperationException ex)
 {
     var method = ex.RequestMethod;
     var url = ex.RequestUrl;
     var statusCode = ex.ResponseStatusCode;
-    var status = ex.ResponseStatus;
+    var status = ex.LogEntry;
     var content = ex.ResponseContent;
     var summary = ex.ToString();
     Console.WriteLine(summary);

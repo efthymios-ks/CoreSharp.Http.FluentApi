@@ -1,5 +1,4 @@
-﻿using CoreSharp.Utilities;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
@@ -7,14 +6,11 @@ using System.Threading.Tasks;
 
 namespace CoreSharp.Http.FluentApi.Exceptions;
 
-/// <summary>
-/// Simple <see cref="HttpResponseMessage"/> <see cref="Exception"/>.
-/// </summary>
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
-public sealed class HttpResponseException : Exception
+public sealed class HttpOperationException : Exception
 {
     // Constructors 
-    public HttpResponseException(
+    public HttpOperationException(
         string requestUrl,
         string requestMethod,
         HttpStatusCode responseStatusCode,
@@ -30,43 +26,33 @@ public sealed class HttpResponseException : Exception
     // Properties 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     private string DebuggerDisplay
-        => ResponseStatus;
+        => LogEntry;
     public string RequestUrl { get; }
     public string RequestMethod { get; }
     public HttpStatusCode ResponseStatusCode { get; }
     public string ResponseContent
         => Message;
-    public string ResponseStatus
+    public string LogEntry
         => $"{RequestMethod} > {RequestUrl} > {(int)ResponseStatusCode} {ResponseStatusCode}";
 
     // Methods
     public override string ToString()
-    {
-        if (JsonX.IsEmpty(ResponseContent))
-        {
-            return ResponseStatus;
-        }
-        else
-        {
-            return ResponseStatus + Environment.NewLine + ResponseContent;
-        }
-    }
+        => LogEntry;
 
     /// <summary>
-    /// Create new instance of <see cref="HttpResponseException"/>
+    /// Create new instance of <see cref="HttpOperationException"/>
     /// using a <see cref="HttpResponseMessage"/>.
     /// Does not dispose <see cref="HttpResponseMessage"/>.
     /// </summary>
-    public static async Task<HttpResponseException> CreateAsync(HttpResponseMessage response, Exception exception = null)
+    public static async Task<HttpOperationException> CreateAsync(HttpResponseMessage response, Exception exception = null)
     {
         ArgumentNullException.ThrowIfNull(response);
 
         var request = response.RequestMessage;
-
         var requestUrl = request?.RequestUri?.AbsoluteUri;
         var requestMethod = $"{nameof(HttpMethod)}.{request?.Method.Method}";
         var responseStatus = response.StatusCode;
-        var responseContent = await response.Content?.ReadAsStringAsync();
+        var responseContent = await response.Content.ReadAsStringAsync();
         return new(requestUrl, requestMethod, responseStatus, responseContent, exception);
     }
 }

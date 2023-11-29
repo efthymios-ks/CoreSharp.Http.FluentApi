@@ -22,7 +22,7 @@ public interface IRequest
     internal TimeSpan? TimeoutInternal { get; set; }
 
     /// <summary>
-    /// Whether the interface should throw an <see cref="HttpResponseException"/>
+    /// Whether the interface should throw an <see cref="HttpOperationException"/>
     /// or not on unsuccessful requests using <see cref="HttpResponseMessage.StatusCode"/>.
     /// </summary>
     internal bool ThrowOnError { get; set; }

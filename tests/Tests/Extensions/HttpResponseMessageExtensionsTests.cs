@@ -37,7 +37,7 @@ public class HttpResponseMessageExtensionsTests
         Func<Task> task = response.EnsureSuccessAsync;
 
         // Assert 
-        await task.Should().NotThrowAsync<HttpResponseException>();
+        await task.Should().NotThrowAsync<HttpOperationException>();
     }
 
     [Test]
@@ -62,7 +62,7 @@ public class HttpResponseMessageExtensionsTests
         Func<Task> task = response.EnsureSuccessAsync;
 
         // Assert 
-        var assertion = await task.Should().ThrowAsync<HttpResponseException>();
+        var assertion = await task.Should().ThrowAsync<HttpOperationException>();
         var exception = assertion.Which;
         exception.RequestUrl.Should().Be(requestUrl);
         exception.RequestMethod.Should().Contain(method.Method);
