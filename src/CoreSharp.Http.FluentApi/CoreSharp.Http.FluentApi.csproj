@@ -10,13 +10,13 @@
 		<RepositoryUrl>CoreSharp.HttpClient.FluentApi</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>Http, Web, Rest, Client, Api, Request, Fluent</PackageTags>
-		<PackageReleaseNotes>-chore(solution): update packages.</PackageReleaseNotes>
+		<PackageReleaseNotes>-refactor: Reworked interfaces structure.</PackageReleaseNotes>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<PackageIcon>icon.png</PackageIcon>
 		<PackageIconUrl />
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>7.3.1</Version>
+		<Version>7.4.0</Version>
 		<AssemblyVersion>1.0.0.0</AssemblyVersion>
 		<FileVersion>1.0.0.0</FileVersion>
 	</PropertyGroup>

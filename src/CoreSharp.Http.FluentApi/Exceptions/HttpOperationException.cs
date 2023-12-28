@@ -50,7 +50,7 @@ public sealed class HttpOperationException : Exception
 
         var request = response.RequestMessage;
         var requestUrl = request?.RequestUri?.AbsoluteUri;
-        var requestMethod = $"{nameof(HttpMethod)}.{request?.Method.Method}";
+        var requestMethod = $"{request?.Method.Method}";
         var responseStatus = response.StatusCode;
         var responseContent = await response.Content.ReadAsStringAsync();
         return new(requestUrl, requestMethod, responseStatus, responseContent, exception);

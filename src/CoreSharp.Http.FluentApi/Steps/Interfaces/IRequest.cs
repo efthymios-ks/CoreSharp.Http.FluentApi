@@ -1,5 +1,4 @@
-﻿using CoreSharp.Http.FluentApi.Exceptions;
-using Microsoft.Net.Http.Headers;
+﻿using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -10,32 +9,22 @@ namespace CoreSharp.Http.FluentApi.Steps.Interfaces;
 public interface IRequest
 {
     // Properties
-    /// <inheritdoc cref="HttpClient" />
     internal HttpClient HttpClient { get; set; }
-
-    /// <inheritdoc cref="HttpRequestMessage.Headers" />
-    internal IDictionary<string, string> HeadersInternal { get; }
-
-    /// <inheritdoc cref="HttpCompletionOption"/>
-    internal HttpCompletionOption CompletionOptionInternal { get; set; }
-
-    internal TimeSpan? TimeoutInternal { get; set; }
-
-    /// <summary>
-    /// Whether the interface should throw an <see cref="HttpOperationException"/>
-    /// or not on unsuccessful requests using <see cref="HttpResponseMessage.StatusCode"/>.
-    /// </summary>
+    internal IDictionary<string, string> Headers { get; }
+    internal IDictionary<string, string> QueryParameters { get; }
+    internal HttpCompletionOption HttpCompletionOption { get; set; }
+    internal TimeSpan? Timeout { get; set; }
     internal bool ThrowOnError { get; set; }
 
     // Methods 
-    /// <inheritdoc cref="Header(string, string)" />
-    IRequest Headers(IDictionary<string, string> headers);
+    /// <inheritdoc cref="WithHeader(string, string)" />
+    IRequest WithHeaders(IDictionary<string, string> headers);
 
     /// <summary>
     /// Add specified key-value header
     /// to outgoing <see cref="HttpRequestMessage"/>.
     /// </summary>
-    IRequest Header(string key, string value);
+    IRequest WithHeader(string key, string value);
 
     /// <summary>
     /// Set the <see cref="HeaderNames.Accept"/> header.
@@ -54,17 +43,35 @@ public interface IRequest
     /// </summary>
     IRequest AcceptXml();
 
+    IRequest WithAuthorization(string authorization);
+
     /// <summary>
     /// Set the <see cref="HeaderNames.Authorization"/> header
     /// to bearer given value.
     /// </summary>
-    IRequest Bearer(string accessToken);
+    IRequest WithBearerToken(string accessToken);
+
+    /// <summary>
+    /// Add query parameters.
+    /// </summary>
+    IRequest WithQuery(IDictionary<string, object> parameters);
+
+    /// <summary>
+    /// Add properties of object as query parameters.
+    /// </summary>
+    IRequest WithQuery<TQueryParameter>(TQueryParameter queryParameter)
+        where TQueryParameter : class;
+
+    /// <summary>
+    /// Add query parameter.
+    /// </summary>
+    IRequest WithQuery(string key, object value);
 
     /// <inheritdoc cref="ThrowOnError" />
     IRequest IgnoreError();
 
-    /// <inheritdoc cref="CompletionOptionInternal" />
-    IRequest CompletionOption(HttpCompletionOption completionOption);
+    /// <inheritdoc cref="HttpCompletionOption" />
+    IRequest WithCompletionOption(HttpCompletionOption completionOption);
 
     /// <summary>
     /// <see cref="TimeSpan"/> to wait before the
@@ -72,29 +79,25 @@ public interface IRequest
     /// If <see cref="HttpClient.Timeout"/>
     /// is lower, then it has higher priority.
     /// </summary>
-    IRequest Timeout(TimeSpan timeout);
+    IRequest WithTimeout(TimeSpan timeout);
 
-    /// <inheritdoc cref="Route(string)" />
-    IRoute Route(string resourceName, int key);
+    /// <inheritdoc cref="WithEndpoint(string)" />
+    IEndpoint WithEndpoint(string resourceName, int key);
 
-    /// <inheritdoc cref="Route(string)" />
-    IRoute Route(string resourceName, long key);
+    /// <inheritdoc cref="WithEndpoint(string)" />
+    IEndpoint WithEndpoint(string resourceName, long key);
 
-    /// <inheritdoc cref="Route(string)" />
-    IRoute Route(string resourceName, Guid key);
+    /// <inheritdoc cref="WithEndpoint(string)" />
+    IEndpoint WithEndpoint(string resourceName, Guid key);
 
-    /// <inheritdoc cref="Route(string)" />
-    IRoute Route(string resourceName, string key);
+    /// <inheritdoc cref="WithEndpoint(string)" />
+    IEndpoint WithEndpoint(string resourceName, string key);
+
+    /// <inheritdoc cref="WithEndpoint(string)" />
+    IEndpoint WithEndpoint(IEnumerable<string> segments);
 
     /// <summary>
     /// Set <see cref="HttpRequestMessage.RequestUri"/>.
     /// </summary>
-    IRoute Route(string resourceName);
-
-    public void Deconstruct(
-        out HttpClient httpClient,
-        out IDictionary<string, string> headers,
-        out HttpCompletionOption httpCompletionOption,
-        out TimeSpan timeout,
-        out bool throwOnError);
+    IEndpoint WithEndpoint(string resourceName);
 }

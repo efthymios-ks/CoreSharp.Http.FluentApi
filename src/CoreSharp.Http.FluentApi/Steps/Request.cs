@@ -4,6 +4,7 @@ using CoreSharp.Utilities;
 using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Mime;
 using static System.FormattableString;
@@ -11,7 +12,7 @@ using static System.FormattableString;
 namespace CoreSharp.Http.FluentApi.Steps;
 
 /// <inheritdoc cref="IRequest"/>
-internal sealed class Request : IRequest
+public sealed class Request : IRequest
 {
     // Constructors 
     public Request(HttpClient httpClient)
@@ -24,54 +25,79 @@ internal sealed class Request : IRequest
     // Properties 
     private IRequest Me
         => this;
-
     HttpClient IRequest.HttpClient { get; set; }
-
+    IDictionary<string, string> IRequest.QueryParameters { get; }
+        = new Dictionary<string, string>();
+    IDictionary<string, string> IRequest.Headers { get; }
+        = new Dictionary<string, string>();
     bool IRequest.ThrowOnError { get; set; } = true;
-
-    HttpCompletionOption IRequest.CompletionOptionInternal { get; set; } = HttpCompletionOption.ResponseHeadersRead;
-
-    IDictionary<string, string> IRequest.HeadersInternal { get; } = new Dictionary<string, string>();
-
-    TimeSpan? IRequest.TimeoutInternal { get; set; }
+    HttpCompletionOption IRequest.HttpCompletionOption { get; set; }
+        = HttpCompletionOption.ResponseHeadersRead;
+    TimeSpan? IRequest.Timeout { get; set; }
 
     // Methods 
-    public IRequest Headers(IDictionary<string, string> headers)
+    public IRequest WithHeaders(IDictionary<string, string> headers)
     {
         ArgumentNullException.ThrowIfNull(headers);
 
         foreach (var header in headers)
         {
-            Header(header.Key, header.Value);
+            Me.WithHeader(header.Key, header.Value);
         }
 
         return this;
     }
 
-    public IRequest Header(string key, string value)
+    public IRequest WithHeader(string key, string value)
     {
         ArgumentException.ThrowIfNullOrEmpty(key);
-        ArgumentException.ThrowIfNullOrEmpty(value);
 
-        Me.HeadersInternal.AddOrUpdate(key, value);
+        Me.Headers.AddOrUpdate(key, value);
 
         return this;
     }
 
     public IRequest Accept(string mediaTypeName)
-        => Header(HeaderNames.Accept, mediaTypeName);
+        => Me.WithHeader(HeaderNames.Accept, mediaTypeName);
 
     public IRequest AcceptJson()
-        => Accept(MediaTypeNames.Application.Json);
+        => Me.Accept(MediaTypeNames.Application.Json);
 
     public IRequest AcceptXml()
-        => Accept(MediaTypeNames.Application.Xml);
+        => Me.Accept(MediaTypeNames.Application.Xml);
 
-    public IRequest Authorization(string authorization)
-         => Header(HeaderNames.Authorization, authorization);
+    public IRequest WithAuthorization(string authorization)
+        => Me.WithHeader(HeaderNames.Authorization, authorization);
 
-    public IRequest Bearer(string accessToken)
-         => Authorization($"Bearer {accessToken}");
+    public IRequest WithBearerToken(string accessToken)
+        => Me.WithAuthorization($"Bearer {accessToken}");
+
+    public IRequest WithQuery(IDictionary<string, object> parameters)
+    {
+        ArgumentNullException.ThrowIfNull(parameters);
+
+        foreach (var (key, value) in parameters)
+        {
+            Me.WithQuery(key, value);
+        }
+
+        return this;
+    }
+
+    public IRequest WithQuery<TQueryParameter>(TQueryParameter queryParameter)
+        where TQueryParameter : class
+    {
+        ArgumentNullException.ThrowIfNull(queryParameter);
+
+        var parameters = queryParameter.GetPropertiesDictionary();
+        return Me.WithQuery(parameters);
+    }
+
+    public IRequest WithQuery(string key, object value)
+    {
+        Me.QueryParameters[key] = value?.ToString();
+        return this;
+    }
 
     public IRequest IgnoreError()
     {
@@ -79,13 +105,13 @@ internal sealed class Request : IRequest
         return this;
     }
 
-    public IRequest CompletionOption(HttpCompletionOption completionOption)
+    public IRequest WithCompletionOption(HttpCompletionOption completionOption)
     {
-        Me.CompletionOptionInternal = completionOption;
+        Me.HttpCompletionOption = completionOption;
         return this;
     }
 
-    public IRequest Timeout(TimeSpan timeout)
+    public IRequest WithTimeout(TimeSpan timeout)
     {
         if (timeout.TotalMilliseconds <= 0)
         {
@@ -99,43 +125,35 @@ internal sealed class Request : IRequest
                 $"{nameof(timeout)} cannot be {nameof(System.Threading.Timeout.InfiniteTimeSpan)}.");
         }
 
-        Me.TimeoutInternal = timeout;
+        Me.Timeout = timeout;
         return this;
     }
 
-    public IRoute Route(string resourceName, int key)
-        => Route(Invariant($"{resourceName}/{key}"));
+    public IEndpoint WithEndpoint(string resourceName, int key)
+        => Me.WithEndpoint(Invariant($"{resourceName}/{key}"));
 
-    public IRoute Route(string resourceName, long key)
-        => Route(Invariant($"{resourceName}/{key}"));
+    public IEndpoint WithEndpoint(string resourceName, long key)
+        => Me.WithEndpoint(Invariant($"{resourceName}/{key}"));
 
-    public IRoute Route(string resourceName, Guid key)
-        => Route($"{resourceName}/{key}");
+    public IEndpoint WithEndpoint(string resourceName, Guid key)
+        => Me.WithEndpoint($"{resourceName}/{key}");
 
-    public IRoute Route(string resourceName, string key)
-        => Route($"{resourceName}/{key}");
+    public IEndpoint WithEndpoint(string resourceName, string key)
+        => Me.WithEndpoint($"{resourceName}/{key}");
 
-    public IRoute Route(string resourceName)
+    public IEndpoint WithEndpoint(IEnumerable<string> segments)
+    {
+        ArgumentNullException.ThrowIfNull(segments);
+
+        return Me.WithEndpoint(UriX.JoinSegments(segments.ToArray()));
+    }
+
+    public IEndpoint WithEndpoint(string resourceName)
     {
         ArgumentException.ThrowIfNullOrEmpty(resourceName);
 
         // Fix resource name 
         resourceName = UriX.JoinSegments(resourceName).TrimStart('/');
-
-        return new Route(this, resourceName);
-    }
-
-    public void Deconstruct(
-        out HttpClient httpClient,
-        out IDictionary<string, string> headers,
-        out HttpCompletionOption httpCompletionOption,
-        out TimeSpan timeout,
-        out bool throwOnError)
-    {
-        httpClient = Me.HttpClient;
-        headers = Me.HeadersInternal;
-        httpCompletionOption = Me.CompletionOptionInternal;
-        timeout = Me.TimeoutInternal ?? TimeSpan.Zero;
-        throwOnError = Me.ThrowOnError;
+        return new Endpoint(this, resourceName);
     }
 }

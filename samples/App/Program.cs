@@ -15,30 +15,30 @@ try
     var factory = services.GetService(typeof(IHttpClientFactory)) as IHttpClientFactory;
 
     // Create your HttpClient 
-    var client = factory.CreateClient("Default");
+    using var client = factory.CreateClient("Default");
 
     // GET /albums and map to IEnumerable 
     var albums = await client
         .Request()
-        .Route("albums")
+        .WithEndpoint("albums")
         .Get()
-        .Json<IEnumerable<Album>>()
+        .WithJsonDeserialize<IEnumerable<Album>>()
         .SendAsync();
 
     // GET /albums to string 
     var albumsJson = await client
         .Request()
-        .Route("albums")
+        .WithEndpoint("albums")
         .Get()
-        .String()
+        .ToString()
         .SendAsync();
 
     // GET /albums to byte[] 
     var albumsBytes = await client
         .Request()
-        .Route("albums")
+        .WithEndpoint("albums")
         .Get()
-        .Bytes()
+        .ToBytes()
         .SendAsync();
 
     // GET /posts, map to array and cache  
@@ -46,29 +46,29 @@ try
     {
         var posts = await client
             .Request()
-            .Route("posts")
+            .WithEndpoint("posts")
             .Get()
-            .Json<Post[]>()
-            .Cache(TimeSpan.FromMinutes(5))
-            .ForceNew(i % 2 == 0)
+            .WithXmlDeserialize<Post[]>()
+            .WithCache(TimeSpan.FromMinutes(5))
+            .WithCacheInvalidation(() => i % 2 == 0)
             .SendAsync();
     }
 
-    // GET /users/2 and map to class automatically based on Content-Type header
+    // GET /users/2 and map to class from json
     var user = await client
         .Request()
-        .Route("users", 2)
+        .WithEndpoint("users", 2)
         .Get()
-        .To<User>()
+        .WithJsonDeserialize<User>()
         .SendAsync();
 
     // PATCH /users/2 and get HttpResponseMessage 
     user.Name = "Efthymios";
     using var response = await client
         .Request()
-        .Route("users", user.Id)
+        .WithEndpoint("users", user.Id)
         .Patch()
-        .JsonContent(user)
+        .WithJsonBody(user)
         .SendAsync();
     var success = response.IsSuccessStatusCode;
     var json = await response.Content.ReadAsStringAsync();
@@ -76,7 +76,7 @@ try
     // Throw on failed request 
     await client
         .Request()
-        .Route("wrong/url")
+        .WithEndpoint("wrong/url")
         .Get()
         .SendAsync();
 }
@@ -91,7 +91,7 @@ catch (HttpOperationException ex)
     var method = ex.RequestMethod;
     var url = ex.RequestUrl;
     var statusCode = ex.ResponseStatusCode;
-    var status = ex.LogEntry;
+    var logEntry = ex.LogEntry;
     var content = ex.ResponseContent;
     var summary = ex.ToString();
     Console.WriteLine(summary);
