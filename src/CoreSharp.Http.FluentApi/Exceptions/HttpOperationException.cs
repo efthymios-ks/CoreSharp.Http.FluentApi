@@ -12,14 +12,14 @@ public sealed class HttpOperationException : Exception
     // Constructors 
     public HttpOperationException(
         string requestUrl,
-        string requestMethod,
+        HttpMethod requestMethod,
         HttpStatusCode responseStatusCode,
         string responseContent,
         Exception innerException = null)
         : base(responseContent, innerException)
     {
         RequestUrl = requestUrl;
-        RequestMethod = requestMethod;
+        RequestMethod = requestMethod?.Method;
         ResponseStatusCode = responseStatusCode;
     }
 
@@ -50,7 +50,7 @@ public sealed class HttpOperationException : Exception
 
         var request = response.RequestMessage;
         var requestUrl = request?.RequestUri?.AbsoluteUri;
-        var requestMethod = $"{request?.Method.Method}";
+        var requestMethod = request?.Method;
         var responseStatus = response.StatusCode;
         var responseContent = await response.Content.ReadAsStringAsync();
         return new(requestUrl, requestMethod, responseStatus, responseContent, exception);
