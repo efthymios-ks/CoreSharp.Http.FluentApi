@@ -1,4 +1,5 @@
-﻿using CoreSharp.Http.FluentApi.Steps;
+﻿using CoreSharp.Http.FluentApi.Services;
+using CoreSharp.Http.FluentApi.Steps;
 using CoreSharp.Http.FluentApi.Steps.Interfaces;
 using System;
 using System.Net.Http;
@@ -18,6 +19,6 @@ public static class HttpClientExtensions
     {
         ArgumentNullException.ThrowIfNull(httpClient);
 
-        return new Request(httpClient);
+        return new Request(httpClient, CacheStorage.Instance, HttpResponseMessageDeserializer.Instance);
     }
 }

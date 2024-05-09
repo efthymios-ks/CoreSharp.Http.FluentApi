@@ -1,6 +1,5 @@
 ﻿using CoreSharp.Http.FluentApi.Steps.Interfaces.Methods.SafeMethods;
 using CoreSharp.Http.FluentApi.Steps.Interfaces.Results;
-using CoreSharp.Http.FluentApi.Utilities;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,7 +20,7 @@ public sealed class SafeMethodWithResultAsBytesAndCache :
     private ISafeMethodWithResultAsBytesAndCache Me
         => this;
     TimeSpan ICachedResult<ISafeMethodWithResultAsBytesAndCache>.CacheDuration { get; set; }
-    Func<Task<bool>> ICachedResult<ISafeMethodWithResultAsBytesAndCache>.CacheInvalidationFactory { get; set; }
+    Func<Task<bool>> ICachedResult<ISafeMethodWithResultAsBytesAndCache>.CacheInvalidationFactory { get; set; } = DefaultCacheInvalidationFactory;
 
     // Methods
     public ISafeMethodWithResultAsBytesAndCache WithCacheInvalidation(Func<bool> cacheInvalidationFactory)
@@ -34,14 +33,18 @@ public sealed class SafeMethodWithResultAsBytesAndCache :
     public ISafeMethodWithResultAsBytesAndCache WithCacheInvalidation(Func<Task<bool>> cacheInvalidationFactory)
     {
         ArgumentNullException.ThrowIfNull(cacheInvalidationFactory);
+
         Me.CacheInvalidationFactory = cacheInvalidationFactory;
         return this;
     }
 
     public override Task<byte[]> SendAsync(CancellationToken cancellationToken = default)
-        => CachedRequestUtils.GetOrAddResultAsync(
+        => Me.Endpoint.Request.CacheStorage.GetOrAddResultAsync(
             this,
             Me.CacheDuration,
-            Me.CacheInvalidationFactory,
-            () => base.SendAsync(cancellationToken));
+            () => base.SendAsync(cancellationToken),
+            Me.CacheInvalidationFactory);
+
+    private static Task<bool> DefaultCacheInvalidationFactory()
+        => Task.FromResult(false);
 }

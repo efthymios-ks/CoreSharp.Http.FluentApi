@@ -48,7 +48,7 @@ try
             .Request()
             .WithEndpoint("posts")
             .Get()
-            .WithXmlDeserialize<Post[]>()
+            .WithJsonDeserialize<Post[]>()
             .WithCache(TimeSpan.FromMinutes(5))
             .WithCacheInvalidation(() => i % 2 == 0)
             .SendAsync();

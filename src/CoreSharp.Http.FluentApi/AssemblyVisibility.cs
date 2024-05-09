@@ -1,3 +1,4 @@
 ﻿using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("CoreSharp.Http.FluentApi.Tests")]
+[assembly: InternalsVisibleTo("Tests.CoreSharp.Http.FluentApi")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")] // For NSubstite to mock internal fields.

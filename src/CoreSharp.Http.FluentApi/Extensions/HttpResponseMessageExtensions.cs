@@ -10,13 +10,6 @@ namespace CoreSharp.Http.FluentApi.Extensions;
 /// </summary>
 public static class HttpResponseMessageExtensions
 {
-    /// <summary>
-    /// Ensure <see cref="HttpResponseMessage" /> was successful using
-    /// <see cref="HttpResponseMessage.IsSuccessStatusCode" />.
-    /// Throws <see cref="HttpOperationException" /> if not,
-    /// including <see cref="HttpResponseMessage.StatusCode" />
-    /// and <see cref="HttpResponseMessage.Content" />.
-    /// </summary>
     public static async Task EnsureSuccessAsync(this HttpResponseMessage response)
     {
         ArgumentNullException.ThrowIfNull(response);
@@ -27,7 +20,7 @@ public static class HttpResponseMessageExtensions
         }
 
         var exception = await HttpOperationException.CreateAsync(response);
-        response.Content?.Dispose();
+        response.Content.Dispose();
         throw exception;
     }
 }

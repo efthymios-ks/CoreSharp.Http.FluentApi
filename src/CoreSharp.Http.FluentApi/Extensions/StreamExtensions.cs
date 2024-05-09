@@ -17,7 +17,7 @@ internal static class StreamExtensions
 
         if (stream is MemoryStream memoryStream)
         {
-            return memoryStream.GetBuffer();
+            return memoryStream.ToArray();
         }
 
         using var binaryReader = new BinaryReader(stream);

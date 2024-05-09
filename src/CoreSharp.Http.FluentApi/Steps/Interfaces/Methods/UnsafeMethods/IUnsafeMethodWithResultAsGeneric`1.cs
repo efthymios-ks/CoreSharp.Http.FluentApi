@@ -1,15 +1,12 @@
-﻿using CoreSharp.Http.FluentApi.Steps.Interfaces.Results;
-using System;
+﻿using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CoreSharp.Http.FluentApi.Steps.Interfaces.Methods.SafeMethods;
+namespace CoreSharp.Http.FluentApi.Steps.Interfaces.Methods.UnsafeMethods;
 
-/// <inheritdoc cref="ISafeMethod"/>
-public interface ISafeMethodWithResultFromXml<TResult> :
-    ISafeMethod,
-    ICachableResult<ISafeMethodWithResultFromXmlAndCache<TResult>>
+/// <inheritdoc cref="IUnsafeMethod"/>
+public interface IUnsafeMethodWithResultAsGeneric<TResult> : IUnsafeMethod
     where TResult : class
 {
     // Properties 

@@ -3,13 +3,12 @@ using CoreSharp.Http.FluentApi.Steps.Interfaces;
 using CoreSharp.Http.FluentApi.Steps.Interfaces.Methods;
 using CoreSharp.Http.FluentApi.Steps.Interfaces.Methods.UnsafeMethods;
 using CoreSharp.Http.FluentApi.Steps.Methods.Abstracts;
-using CoreSharp.Http.FluentApi.Utilities;
-using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -35,11 +34,13 @@ public class UnsafeMethod : MethodBase, IUnsafeMethod
     // Properties 
     private IUnsafeMethod Me
         => this;
+    private static Encoding DefaultEncoding
+        => Encoding.UTF8;
     HttpContent IUnsafeMethod.HttpContent { get; set; }
 
     // Methods
-    public IUnsafeMethod WithJsonBody(string json)
-        => WithBody(json, MediaTypeNames.Application.Json);
+    public IUnsafeMethod WithJsonBody(string content)
+        => WithBody(content, MediaTypeNames.Application.Json);
 
     public IUnsafeMethod WithJsonBody(object content)
     {
@@ -53,20 +54,12 @@ public class UnsafeMethod : MethodBase, IUnsafeMethod
     {
         ArgumentNullException.ThrowIfNull(content);
 
-        var contentAsStream = ToJsonStreamContent(content);
-        return WithBody(contentAsStream);
+        var streamContent = ToJsonStreamContent(content);
+        return WithBody(streamContent);
     }
 
-    public IUnsafeMethod WithXmlBody(string xml)
-        => WithBody(xml, MediaTypeNames.Application.Xml);
-
-    public IUnsafeMethod WithXmlBody(Stream content)
-    {
-        ArgumentNullException.ThrowIfNull(content);
-
-        var contentAsStream = ToXmlStreamContent(content);
-        return WithBody(contentAsStream);
-    }
+    public IUnsafeMethod WithXmlBody(string content)
+        => WithBody(content, MediaTypeNames.Application.Xml);
 
     public IUnsafeMethod WithXmlBody(object content)
     {
@@ -76,11 +69,19 @@ public class UnsafeMethod : MethodBase, IUnsafeMethod
         return WithXmlBody(xml);
     }
 
-    public IUnsafeMethod WithBody(string content, string mediaTypeName)
-        => WithBody(content, Encoding.UTF8, mediaTypeName);
+    public IUnsafeMethod WithXmlBody(Stream content)
+    {
+        ArgumentNullException.ThrowIfNull(content);
 
-    public IUnsafeMethod WithBody(string content, Encoding encoding, string mediaTypeName)
-        => WithBody(new StringContent(content, encoding, mediaTypeName));
+        var contentAsStream = ToXmlStreamContent(content);
+        return WithBody(contentAsStream);
+    }
+
+    public IUnsafeMethod WithBody(string content, string mediaType)
+        => WithBody(content, DefaultEncoding, mediaType);
+
+    public IUnsafeMethod WithBody(string content, Encoding encoding, string mediaType)
+        => WithBody(new StringContent(content, encoding, mediaType));
 
     public IUnsafeMethod WithBody(HttpContent content)
     {
@@ -89,56 +90,35 @@ public class UnsafeMethod : MethodBase, IUnsafeMethod
     }
 
     public override Task<HttpResponseMessage> SendAsync(CancellationToken cancellationToken = default)
-        => IMethodUtils.SendAsync(this, httpContent: null, cancellationToken: cancellationToken);
+        => SendAsync(Me.HttpContent, cancellationToken: cancellationToken);
 
-    private static Stream ToJsonStream(object entity, int bufferSize = DefaultBufferSize)
+    private static Stream ToJsonStream(object entity)
     {
-        ArgumentNullException.ThrowIfNull(entity);
+        var memoryStream = new MemoryStream();
+        using var writer = new Utf8JsonWriter(memoryStream);
+        JsonSerializer.Serialize(writer, entity, JsonSerializerOptions.Default);
+        writer.Flush();
+        memoryStream.Position = 0;
 
-        var serializer = JsonSerializer.Create();
-        var stream = new MemoryStream();
-        using var streamWriter = new StreamWriter(stream, Encoding.UTF8, bufferSize, true);
-        using var jsonWriter = new JsonTextWriter(streamWriter);
-
-        serializer.Serialize(jsonWriter, entity);
-        streamWriter.Flush();
-        if (stream.CanSeek)
-        {
-            stream.Position = 0;
-        }
-
-        return stream;
+        return memoryStream;
     }
 
-    private static StreamContent ToJsonStreamContent(object entity, int bufferSize = DefaultBufferSize)
+    private static StreamContent ToJsonStreamContent(object entity)
     {
-        ArgumentNullException.ThrowIfNull(entity);
-
         var stream = ToJsonStream(entity);
-        return ToJsonStreamContent(stream, bufferSize);
+        return ToStreamContent(stream, MediaTypeNames.Application.Json);
     }
 
-    private static StreamContent ToJsonStreamContent(Stream stream, int bufferSize = DefaultBufferSize)
+    private static StreamContent ToJsonStreamContent(Stream stream)
+        => ToStreamContent(stream, MediaTypeNames.Application.Json);
+
+    private static StreamContent ToXmlStreamContent(Stream stream)
+        => ToStreamContent(stream, MediaTypeNames.Application.Xml);
+
+    private static StreamContent ToStreamContent(Stream stream, string mediaTypeName)
     {
-        ArgumentNullException.ThrowIfNull(stream);
-
-        return ToStreamContent(stream, MediaTypeNames.Application.Json, bufferSize);
-    }
-
-    private static StreamContent ToXmlStreamContent(Stream stream, int bufferSize = DefaultBufferSize)
-    {
-        ArgumentNullException.ThrowIfNull(stream);
-
-        return ToStreamContent(stream, MediaTypeNames.Application.Xml, bufferSize);
-    }
-
-    private static StreamContent ToStreamContent(Stream stream, string mediaTypeName, int bufferSize = DefaultBufferSize)
-    {
-        ArgumentNullException.ThrowIfNull(stream);
-        ArgumentException.ThrowIfNullOrEmpty(mediaTypeName);
-
-        var streamContent = new StreamContent(stream, bufferSize);
-        streamContent.Headers.ContentType = new(mediaTypeName);
+        var streamContent = new StreamContent(stream, DefaultBufferSize);
+        streamContent.Headers.ContentType = new(mediaTypeName, DefaultEncoding.WebName);
         return streamContent;
     }
 }

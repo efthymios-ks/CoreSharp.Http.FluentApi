@@ -1,23 +1,24 @@
-﻿using CoreSharp.Http.FluentApi.Steps.Interfaces;
+﻿using CoreSharp.Http.FluentApi.Extensions;
+using CoreSharp.Http.FluentApi.Steps;
 using FluentAssertions;
 using NUnit.Framework;
 using System;
 using System.Net.Http;
 
-namespace CoreSharp.Http.FluentApi.Extensions.Tests;
+namespace Tests.Extensions;
 
 [TestFixture]
-public class HttpClientExtensionsTests
+public sealed class HttpClientExtensionsTests
 {
     // Methods
     [Test]
     public void Request_WhenHttpClientIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
-        HttpClient httpClient = null;
+        using HttpClient httpClient = null;
 
         // Act
-        Action action = () => httpClient.Request();
+        Action action = () => _ = httpClient.Request();
 
         // Assert
         action.Should().ThrowExactly<ArgumentNullException>();
@@ -27,13 +28,13 @@ public class HttpClientExtensionsTests
     public void Request_WhenCalled_ShouldReturnIRequest()
     {
         // Arrange
-        var httpClient = new HttpClient();
+        using var httpClient = new HttpClient();
 
         // Act
         var request = httpClient.Request();
 
         // Assert
         request.Should().NotBeNull();
-        request.Should().BeAssignableTo<IRequest>();
+        request.Should().BeOfType<Request>();
     }
 }

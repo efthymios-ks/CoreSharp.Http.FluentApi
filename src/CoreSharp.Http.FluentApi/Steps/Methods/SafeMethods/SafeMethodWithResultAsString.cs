@@ -1,5 +1,4 @@
 ﻿using CoreSharp.Http.FluentApi.Steps.Interfaces.Methods.SafeMethods;
-using CoreSharp.Http.FluentApi.Steps.Interfaces.Results;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,13 +11,13 @@ public class SafeMethodWithResultAsString :
     ISafeMethodWithResultAsString
 {
     // Constructors
-    public SafeMethodWithResultAsString(ISafeMethod method)
-        : base(method)
+    public SafeMethodWithResultAsString(ISafeMethod safeMethod)
+        : base(safeMethod)
     {
     }
 
     // Methods
-    ISafeMethodWithResultAsStringAndCache ICachableResult<ISafeMethodWithResultAsStringAndCache>.WithCache(TimeSpan duration)
+    public ISafeMethodWithResultAsStringAndCache WithCache(TimeSpan duration)
         => new SafeMethodWithResultAsStringAndCache(this, duration);
 
     public new virtual async Task<string> SendAsync(CancellationToken cancellationToken = default)

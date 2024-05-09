@@ -17,6 +17,4 @@ public interface ICachedResult<TContainer>
     /// Force new request.
     /// </summary> 
     TContainer WithCacheInvalidation(Func<Task<bool>> cacheInvalidationFactory);
-
-    // TODO: Select memory source.
 }

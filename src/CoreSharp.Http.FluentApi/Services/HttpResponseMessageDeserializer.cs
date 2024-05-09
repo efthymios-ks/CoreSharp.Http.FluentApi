@@ -1,14 +1,23 @@
-﻿using System;
+﻿using CoreSharp.Http.FluentApi.Utilities;
+using System;
 using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CoreSharp.Http.FluentApi.Utilities;
+namespace CoreSharp.Http.FluentApi.Services;
 
-internal static class HttpResponseMessageUtils
+public sealed class HttpResponseMessageDeserializer : IHttpResponseMessageDeserializer
 {
-    public static async Task<TResult> DeserialeAsync<TResult>(
+    // Fields
+    private static IHttpResponseMessageDeserializer _instance;
+
+    // Properties
+    public static IHttpResponseMessageDeserializer Instance
+        => _instance ??= new HttpResponseMessageDeserializer();
+
+    // Methods
+    public async Task<TResult> DeserializeAsync<TResult>(
         HttpResponseMessage httpResponseMessage,
         Func<Stream, TResult> deserializeStreamFunction,
         Func<string, TResult> deserializeStringFunction,
@@ -52,7 +61,6 @@ internal static class HttpResponseMessageUtils
         HttpResponseMessage response,
         Func<string, TResult> deserializeStringFunction,
         CancellationToken cancellationToken)
-
         where TResult : class
     {
         if (deserializeStringFunction is null)
