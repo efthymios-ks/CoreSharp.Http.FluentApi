@@ -1,4 +1,6 @@
-﻿using Microsoft.Net.Http.Headers;
+﻿using CoreSharp.Http.FluentApi.Services.Interfaces;
+using CoreSharp.Http.FluentApi.Utilities;
+using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -9,6 +11,8 @@ namespace CoreSharp.Http.FluentApi.Steps.Interfaces;
 public interface IRequest
 {
     // Properties
+    internal ICacheStorage CacheStorage { get; set; }
+    internal IHttpResponseMessageDeserializer HttpResponseMessageDeserializer { get; set; }
     internal HttpClient HttpClient { get; set; }
     internal IDictionary<string, string> Headers { get; }
     internal IDictionary<string, string> QueryParameters { get; }

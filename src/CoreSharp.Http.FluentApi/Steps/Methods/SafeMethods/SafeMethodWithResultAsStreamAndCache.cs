@@ -1,7 +1,6 @@
 ﻿using CoreSharp.Http.FluentApi.Extensions;
 using CoreSharp.Http.FluentApi.Steps.Interfaces.Methods.SafeMethods;
 using CoreSharp.Http.FluentApi.Steps.Interfaces.Results;
-using CoreSharp.Http.FluentApi.Utilities;
 using System;
 using System.IO;
 using System.Threading;
@@ -23,7 +22,7 @@ public sealed class SafeMethodWithResultAsStreamAndCache :
     private ISafeMethodWithResultAsStreamAndCache Me
         => this;
     TimeSpan ICachedResult<ISafeMethodWithResultAsStreamAndCache>.CacheDuration { get; set; }
-    Func<Task<bool>> ICachedResult<ISafeMethodWithResultAsStreamAndCache>.CacheInvalidationFactory { get; set; }
+    Func<Task<bool>> ICachedResult<ISafeMethodWithResultAsStreamAndCache>.CacheInvalidationFactory { get; set; } = DefaultCacheInvalidationFactory;
 
     // Methods
     public ISafeMethodWithResultAsStreamAndCache WithCacheInvalidation(Func<bool> cacheInvalidationFactory)
@@ -43,11 +42,12 @@ public sealed class SafeMethodWithResultAsStreamAndCache :
 
     public override async Task<Stream> SendAsync(CancellationToken cancellationToken = default)
     {
-        var bytes = await CachedRequestUtils.GetOrAddResultAsync(
+        var cacheStorage = Me.Endpoint.Request.CacheStorage;
+        var bytes = await cacheStorage.GetOrAddResultAsync(
             this,
             Me.CacheDuration,
-            Me.CacheInvalidationFactory,
-            () => SendAndGetBytesAsync(cancellationToken));
+            () => SendAndGetBytesAsync(cancellationToken),
+            Me.CacheInvalidationFactory);
 
         return new MemoryStream(bytes);
     }
@@ -57,4 +57,7 @@ public sealed class SafeMethodWithResultAsStreamAndCache :
         var stream = await base.SendAsync(cancellationToken);
         return stream.GetBytes();
     }
+
+    private static Task<bool> DefaultCacheInvalidationFactory()
+        => Task.FromResult(false);
 }

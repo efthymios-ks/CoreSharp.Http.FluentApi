@@ -1,6 +1,8 @@
-﻿using CoreSharp.Http.FluentApi.Steps.Interfaces;
+﻿using CoreSharp.Extensions;
+using CoreSharp.Http.FluentApi.Extensions;
+using CoreSharp.Http.FluentApi.Steps.Interfaces;
 using CoreSharp.Http.FluentApi.Steps.Interfaces.Methods;
-using CoreSharp.Http.FluentApi.Utilities;
+using CoreSharp.Utilities;
 using System;
 using System.Net.Http;
 using System.Threading;
@@ -29,5 +31,59 @@ public abstract class MethodBase : IMethod
 
     // Methods
     public virtual Task<HttpResponseMessage> SendAsync(CancellationToken cancellationToken = default)
-        => IMethodUtils.SendAsync(this, httpContent: null, cancellationToken: cancellationToken);
+        => SendAsync(httpContent: null, cancellationToken: cancellationToken);
+
+    protected async Task<HttpResponseMessage> SendAsync(HttpContent httpContent, CancellationToken cancellationToken = default)
+    {
+        // Extract values
+        var httpMethod = Me.HttpMethod;
+
+        var endpointInterface = Me.Endpoint;
+        var endpoint = endpointInterface.Endpoint;
+
+        var requestInterface = endpointInterface.Request;
+        var httpClient = requestInterface.HttpClient;
+        var queryParameters = requestInterface.QueryParameters;
+        var headers = requestInterface.Headers;
+        var httpCompletionOption = requestInterface.HttpCompletionOption;
+        var timeout = requestInterface.Timeout ?? Timeout.InfiniteTimeSpan;
+        var throwOnError = requestInterface.ThrowOnError;
+
+        // Add query parameter
+        if (queryParameters.Count > 0)
+        {
+            endpoint = UriUtils.Build(endpoint, queryParameters);
+        }
+
+        // Create request 
+        using var request = new HttpRequestMessage(httpMethod, endpoint)
+        {
+            Content = httpContent
+        };
+
+        foreach (var (key, value) in headers)
+        {
+            request.Headers.Remove(key);
+            request.Headers.Add(key, value);
+        }
+
+        // Send request
+        try
+        {
+            var response = await httpClient.SendAsync(request, httpCompletionOption, timeout, cancellationToken);
+            await response.EnsureSuccessAsync();
+            return response;
+        }
+        catch when (throwOnError)
+        {
+            // Throw if needed
+            throw;
+        }
+        catch
+        {
+            // Or ignore 
+        }
+
+        return null;
+    }
 }

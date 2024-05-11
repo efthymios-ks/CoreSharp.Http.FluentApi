@@ -1,22 +1,23 @@
 ﻿using CoreSharp.Http.FluentApi.Exceptions;
+using CoreSharp.Http.FluentApi.Extensions;
 using FluentAssertions;
+using NSubstitute;
 using NUnit.Framework;
 using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace CoreSharp.Http.FluentApi.Extensions.Tests;
+namespace Tests.Extensions;
 
 [TestFixture]
-public class HttpResponseMessageExtensionsTests
+public sealed class HttpResponseMessageExtensionsTests
 {
-    // Methods
     [Test]
     public async Task EnsureSuccessAsync_WhenHttpResponseMessageIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
-        HttpResponseMessage response = null;
+        using HttpResponseMessage response = null;
 
         // Act
         Func<Task> action = response.EnsureSuccessAsync;
@@ -29,7 +30,13 @@ public class HttpResponseMessageExtensionsTests
     public async Task EnsureSuccessAsync_WhenStatusIsSuccessful_ShouldNotThrowException()
     {
         // Arrange
-        var response = new HttpResponseMessage(HttpStatusCode.OK);
+        using var request = new HttpRequestMessage(HttpMethod.Get, @"http://www.example.com/api");
+        using var content = new StringContent("Data");
+        using var response = new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            RequestMessage = request,
+            Content = content
+        };
 
         // Act
         Func<Task> action = response.EnsureSuccessAsync;
@@ -39,15 +46,48 @@ public class HttpResponseMessageExtensionsTests
     }
 
     [Test]
-    public async Task EnsureSuccessAsync_WhenStatusIsSuccessful_ShouldThrowHttpOperationException()
+    public async Task EnsureSuccessAsync_WhenStatusIsNotSuccessful_ShouldThrowHttpOperationException()
     {
         // Arrange
-        var response = new HttpResponseMessage(HttpStatusCode.NotFound);
+        using var request = new HttpRequestMessage(HttpMethod.Get, @"http://www.example.com/api");
+        using var response = new HttpResponseMessage(HttpStatusCode.NotFound)
+        {
+            RequestMessage = request
+        };
+        response.Content = null;
 
         // Act
         Func<Task> action = response.EnsureSuccessAsync;
 
         // Assert
         await action.Should().ThrowExactlyAsync<HttpOperationException>();
+    }
+
+    [Test]
+    public async Task EnsureSuccessAsync_WhenStatusIsNotSuccessful_ShouldDisposeContent()
+    {
+        // Arrange
+        using var request = new HttpRequestMessage(HttpMethod.Get, @"http://www.example.com/api");
+        using var content = Substitute.For<HttpContent>();
+        using var response = new HttpResponseMessage(HttpStatusCode.NotFound)
+        {
+            RequestMessage = request,
+            Content = content
+        };
+
+        // Act
+        try
+        {
+            await response.EnsureSuccessAsync();
+        }
+        catch
+        {
+            // Ignore
+        }
+
+        // Assert 
+        content
+            .Received(1)
+            .Dispose();
     }
 }

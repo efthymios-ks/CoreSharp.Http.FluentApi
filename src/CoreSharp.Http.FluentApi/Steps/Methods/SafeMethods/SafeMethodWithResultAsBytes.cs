@@ -11,8 +11,8 @@ public class SafeMethodWithResultAsBytes :
     ISafeMethodWithResultAsBytes
 {
     // Constructors
-    public SafeMethodWithResultAsBytes(ISafeMethod method)
-        : base(method)
+    public SafeMethodWithResultAsBytes(ISafeMethod safeMethod)
+        : base(safeMethod)
     {
     }
 

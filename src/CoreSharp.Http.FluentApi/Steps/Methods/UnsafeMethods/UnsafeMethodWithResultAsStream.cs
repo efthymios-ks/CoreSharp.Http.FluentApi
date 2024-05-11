@@ -16,7 +16,7 @@ public class UnsafeMethodWithResultAsStream : UnsafeMethodWithResult, IUnsafeMet
     // Methods
     public new virtual async Task<Stream> SendAsync(CancellationToken cancellationToken = default)
     {
-        using var response = await base.SendAsync(cancellationToken);
+        var response = await base.SendAsync(cancellationToken);
         return await response.Content.ReadAsStreamAsync(cancellationToken);
     }
 }

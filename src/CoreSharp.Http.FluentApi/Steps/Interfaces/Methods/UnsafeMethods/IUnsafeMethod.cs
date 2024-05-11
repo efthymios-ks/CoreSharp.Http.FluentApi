@@ -17,7 +17,7 @@ public interface IUnsafeMethod : IMethod
 
     // Methods
     /// <inheritdoc cref="WithJsonBody(Stream)" />
-    IUnsafeMethod WithJsonBody(string json);
+    IUnsafeMethod WithJsonBody(string content);
 
     /// <inheritdoc cref="WithJsonBody(Stream)" />
     IUnsafeMethod WithJsonBody(object content);
@@ -30,7 +30,7 @@ public interface IUnsafeMethod : IMethod
     IUnsafeMethod WithJsonBody(Stream content);
 
     /// <inheritdoc cref="WithXmlBody(Stream)" />
-    IUnsafeMethod WithXmlBody(string xml);
+    IUnsafeMethod WithXmlBody(string content);
 
     /// <inheritdoc cref="WithXmlBody(string)" />
     IUnsafeMethod WithXmlBody(object content);
@@ -43,10 +43,10 @@ public interface IUnsafeMethod : IMethod
     IUnsafeMethod WithXmlBody(Stream content);
 
     /// <inheritdoc cref="WithBody(string, Encoding, string)" />
-    IUnsafeMethod WithBody(string content, string mediaTypeName);
+    IUnsafeMethod WithBody(string content, string mediaType);
 
     /// <inheritdoc cref="WithBody(HttpContent)" />
-    IUnsafeMethod WithBody(string content, Encoding encoding, string mediaTypeName);
+    IUnsafeMethod WithBody(string content, Encoding encoding, string mediaType);
 
     /// <summary>
     /// Set <see cref="HttpRequestMessage.Content"/>.

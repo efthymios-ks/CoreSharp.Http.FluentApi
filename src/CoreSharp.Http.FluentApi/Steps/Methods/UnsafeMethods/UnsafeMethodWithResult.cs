@@ -8,6 +8,7 @@ using System.Text.Json;
 
 namespace CoreSharp.Http.FluentApi.Steps.Methods.UnsafeMethods;
 
+/// <inheritdoc cref="IUnsafeMethodWithResult"/>
 public class UnsafeMethodWithResult : UnsafeMethod, IUnsafeMethodWithResult
 {
     // Constructors 
@@ -23,30 +24,30 @@ public class UnsafeMethodWithResult : UnsafeMethod, IUnsafeMethodWithResult
     public IUnsafeMethodWithResultAsStream ToStream()
         => new UnsafeMethodWithResultAsStream(this);
 
-    IUnsafeMethodWithResultAsString IUnsafeMethodWithResult.ToString()
+    public new IUnsafeMethodWithResultAsString ToString()
         => new UnsafeMethodWithResultAsString(this);
 
-    public IUnsafeMethodWithResultFromJson<TResponse> WithJsonDeserialize<TResponse>()
+    public IUnsafeMethodWithResultAsGeneric<TResponse> WithJsonDeserialize<TResponse>()
         where TResponse : class
         => WithJsonDeserialize<TResponse>(JsonSettings.Default);
 
-    public IUnsafeMethodWithResultFromJson<TResponse> WithJsonDeserialize<TResponse>(JsonSerializerSettings jsonSerializerSettings)
+    public IUnsafeMethodWithResultAsGeneric<TResponse> WithJsonDeserialize<TResponse>(JsonSerializerSettings jsonSerializerSettings)
         where TResponse : class
     {
         ArgumentNullException.ThrowIfNull(jsonSerializerSettings);
 
-        return WithJsonDeserialize(DeserializeStreamFunction);
+        return WithGenericDeserialize(DeserializeStreamFunction);
 
         TResponse DeserializeStreamFunction(Stream stream)
             => stream.FromJson<TResponse>(jsonSerializerSettings);
     }
 
-    public IUnsafeMethodWithResultFromJson<TResponse> WithJsonDeserialize<TResponse>(JsonSerializerOptions jsonSerializerOptions)
+    public IUnsafeMethodWithResultAsGeneric<TResponse> WithJsonDeserialize<TResponse>(JsonSerializerOptions jsonSerializerOptions)
         where TResponse : class
     {
         ArgumentNullException.ThrowIfNull(jsonSerializerOptions);
 
-        return WithJsonDeserialize(DeserializeStreamFunction);
+        return WithGenericDeserialize(DeserializeStreamFunction);
 
         // TODO: Fix after adding task-based deserialization.
         TResponse DeserializeStreamFunction(Stream stream)
@@ -56,44 +57,28 @@ public class UnsafeMethodWithResult : UnsafeMethod, IUnsafeMethodWithResult
                 .GetResult();
     }
 
-    public IUnsafeMethodWithResultFromJson<TResponse> WithJsonDeserialize<TResponse>(Func<string, TResponse> deserializeStringFunction)
+    public IUnsafeMethodWithResultAsGeneric<TResponse> WithXmlDeserialize<TResponse>()
         where TResponse : class
     {
-        ArgumentNullException.ThrowIfNull(deserializeStringFunction);
-
-        return new UnsafeMethodWithResultFromJson<TResponse>(this, deserializeStringFunction);
-    }
-
-    public IUnsafeMethodWithResultFromJson<TResponse> WithJsonDeserialize<TResponse>(Func<Stream, TResponse> deserializeStringFunction)
-        where TResponse : class
-    {
-        ArgumentNullException.ThrowIfNull(deserializeStringFunction);
-
-        return new UnsafeMethodWithResultFromJson<TResponse>(this, deserializeStringFunction);
-    }
-
-    public IUnsafeMethodWithResultFromXml<TResponse> WithXmlDeserialize<TResponse>()
-        where TResponse : class
-    {
-        return WithXmlDeserialize(DeserializeStringFunction);
+        return WithGenericDeserialize(DeserializeStringFunction);
 
         static TResponse DeserializeStringFunction(string xml)
             => xml.FromXml<TResponse>();
     }
 
-    public IUnsafeMethodWithResultFromXml<TResponse> WithXmlDeserialize<TResponse>(Func<string, TResponse> deserializeStringFunction)
+    public IUnsafeMethodWithResultAsGeneric<TResponse> WithGenericDeserialize<TResponse>(Func<string, TResponse> deserializeStringFunction)
         where TResponse : class
     {
         ArgumentNullException.ThrowIfNull(deserializeStringFunction);
 
-        return new UnsafeMethodWithResultFromXml<TResponse>(this, deserializeStringFunction);
+        return new UnsafeMethodWithResultAsGeneric<TResponse>(this, deserializeStringFunction);
     }
 
-    public IUnsafeMethodWithResultFromXml<TResponse> WithXmlDeserialize<TResponse>(Func<Stream, TResponse> deserializeStreamFunction)
+    public IUnsafeMethodWithResultAsGeneric<TResponse> WithGenericDeserialize<TResponse>(Func<Stream, TResponse> deserializeStreamFunction)
         where TResponse : class
     {
         ArgumentNullException.ThrowIfNull(deserializeStreamFunction);
 
-        return new UnsafeMethodWithResultFromXml<TResponse>(this, deserializeStreamFunction);
+        return new UnsafeMethodWithResultAsGeneric<TResponse>(this, deserializeStreamFunction);
     }
 }

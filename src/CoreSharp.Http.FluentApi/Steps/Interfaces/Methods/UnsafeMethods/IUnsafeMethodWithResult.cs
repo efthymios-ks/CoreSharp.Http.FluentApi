@@ -13,39 +13,35 @@ public interface IUnsafeMethodWithResult : IUnsafeMethod
     IUnsafeMethodWithResultAsStream ToStream();
     IUnsafeMethodWithResultAsString ToString();
 
-    /// <inheritdoc cref="WithJsonDeserialize{TResponse}(Func{Stream, TResponse})"/>
-    IUnsafeMethodWithResultFromJson<TResponse> WithJsonDeserialize<TResponse>()
-        where TResponse : class;
-
-    /// <inheritdoc cref="WithJsonDeserialize{TResponse}(Func{Stream, TResponse})"/>
-    IUnsafeMethodWithResultFromJson<TResponse> WithJsonDeserialize<TResponse>(JsonNet.JsonSerializerSettings jsonSerializerSettings)
-      where TResponse : class;
-
-    /// <inheritdoc cref="WithJsonDeserialize{TResponse}(Func{Stream, TResponse})"/>
-    IUnsafeMethodWithResultFromJson<TResponse> WithJsonDeserialize<TResponse>(TextJson.JsonSerializerOptions jsonSerializerOptions)
-      where TResponse : class;
-
-    /// <inheritdoc cref="WithJsonDeserialize{TResponse}(Func{Stream, TResponse})"/>
-    IUnsafeMethodWithResultFromJson<TResponse> WithJsonDeserialize<TResponse>(Func<string, TResponse> deserializeStringFunction)
-       where TResponse : class;
-
     /// <summary>
     /// Treat response as JSON and deserialize to provided type.
     /// </summary>
-    IUnsafeMethodWithResultFromJson<TResponse> WithJsonDeserialize<TResponse>(Func<Stream, TResponse> deserializeStringFunction)
+    IUnsafeMethodWithResultAsGeneric<TResponse> WithJsonDeserialize<TResponse>()
+        where TResponse : class;
+
+    /// <inheritdoc cref="WithJsonDeserialize{TResponse}()"/>
+    IUnsafeMethodWithResultAsGeneric<TResponse> WithJsonDeserialize<TResponse>(JsonNet.JsonSerializerSettings jsonSerializerSettings)
       where TResponse : class;
 
-    /// <inheritdoc cref="WithXmlDeserialize{TResponse}(Func{Stream, TResponse})"/>
-    IUnsafeMethodWithResultFromXml<TResponse> WithXmlDeserialize<TResponse>()
-      where TResponse : class;
-
-    /// <inheritdoc cref="WithXmlDeserialize{TResponse}(Func{Stream, TResponse})"/>
-    IUnsafeMethodWithResultFromXml<TResponse> WithXmlDeserialize<TResponse>(Func<string, TResponse> deserializeStringFunction)
+    /// <inheritdoc cref="WithJsonDeserialize{TResponse}()"/>
+    IUnsafeMethodWithResultAsGeneric<TResponse> WithJsonDeserialize<TResponse>(TextJson.JsonSerializerOptions jsonSerializerOptions)
       where TResponse : class;
 
     /// <summary>
     /// Treat response as XML and deserialize to provided type.
     /// </summary>
-    IUnsafeMethodWithResultFromXml<TResponse> WithXmlDeserialize<TResponse>(Func<Stream, TResponse> deserializeStreamFunction)
+    IUnsafeMethodWithResultAsGeneric<TResponse> WithXmlDeserialize<TResponse>()
+      where TResponse : class;
+
+    /// <inheritdoc cref="WithGenericDeserialize{TResponse}(Func{Stream, TResponse})"/>
+    IUnsafeMethodWithResultAsGeneric<TResponse> WithGenericDeserialize<TResponse>(Func<string, TResponse> deserializeStringFunction)
         where TResponse : class;
+
+    /// <summary>
+    /// Deserialize to provided type.
+    /// </summary>
+    IUnsafeMethodWithResultAsGeneric<TResponse> WithGenericDeserialize<TResponse>(Func<Stream, TResponse> deserializeStreamFunction)
+        where TResponse : class;
+
+    // TODO: Add task deserialization overload.
 }

@@ -1,5 +1,7 @@
 ﻿using CoreSharp.Extensions;
+using CoreSharp.Http.FluentApi.Services.Interfaces;
 using CoreSharp.Http.FluentApi.Steps.Interfaces;
+using CoreSharp.Http.FluentApi.Utilities;
 using CoreSharp.Utilities;
 using Microsoft.Net.Http.Headers;
 using System;
@@ -14,17 +16,28 @@ namespace CoreSharp.Http.FluentApi.Steps;
 /// <inheritdoc cref="IRequest"/>
 public sealed class Request : IRequest
 {
-    // Constructors 
-    public Request(HttpClient httpClient)
+    // Constructors
+
+    public Request(
+        HttpClient httpClient,
+        ICacheStorage cacheStorage,
+        IHttpResponseMessageDeserializer httpResponseMessageDeserializer)
     {
         ArgumentNullException.ThrowIfNull(httpClient);
+        ArgumentNullException.ThrowIfNull(cacheStorage);
+        ArgumentNullException.ThrowIfNull(httpResponseMessageDeserializer);
 
-        Me.HttpClient = httpClient;
+        var me = Me;
+        me.HttpClient = httpClient;
+        me.CacheStorage = cacheStorage;
+        me.HttpResponseMessageDeserializer = httpResponseMessageDeserializer;
     }
 
     // Properties 
     private IRequest Me
         => this;
+    ICacheStorage IRequest.CacheStorage { get; set; }
+    IHttpResponseMessageDeserializer IRequest.HttpResponseMessageDeserializer { get; set; }
     HttpClient IRequest.HttpClient { get; set; }
     IDictionary<string, string> IRequest.QueryParameters { get; }
         = new Dictionary<string, string>();
@@ -89,7 +102,11 @@ public sealed class Request : IRequest
     {
         ArgumentNullException.ThrowIfNull(queryParameter);
 
-        var parameters = queryParameter.GetPropertiesDictionary();
+        if (queryParameter is not IDictionary<string, object> parameters)
+        {
+            parameters = queryParameter.GetPropertiesDictionary();
+        }
+
         return Me.WithQuery(parameters);
     }
 
@@ -119,12 +136,6 @@ public sealed class Request : IRequest
                 $"{nameof(timeout)} ({timeout.ToStringReadable()}) has to be positive and non-zero.");
         }
 
-        if (timeout == System.Threading.Timeout.InfiniteTimeSpan)
-        {
-            throw new ArgumentOutOfRangeException(nameof(timeout),
-                $"{nameof(timeout)} cannot be {nameof(System.Threading.Timeout.InfiniteTimeSpan)}.");
-        }
-
         Me.Timeout = timeout;
         return this;
     }
@@ -145,7 +156,7 @@ public sealed class Request : IRequest
     {
         ArgumentNullException.ThrowIfNull(segments);
 
-        return Me.WithEndpoint(UriX.JoinSegments(segments.ToArray()));
+        return Me.WithEndpoint(UriUtils.JoinSegments(segments.ToArray()));
     }
 
     public IEndpoint WithEndpoint(string resourceName)
@@ -153,7 +164,7 @@ public sealed class Request : IRequest
         ArgumentException.ThrowIfNullOrEmpty(resourceName);
 
         // Fix resource name 
-        resourceName = UriX.JoinSegments(resourceName).TrimStart('/');
+        resourceName = UriUtils.JoinSegments(resourceName).TrimStart('/');
         return new Endpoint(this, resourceName);
     }
 }

@@ -4,7 +4,8 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace CoreSharp.Http.FluentApi.Steps.Interfaces;
 
-[SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "<Pending>")]
+[SuppressMessage("Naming", "CA1716:Identifiers should not match keywords",
+    Justification = "<Pending>")]
 public interface IEndpoint
 {
     // Properties 
