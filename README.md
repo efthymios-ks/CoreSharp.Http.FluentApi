@@ -27,11 +27,11 @@ dotnet add package CoreSharp.Http.FluentApi
 - [Headers](#headers)
 	- [Accept](#accept)
 	- [Authorization](#authorization)
-- [Query parameters](#query-parameters)
 - [Ignore error](#ignore-error)
 - [HttpCompletionOption](#httpcompletionoption)
 - [Timeout](#timeout)
 - [Endpoint](#endpoint)
+- [Query parameters](#query-parameters)
 - [HTTP method](#http-method)
 	- [Safe methods](#safe-methods)
 	- [Unsafe methods](#unsafe-methods)
@@ -114,47 +114,6 @@ var response = client
 var response = client
 	.Request()
 	.WithBearerToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9")
-	.WithEndpoint("users")
-	.Get()
-	.SendAsync();
-```
-
-### Query parameters
-```CSharp
-// GET > /users/?Id=1&Name="Makis"
-var response = client
-	.Request()
-	.WithQuery("Id", 1)
-	.WithQuery("Name","Makis")
-	.WithEndpoint("users")
-	.Get()
-	.SendAsync();
-```
-
-```CSharp
-// GET > /users/?Id=1&Name="Makis"
-var response = client
-	.Request()
-	.WithQuery(new
-	{
-		Id = 1,
-		Name = "Makis"
-	})
-	.WithEndpoint("users")
-	.Get()
-	.SendAsync();
-```
-
-```CSharp
-// GET > /users/?Id=1&Name="Makis"
-var queryParameters = new Dictionary<string, object>()
-{
-	{ "Id", 1 },
-	{ "Name", "Makis" }
-};
-var response = client
-	.Request()
-	.WithQuery(queryParameters)
 	.WithEndpoint("users")
 	.Get()
 	.SendAsync();
@@ -251,6 +210,47 @@ var response = client
 var response = client
 	.Request()
 	.WithEndpoint(new [] {"users", "filter", "new" })
+	.Get()
+	.SendAsync();
+```
+
+### Query parameters
+```CSharp
+// GET > /users/?Id=1&Name="Makis"
+var response = client
+	.Request()
+	.WithEndpoint("users")
+	.WithQuery("Id", 1)
+	.WithQuery("Name","Makis")
+	.Get()
+	.SendAsync();
+```
+
+```CSharp
+// GET > /users/?Id=1&Name="Makis"
+var response = client
+	.Request()
+	.WithEndpoint("users")
+	.WithQuery(new
+	{
+		Id = 1,
+		Name = "Makis"
+	})
+	.Get()
+	.SendAsync();
+```
+
+```CSharp
+// GET > /users/?Id=1&Name="Makis"
+var queryParameters = new Dictionary<string, object>()
+{
+	{ "Id", 1 },
+	{ "Name", "Makis" }
+};
+var response = client
+	.Request()
+	.WithEndpoint("users")
+	.WithQuery(queryParameters)
 	.Get()
 	.SendAsync();
 ```
@@ -358,7 +358,7 @@ var response = client
 	.Post()
 	.WithJsonBody(@"
 	{
-		""Name"": "Dave""
+		""Name"": ""Dave""
 	}")
 	.SendAsync();
 ```
@@ -473,7 +473,7 @@ User response = client
 ```
 
 ```CSharp
-// Deserialize with System.Text.Json
+// Deserialize JSON with System.Text.Json
 System.Text.Json.JsonSerializerOptions options = new();
 User response = client
 	.Request()
@@ -484,7 +484,7 @@ User response = client
 ```
 
 ```CSharp
-// Deserialize with Newtonsoft.Json
+// Deserialize JSON with Newtonsoft.Json
 Newtonsoft.Json.JsonSerializerSettings settings = new();
 User response = client
 	.Request()

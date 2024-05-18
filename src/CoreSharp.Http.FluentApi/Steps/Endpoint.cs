@@ -1,9 +1,11 @@
-﻿using CoreSharp.Http.FluentApi.Steps.Interfaces;
+﻿using CoreSharp.Extensions;
+using CoreSharp.Http.FluentApi.Steps.Interfaces;
 using CoreSharp.Http.FluentApi.Steps.Interfaces.Methods.SafeMethods;
 using CoreSharp.Http.FluentApi.Steps.Interfaces.Methods.UnsafeMethods;
 using CoreSharp.Http.FluentApi.Steps.Methods.SafeMethods;
 using CoreSharp.Http.FluentApi.Steps.Methods.UnsafeMethods;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 
 namespace CoreSharp.Http.FluentApi.Steps;
@@ -27,8 +29,41 @@ public sealed class Endpoint : IEndpoint
         => this;
     IRequest IEndpoint.Request { get; set; }
     string IEndpoint.Endpoint { get; set; }
+    IDictionary<string, string> IEndpoint.QueryParameters { get; }
+        = new Dictionary<string, string>();
 
     // Methods 
+    public IEndpoint WithQuery(IDictionary<string, object> parameters)
+    {
+        ArgumentNullException.ThrowIfNull(parameters);
+
+        foreach (var (key, value) in parameters)
+        {
+            Me.WithQuery(key, value);
+        }
+
+        return this;
+    }
+
+    public IEndpoint WithQuery<TQueryParameter>(TQueryParameter queryParameter)
+        where TQueryParameter : class
+    {
+        ArgumentNullException.ThrowIfNull(queryParameter);
+
+        if (queryParameter is not IDictionary<string, object> parameters)
+        {
+            parameters = queryParameter.GetPropertiesDictionary();
+        }
+
+        return Me.WithQuery(parameters);
+    }
+
+    public IEndpoint WithQuery(string key, object value)
+    {
+        Me.QueryParameters[key] = value?.ToString();
+        return this;
+    }
+
     public ISafeMethodWithResult Get()
         => new SafeMethodWithResult(new SafeMethod(this, HttpMethod.Get));
 

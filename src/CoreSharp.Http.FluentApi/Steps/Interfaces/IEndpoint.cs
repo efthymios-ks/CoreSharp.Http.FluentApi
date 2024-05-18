@@ -1,5 +1,6 @@
 ﻿using CoreSharp.Http.FluentApi.Steps.Interfaces.Methods.SafeMethods;
 using CoreSharp.Http.FluentApi.Steps.Interfaces.Methods.UnsafeMethods;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace CoreSharp.Http.FluentApi.Steps.Interfaces;
@@ -11,8 +12,25 @@ public interface IEndpoint
     // Properties 
     internal IRequest Request { get; set; }
     internal string Endpoint { get; set; }
+    internal IDictionary<string, string> QueryParameters { get; }
 
     // Methods 
+    /// <summary>
+    /// Add query parameters.
+    /// </summary>
+    IEndpoint WithQuery(IDictionary<string, object> parameters);
+
+    /// <summary>
+    /// Add properties of object as query parameters.
+    /// </summary>
+    IEndpoint WithQuery<TQueryParameter>(TQueryParameter queryParameter)
+        where TQueryParameter : class;
+
+    /// <summary>
+    /// Add query parameter.
+    /// </summary>
+    IEndpoint WithQuery(string key, object value);
+
     /// <summary>
     /// The HTTP GET method requests a representation of the specified resource. <br/>
     /// Requests using GET should only be used to request data (they shouldn't include data).

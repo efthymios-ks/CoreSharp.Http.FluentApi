@@ -28,8 +28,8 @@ public sealed class CacheStorage : ICacheStorage
         ArgumentNullException.ThrowIfNull(method);
 
         var endpointObject = method.Endpoint;
+        var queryParameters = endpointObject.QueryParameters;
         var requestObject = endpointObject.Request;
-        var queryParameters = requestObject.QueryParameters;
         var headers = requestObject.Headers;
         var endpoint = endpointObject.Endpoint;
         var builder = new StringBuilder();

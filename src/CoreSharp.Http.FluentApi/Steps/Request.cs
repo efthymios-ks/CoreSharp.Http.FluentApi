@@ -39,8 +39,6 @@ public sealed class Request : IRequest
     ICacheStorage IRequest.CacheStorage { get; set; }
     IHttpResponseMessageDeserializer IRequest.HttpResponseMessageDeserializer { get; set; }
     HttpClient IRequest.HttpClient { get; set; }
-    IDictionary<string, string> IRequest.QueryParameters { get; }
-        = new Dictionary<string, string>();
     IDictionary<string, string> IRequest.Headers { get; }
         = new Dictionary<string, string>();
     bool IRequest.ThrowOnError { get; set; } = true;
@@ -84,37 +82,6 @@ public sealed class Request : IRequest
 
     public IRequest WithBearerToken(string accessToken)
         => Me.WithAuthorization($"Bearer {accessToken}");
-
-    public IRequest WithQuery(IDictionary<string, object> parameters)
-    {
-        ArgumentNullException.ThrowIfNull(parameters);
-
-        foreach (var (key, value) in parameters)
-        {
-            Me.WithQuery(key, value);
-        }
-
-        return this;
-    }
-
-    public IRequest WithQuery<TQueryParameter>(TQueryParameter queryParameter)
-        where TQueryParameter : class
-    {
-        ArgumentNullException.ThrowIfNull(queryParameter);
-
-        if (queryParameter is not IDictionary<string, object> parameters)
-        {
-            parameters = queryParameter.GetPropertiesDictionary();
-        }
-
-        return Me.WithQuery(parameters);
-    }
-
-    public IRequest WithQuery(string key, object value)
-    {
-        Me.QueryParameters[key] = value?.ToString();
-        return this;
-    }
 
     public IRequest IgnoreError()
     {

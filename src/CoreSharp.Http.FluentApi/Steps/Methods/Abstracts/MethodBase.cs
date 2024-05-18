@@ -40,10 +40,10 @@ public abstract class MethodBase : IMethod
 
         var endpointInterface = Me.Endpoint;
         var endpoint = endpointInterface.Endpoint;
+        var queryParameters = endpointInterface.QueryParameters;
 
         var requestInterface = endpointInterface.Request;
         var httpClient = requestInterface.HttpClient;
-        var queryParameters = requestInterface.QueryParameters;
         var headers = requestInterface.Headers;
         var httpCompletionOption = requestInterface.HttpCompletionOption;
         var timeout = requestInterface.Timeout ?? Timeout.InfiniteTimeSpan;

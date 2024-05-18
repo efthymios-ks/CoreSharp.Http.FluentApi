@@ -15,12 +15,11 @@ public interface IRequest
     internal IHttpResponseMessageDeserializer HttpResponseMessageDeserializer { get; set; }
     internal HttpClient HttpClient { get; set; }
     internal IDictionary<string, string> Headers { get; }
-    internal IDictionary<string, string> QueryParameters { get; }
     internal HttpCompletionOption HttpCompletionOption { get; set; }
     internal TimeSpan? Timeout { get; set; }
     internal bool ThrowOnError { get; set; }
 
-    // Methods 
+    // Methods
     /// <inheritdoc cref="WithHeader(string, string)" />
     IRequest WithHeaders(IDictionary<string, string> headers);
 
@@ -54,22 +53,6 @@ public interface IRequest
     /// to bearer given value.
     /// </summary>
     IRequest WithBearerToken(string accessToken);
-
-    /// <summary>
-    /// Add query parameters.
-    /// </summary>
-    IRequest WithQuery(IDictionary<string, object> parameters);
-
-    /// <summary>
-    /// Add properties of object as query parameters.
-    /// </summary>
-    IRequest WithQuery<TQueryParameter>(TQueryParameter queryParameter)
-        where TQueryParameter : class;
-
-    /// <summary>
-    /// Add query parameter.
-    /// </summary>
-    IRequest WithQuery(string key, object value);
 
     /// <inheritdoc cref="ThrowOnError" />
     IRequest IgnoreError();

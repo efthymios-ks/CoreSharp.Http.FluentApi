@@ -2,7 +2,6 @@
 using AutoFixture.AutoNSubstitute;
 using AutoFixture.NUnit3;
 using CoreSharp.Http.FluentApi.Services;
-using CoreSharp.Http.FluentApi.Steps;
 using CoreSharp.Http.FluentApi.Steps.Interfaces;
 using CoreSharp.Http.FluentApi.Utilities;
 using NSubstitute;
@@ -51,7 +50,6 @@ public sealed class AutoNSubstituteDataAttribute : AutoDataAttribute
             request.HttpClient.Returns(httpClient);
             request.HttpCompletionOption.Returns(HttpCompletionOption.ResponseContentRead);
             request.Headers.Returns(new Dictionary<string, string>());
-            request.QueryParameters.Returns(new Dictionary<string, string>());
             request.ThrowOnError.Returns(false);
             request.Timeout.Returns((TimeSpan?)null);
             request.HttpResponseMessageDeserializer = fixture.Create<IHttpResponseMessageDeserializer>();
@@ -59,10 +57,16 @@ public sealed class AutoNSubstituteDataAttribute : AutoDataAttribute
             return request;
         });
 
-        fixture.Register<IEndpoint>(() =>
+        fixture.Register(() =>
         {
+            var endpoint = Substitute.For<IEndpoint>();
+
             var request = fixture.Create<IRequest>();
-            return new Endpoint(request, "http://www.example.com/");
+            endpoint.Request.Returns(request);
+            endpoint.Endpoint.Returns("http://www.example.com/");
+            endpoint.QueryParameters.Returns(new Dictionary<string, string>());
+
+            return endpoint;
         });
 
         return fixture;

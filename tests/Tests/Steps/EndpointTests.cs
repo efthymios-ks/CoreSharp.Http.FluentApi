@@ -6,7 +6,9 @@ using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
+using Tests.Internal.Attributes;
 
 namespace Tests.Steps;
 
@@ -69,6 +71,142 @@ public sealed class EndpointTests
         var endpointInterface = (IEndpoint)endpoint;
         endpointInterface.Request.Should().BeSameAs(request);
         endpointInterface.Endpoint.Should().Be(resourceName);
+        endpointInterface.QueryParameters.Should().NotBeNull().And.BeEmpty();
+    }
+
+    [Test]
+    [AutoNSubstituteData]
+    public void WithQuery_WhenDictionaryIsNull_ShouldThrowArgumentNullException(Endpoint endpoint)
+    {
+        // Arrange
+        IDictionary<string, object> parameters = null!;
+
+        // Act 
+        Action action = () => endpoint.WithQuery(parameters);
+
+        // Assert 
+        action.Should().ThrowExactly<ArgumentNullException>();
+    }
+
+    [Test]
+    [AutoNSubstituteData]
+    public void WithQuery_WhenDictionaryIsNotNull_ShouldSetQueryStringFromDictionary(Endpoint endpoint)
+    {
+        // Arrange
+        IDictionary<string, object> parameters = new Dictionary<string, object>
+        {
+            { "key1", "value1" },
+            { "key2", "value2" }
+        };
+
+        // Act 
+        var endpointReturned = endpoint.WithQuery(parameters);
+
+        // Assert 
+        endpointReturned.Should().BeSameAs(endpoint);
+        var endpointInterface = (IEndpoint)endpoint;
+        endpointInterface.QueryParameters.Should().BeEquivalentTo(parameters);
+    }
+
+    [Test]
+    [AutoNSubstituteData]
+    public void WithQuery_WhenGenericClassIsNull_ShouldThrowArgumentNullException(Endpoint endpoint)
+    {
+        // Arrange
+        object parameters = null!;
+
+        // Act 
+        Action action = () => endpoint.WithQuery(parameters);
+
+        // Assert 
+        action.Should().ThrowExactly<ArgumentNullException>();
+    }
+
+    [Test]
+    [AutoNSubstituteData]
+    public void WithQuery_WhenGenericClassIsDictionary_ShouldSetQueryStringFromDictionary(Endpoint endpoint)
+    {
+        // Arrange
+        var payload = new Dictionary<string, object>
+        {
+            { "key1", "value1" },
+            { "key2", "value2" }
+        };
+
+        // Act 
+        var endpointReturned = endpoint.WithQuery(payload);
+
+        // Assert 
+        endpointReturned.Should().BeSameAs(endpoint);
+        var endpointInterface = (IEndpoint)endpoint;
+        endpointInterface.QueryParameters.Should().BeEquivalentTo(payload);
+    }
+
+    [Test]
+    [AutoNSubstituteData]
+    public void WithQuery_WhenGenericClassIsNotDictionary_ShouldSetQueryStringFromObjectProperties(Endpoint endpoint)
+    {
+        // Arrange
+        var payload = new
+        {
+            Key1 = "Value1",
+            Key2 = "Value2"
+        };
+        var expectedQueryParameters = new Dictionary<string, object>
+        {
+            { "Key1", "Value1" },
+            { "Key2", "Value2" }
+        };
+
+        // Act 
+        var endpointReturned = endpoint.WithQuery(payload);
+
+        // Assert 
+        endpointReturned.Should().BeSameAs(endpoint);
+        var endpointInterface = (IEndpoint)endpoint;
+        endpointInterface.QueryParameters.Should().BeEquivalentTo(expectedQueryParameters);
+    }
+
+    [Test]
+    [AutoNSubstituteData]
+    public void WithQuery_WhenValueIsNull_ShouldSetQueryStringWithNullValue(Endpoint endpoint)
+    {
+        // Arrange
+        const string key = "key";
+        const string value = null;
+        var expectedQueryParameters = new Dictionary<string, object>
+        {
+            { key, value }
+        };
+
+        // Act 
+        var endpointReturned = endpoint.WithQuery(key, value);
+
+        // Assert 
+        endpointReturned.Should().BeSameAs(endpoint);
+        var endpointInterface = (IEndpoint)endpoint;
+        endpointInterface.QueryParameters.Should().BeEquivalentTo(expectedQueryParameters);
+    }
+
+    [Test]
+    [AutoNSubstituteData]
+    public void WithQuery_WhenValueIsNotNull_ShouldSetQueryString(Endpoint endpoint)
+    {
+        // Arrange
+        const string key = "key";
+        const string value = "value";
+        var expectedQueryParameters = new Dictionary<string, object>
+        {
+            { key, value }
+        };
+
+        // Act 
+        var endpointReturned = endpoint.WithQuery(key, value);
+
+        // Assert 
+        endpointReturned.Should().BeSameAs(endpoint);
+        var endpointInterface = (IEndpoint)endpoint;
+        endpointInterface.QueryParameters.Should().BeEquivalentTo(expectedQueryParameters);
     }
 
     [Test]

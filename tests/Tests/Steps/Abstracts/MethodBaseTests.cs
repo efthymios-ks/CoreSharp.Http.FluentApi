@@ -66,13 +66,12 @@ public sealed class MethodBaseTests
     [AutoNSubstituteData]
     public async Task SendAsync_WhenHasQueryParameters_ShouldAppendQueryParametersToEndpoint(
         [Frozen] MockHttpMessageHandler mockHttpMessageHandler,
-        [Frozen] IRequest request,
         IEndpoint endpoint)
     {
         // Arrange 
         var httpMethod = HttpMethod.Get;
         var method = new DummyMethod(endpoint, httpMethod);
-        request.QueryParameters.Add("key1", "value1");
+        endpoint.QueryParameters.Add("key1", "value1");
 
         // Act
         _ = await method.SendAsync();

@@ -56,8 +56,8 @@ public sealed class CacheStorageTests
         CacheStorage cacheStorage)
     {
         // Arrange 
-        method.Endpoint.Request.QueryParameters["Key1"] = "Value1";
-        method.Endpoint.Request.QueryParameters["Key2"] = "Value2";
+        method.Endpoint.QueryParameters["Key1"] = "Value1";
+        method.Endpoint.QueryParameters["Key2"] = "Value2";
 
         // Act
         var cacheKey = cacheStorage.GetCacheKey<string>(method);
