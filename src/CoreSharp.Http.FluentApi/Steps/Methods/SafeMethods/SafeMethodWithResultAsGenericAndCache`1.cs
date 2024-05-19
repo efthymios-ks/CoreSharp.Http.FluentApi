@@ -14,7 +14,7 @@ public sealed class SafeMethodWithResultAsGenericAndCache<TResult> :
 {
     // Constructors
     public SafeMethodWithResultAsGenericAndCache(ISafeMethodWithResultAsGeneric<TResult> method, TimeSpan duration)
-        : base(method)
+        : base(method, method?.DeserializeFunction)
         => Me.CacheDuration = duration;
 
     // Properties
@@ -38,6 +38,7 @@ public sealed class SafeMethodWithResultAsGenericAndCache<TResult> :
         Me.CacheInvalidationFactory = cacheInvalidationFactory;
         return this;
     }
+
     public override Task<TResult> SendAsync(CancellationToken cancellationToken = default)
         => Me.Endpoint.Request.CacheStorage.GetOrAddResultAsync(
             this,

@@ -19,6 +19,6 @@ public static class HttpClientExtensions
     {
         ArgumentNullException.ThrowIfNull(httpClient);
 
-        return new Request(httpClient, CacheStorage.Instance, HttpResponseMessageDeserializer.Instance);
+        return new Request(httpClient, CacheStorage.Instance);
     }
 }

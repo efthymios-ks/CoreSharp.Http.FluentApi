@@ -1,7 +1,6 @@
 ﻿using CoreSharp.Http.FluentApi.Services.Interfaces;
 using CoreSharp.Http.FluentApi.Steps;
 using CoreSharp.Http.FluentApi.Steps.Interfaces;
-using CoreSharp.Http.FluentApi.Utilities;
 using FluentAssertions;
 using Microsoft.Net.Http.Headers;
 using NSubstitute;
@@ -24,10 +23,9 @@ public sealed class RequestTests
         // Arrange 
         using HttpClient httpClient = null;
         var cacheStorage = Substitute.For<ICacheStorage>();
-        var httpResponseMessageDeserializer = Substitute.For<IHttpResponseMessageDeserializer>();
 
         // Act 
-        Action action = () => _ = new Request(httpClient, cacheStorage, httpResponseMessageDeserializer);
+        Action action = () => _ = new Request(httpClient, cacheStorage);
 
         // Assert 
         action.Should().ThrowExactly<ArgumentNullException>();
@@ -39,25 +37,9 @@ public sealed class RequestTests
         // Arrange 
         using var httpClient = new HttpClient();
         ICacheStorage cacheStorage = null;
-        var httpResponseMessageDeserializer = Substitute.For<IHttpResponseMessageDeserializer>();
 
         // Act 
-        Action action = () => _ = new Request(httpClient, cacheStorage, httpResponseMessageDeserializer);
-
-        // Assert 
-        action.Should().ThrowExactly<ArgumentNullException>();
-    }
-
-    [Test]
-    public void Constructor_WhenHttpResponseMessageDeserializerIsNull_ShouldThrowArgumentNullException()
-    {
-        // Arrange 
-        using var httpClient = new HttpClient();
-        ICacheStorage cacheStorage = null;
-        IHttpResponseMessageDeserializer httpResponseMessageDeserializer = null;
-
-        // Act 
-        Action action = () => _ = new Request(httpClient, cacheStorage, httpResponseMessageDeserializer);
+        Action action = () => _ = new Request(httpClient, cacheStorage);
 
         // Assert 
         action.Should().ThrowExactly<ArgumentNullException>();
@@ -69,15 +51,13 @@ public sealed class RequestTests
         // Arrange 
         using var httpClient = new HttpClient();
         var cacheStorage = Substitute.For<ICacheStorage>();
-        var httpResponseMessageDeserializer = Substitute.For<IHttpResponseMessageDeserializer>();
 
         // Act 
-        var request = new Request(httpClient, cacheStorage, httpResponseMessageDeserializer);
+        var request = new Request(httpClient, cacheStorage);
 
         // Assert 
         var requestInterface = (IRequest)request;
         requestInterface.CacheStorage.Should().BeSameAs(cacheStorage);
-        requestInterface.HttpResponseMessageDeserializer.Should().BeSameAs(httpResponseMessageDeserializer);
         requestInterface.HttpClient.Should().BeSameAs(httpClient);
         requestInterface.Headers.Should().NotBeNull().And.BeEmpty();
         requestInterface.ThrowOnError.Should().BeTrue();
@@ -281,8 +261,7 @@ public sealed class RequestTests
         // Arrange 
         using var httpClient = new HttpClient();
         var cacheStorage = Substitute.For<ICacheStorage>();
-        var httpResponseMessageDeserializer = Substitute.For<IHttpResponseMessageDeserializer>();
-        var request = new Request(httpClient, cacheStorage, httpResponseMessageDeserializer);
+        var request = new Request(httpClient, cacheStorage);
         var timeout = TimeSpan.FromSeconds(timeoutSeconds);
 
         // Act 

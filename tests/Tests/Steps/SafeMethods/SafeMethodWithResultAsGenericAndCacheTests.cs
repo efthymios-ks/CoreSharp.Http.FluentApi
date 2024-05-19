@@ -9,6 +9,8 @@ using NSubstitute;
 using NSubstitute.ReceivedExtensions;
 using NUnit.Framework;
 using System;
+using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using Tests.Internal.Attributes;
 using Tests.Internal.HttpmessageHandlers;
@@ -18,6 +20,21 @@ namespace Tests.Steps.SafeMethods;
 [TestFixture]
 public sealed class SafeMethodWithResultAsGenericAndCacheTests
 {
+    [Test]
+    [AutoNSubstituteData]
+    public void Constructor_WhenSafeMethodWithResultAsGenericIsNull_ShouldThrowArgumentNullException()
+    {
+        // Arrange
+        ISafeMethodWithResultAsGeneric<string> safeMethodWithResultAsGeneric = null;
+        var duration = TimeSpan.FromMinutes(1);
+
+        // Arrange
+        Action action = () => _ = new SafeMethodWithResultAsGenericAndCache<string>(safeMethodWithResultAsGeneric, duration);
+
+        // Assert
+        action.Should().ThrowExactly<ArgumentNullException>();
+    }
+
     [Test]
     [AutoNSubstituteData]
     public void Constructor_WhenCalled_ShouldSetProperties(ISafeMethodWithResultAsGeneric<string> safeMethodWithResultAsGeneric)
@@ -116,8 +133,13 @@ public sealed class SafeMethodWithResultAsGenericAndCacheTests
     {
         // Arrange
         ICacheStorage cacheStorage = new CacheStorage(memoryCache);
-        safeMethodWithResultAsGeneric.DeserializeStreamFunction = null;
-        safeMethodWithResultAsGeneric.DeserializeStringFunction = response => response;
+        safeMethodWithResultAsGeneric.DeserializeFunction = async response =>
+        {
+            await using var memoryStream = new MemoryStream();
+            await response.CopyToAsync(memoryStream);
+            var buffer = memoryStream.ToArray();
+            return Encoding.UTF8.GetString(buffer);
+        };
         var safeMethodWithResultAsBytesAndCache = new SafeMethodWithResultAsGenericAndCache<string>(safeMethodWithResultAsGeneric, TimeSpan.FromMinutes(1));
 
         safeMethodWithResultAsGeneric

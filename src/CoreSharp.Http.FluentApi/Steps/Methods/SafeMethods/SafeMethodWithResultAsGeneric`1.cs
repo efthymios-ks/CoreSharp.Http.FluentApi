@@ -13,34 +13,18 @@ public class SafeMethodWithResultAsGeneric<TResult> :
     where TResult : class
 {
     // Constructors
-    public SafeMethodWithResultAsGeneric(ISafeMethod safeMethod, Func<Stream, TResult> deserializeStreamFunction)
+    public SafeMethodWithResultAsGeneric(ISafeMethod safeMethod, Func<Stream, Task<TResult>> deserializeStreamFunction)
         : base(safeMethod)
     {
         ArgumentNullException.ThrowIfNull(deserializeStreamFunction);
 
-        Me.DeserializeStreamFunction = deserializeStreamFunction;
-    }
-
-    public SafeMethodWithResultAsGeneric(ISafeMethod safeMethod, Func<string, TResult> deserializeStringFunction)
-        : base(safeMethod)
-    {
-        ArgumentNullException.ThrowIfNull(deserializeStringFunction);
-
-        Me.DeserializeStringFunction = deserializeStringFunction;
-    }
-
-    protected SafeMethodWithResultAsGeneric(ISafeMethodWithResultAsGeneric<TResult> safeMethodWithResultFromJson)
-        : base(safeMethodWithResultFromJson)
-    {
-        Me.DeserializeStreamFunction = safeMethodWithResultFromJson.DeserializeStreamFunction;
-        Me.DeserializeStringFunction = safeMethodWithResultFromJson.DeserializeStringFunction;
+        Me.DeserializeFunction = deserializeStreamFunction;
     }
 
     // Properties
     private ISafeMethodWithResultAsGeneric<TResult> Me
         => this;
-    Func<Stream, TResult> ISafeMethodWithResultAsGeneric<TResult>.DeserializeStreamFunction { get; set; }
-    Func<string, TResult> ISafeMethodWithResultAsGeneric<TResult>.DeserializeStringFunction { get; set; }
+    Func<Stream, Task<TResult>> ISafeMethodWithResultAsGeneric<TResult>.DeserializeFunction { get; set; }
 
     // Methods
     public ISafeMethodWithResultAsGenericAndCache<TResult> WithCache(TimeSpan duration)
@@ -48,11 +32,8 @@ public class SafeMethodWithResultAsGeneric<TResult> :
 
     public new virtual async Task<TResult> SendAsync(CancellationToken cancellationToken = default)
     {
-        using var httpResponseMessage = await base.SendAsync(cancellationToken);
-        return await Me.Endpoint.Request.HttpResponseMessageDeserializer.DeserializeAsync(
-            httpResponseMessage,
-            Me.DeserializeStreamFunction,
-            Me.DeserializeStringFunction,
-            cancellationToken);
+        using var response = await base.SendAsync(cancellationToken);
+        using var buffer = await response.Content.ReadAsStreamAsync(cancellationToken);
+        return await Me.DeserializeFunction(buffer);
     }
 }

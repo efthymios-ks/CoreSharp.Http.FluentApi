@@ -30,11 +30,11 @@ public sealed class StreamExtensionsTests
     }
 
     [Test]
-    public void GetBytes_WhenStreamIsMemoryStream_ShouldReturnByteArrayForMemoryStream()
+    public async Task GetBytes_WhenStreamIsMemoryStream_ShouldReturnByteArrayForMemoryStream()
     {
         // Arrange 
         var buffer = Encoding.UTF8.GetBytes("Data");
-        using var stream = Substitute.For<MemoryStream>();
+        await using var stream = Substitute.For<MemoryStream>();
         stream.ToArray().Returns(buffer);
 
         // Act
@@ -47,11 +47,11 @@ public sealed class StreamExtensionsTests
     }
 
     [Test]
-    public void GetBytes_WhenStreamIsNotMemoryStream_ShouldReturnByteArray()
+    public async Task GetBytes_WhenStreamIsNotMemoryStream_ShouldReturnByteArray()
     {
         // Arrange
         var buffer = Encoding.UTF8.GetBytes("Data");
-        using var stream = new DummyStream(buffer);
+        await using var stream = new DummyStream(buffer);
 
         // Act
         var streamReturned = stream.GetBytes();

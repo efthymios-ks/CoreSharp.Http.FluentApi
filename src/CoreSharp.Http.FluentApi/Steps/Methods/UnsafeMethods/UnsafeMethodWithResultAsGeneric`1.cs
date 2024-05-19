@@ -14,43 +14,24 @@ public class UnsafeMethodWithResultAsGeneric<TResult> :
     where TResult : class
 {
     // Constructors
-    public UnsafeMethodWithResultAsGeneric(IUnsafeMethod method, Func<Stream, TResult> deserializeStreamFunction)
+    public UnsafeMethodWithResultAsGeneric(IUnsafeMethod method, Func<Stream, Task<TResult>> deserializeSFunction)
         : base(method)
     {
-        ArgumentNullException.ThrowIfNull(deserializeStreamFunction);
+        ArgumentNullException.ThrowIfNull(deserializeSFunction);
 
-        Me.DeserializeStreamFunction = deserializeStreamFunction;
-    }
-
-    public UnsafeMethodWithResultAsGeneric(IUnsafeMethod method, Func<string, TResult> deserializeStringFunction)
-        : base(method)
-    {
-        ArgumentNullException.ThrowIfNull(deserializeStringFunction);
-
-        Me.DeserializeStringFunction = deserializeStringFunction;
-    }
-
-    protected UnsafeMethodWithResultAsGeneric(IUnsafeMethodWithResultAsGeneric<TResult> method)
-        : base(method)
-    {
-        Me.DeserializeStreamFunction = method.DeserializeStreamFunction;
-        Me.DeserializeStringFunction = method.DeserializeStringFunction;
+        Me.DeserializeFunction = deserializeSFunction;
     }
 
     // Properties
     private IUnsafeMethodWithResultAsGeneric<TResult> Me
         => this;
-    Func<Stream, TResult> IUnsafeMethodWithResultAsGeneric<TResult>.DeserializeStreamFunction { get; set; }
-    Func<string, TResult> IUnsafeMethodWithResultAsGeneric<TResult>.DeserializeStringFunction { get; set; }
+    Func<Stream, Task<TResult>> IUnsafeMethodWithResultAsGeneric<TResult>.DeserializeFunction { get; set; }
 
     // Methods 
     public new async Task<TResult> SendAsync(CancellationToken cancellationToken = default)
     {
-        using var httpResponseMessage = await base.SendAsync(cancellationToken);
-        return await Me.Endpoint.Request.HttpResponseMessageDeserializer.DeserializeAsync(
-            httpResponseMessage,
-            Me.DeserializeStreamFunction,
-            Me.DeserializeStringFunction,
-            cancellationToken);
+        using var response = await base.SendAsync(cancellationToken);
+        using var buffer = await response.Content.ReadAsStreamAsync(cancellationToken);
+        return await Me.DeserializeFunction(buffer);
     }
 }

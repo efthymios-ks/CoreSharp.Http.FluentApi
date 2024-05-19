@@ -5,6 +5,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using System;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using Tests.Internal.Attributes;
 using Tests.Internal.HttpmessageHandlers;
@@ -252,10 +253,10 @@ public sealed class SafeMethodWithResultTests
     {
         // Arrange
         var safeMethodWithResult = new SafeMethodWithResult(safeMethod);
-        Func<string, string> deserializeStringFunction = null;
+        Func<string, string> deserializeFunction = null;
 
         // Act
-        Action action = () => _ = safeMethodWithResult.WithGenericDeserialize(deserializeStringFunction);
+        Action action = () => _ = safeMethodWithResult.WithGenericDeserialize(deserializeFunction);
 
         // Assert
         action.Should().ThrowExactly<ArgumentNullException>();
@@ -267,11 +268,10 @@ public sealed class SafeMethodWithResultTests
     {
         // Arrange
         var safeMethodWithResult = new SafeMethodWithResult(safeMethod);
-        static string DeserializeStringFunction(string value)
-            => null;
+        Func<string, string> deserializeFunction = response => null;
 
         // Act
-        var result = safeMethodWithResult.WithGenericDeserialize(DeserializeStringFunction);
+        var result = safeMethodWithResult.WithGenericDeserialize(deserializeFunction);
 
         // Assert
         result.Should().BeOfType<SafeMethodWithResultAsGeneric<string>>();
@@ -281,14 +281,44 @@ public sealed class SafeMethodWithResultTests
 
     [Test]
     [AutoNSubstituteData]
+    public async Task WithGenericDeserialize_WhenDeserializeStringFunctionIsNotNull_ShouldDeserializeResponse(
+        [Frozen] MockHttpMessageHandler mockHttpMessageHandler,
+        ISafeMethod safeMethod)
+    {
+        // Arrange 
+        const string expectedResponse = "Data";
+        mockHttpMessageHandler.ResponseContent = "Data";
+
+        string deserializeFunctionCapturedResponse = null;
+        var deserializeFunctionCallCount = 0;
+        Func<string, string> deserializeFunction = response =>
+        {
+            deserializeFunctionCapturedResponse = response;
+            deserializeFunctionCallCount++;
+            return response;
+        };
+
+        // Act
+        var response = await new SafeMethodWithResult(safeMethod)
+            .WithGenericDeserialize(deserializeFunction)
+            .SendAsync();
+
+        // Assert
+        response.Should().BeEquivalentTo(expectedResponse);
+        deserializeFunctionCallCount.Should().Be(1);
+        deserializeFunctionCapturedResponse.Should().Be(mockHttpMessageHandler.ResponseContent);
+    }
+
+    [Test]
+    [AutoNSubstituteData]
     public void WithGenericDeserialize_WhenDeserializeStreamFunctionIsNull_ShouldThrowArgumentNullException(ISafeMethod safeMethod)
     {
         // Arrange
         var safeMethodWithResult = new SafeMethodWithResult(safeMethod);
-        Func<Stream, string> deserializeStringFunction = null;
+        Func<Stream, string> deserializeFunction = null;
 
         // Act
-        Action action = () => _ = safeMethodWithResult.WithGenericDeserialize(deserializeStringFunction);
+        Action action = () => _ = safeMethodWithResult.WithGenericDeserialize(deserializeFunction);
 
         // Assert
         action.Should().ThrowExactly<ArgumentNullException>();
@@ -300,16 +330,179 @@ public sealed class SafeMethodWithResultTests
     {
         // Arrange
         var safeMethodWithResult = new SafeMethodWithResult(safeMethod);
-        static string DeserializeStreamFunction(Stream stream)
-            => null;
+        Func<Stream, string> deserializeFunction = response => null;
 
         // Act
-        var result = safeMethodWithResult.WithGenericDeserialize(DeserializeStreamFunction);
+        var result = safeMethodWithResult.WithGenericDeserialize(deserializeFunction);
 
         // Assert
         result.Should().BeOfType<SafeMethodWithResultAsGeneric<string>>();
         result.Endpoint.Should().BeSameAs(safeMethod.Endpoint);
         result.HttpMethod.Should().Be(safeMethod.HttpMethod);
+    }
+
+    [Test]
+    [AutoNSubstituteData]
+    public async Task WithGenericDeserialize_WhenDeserializeStreamFunctionIsNotNull_ShouldDeserializeResponse(
+        [Frozen] MockHttpMessageHandler mockHttpMessageHandler,
+        ISafeMethod safeMethod)
+    {
+        // Arrange 
+        const string expectedResponse = "Data";
+        mockHttpMessageHandler.ResponseContent = "Data";
+
+        string deserializeFunctionCapturedResponse = null;
+        var deserializeFunctionCallCount = 0;
+        Func<Stream, string> deserializeFunction = response =>
+        {
+            using var memoryStream = new MemoryStream();
+            response.CopyTo(memoryStream);
+            var responseAsBytes = memoryStream.ToArray();
+            var responseAsString = Encoding.UTF8.GetString(responseAsBytes);
+
+            deserializeFunctionCapturedResponse = responseAsString;
+            deserializeFunctionCallCount++;
+            return responseAsString;
+        };
+
+        // Act
+        var response = await new SafeMethodWithResult(safeMethod)
+            .WithGenericDeserialize(deserializeFunction)
+            .SendAsync();
+
+        // Assert
+        response.Should().BeEquivalentTo(expectedResponse);
+        deserializeFunctionCallCount.Should().Be(1);
+        deserializeFunctionCapturedResponse.Should().Be(mockHttpMessageHandler.ResponseContent);
+    }
+
+    [Test]
+    [AutoNSubstituteData]
+    public void WithGenericDeserialize_WhenDeserializeTaskStringFunctionIsNull_ShouldThrowArgumentNullException(ISafeMethod safeMethod)
+    {
+        // Arrange
+        var safeMethodWithResult = new SafeMethodWithResult(safeMethod);
+        Func<string, Task<string>> deserializeFunction = null;
+
+        // Act
+        Action action = () => _ = safeMethodWithResult.WithGenericDeserialize(deserializeFunction);
+
+        // Assert
+        action.Should().ThrowExactly<ArgumentNullException>();
+    }
+
+    [Test]
+    [AutoNSubstituteData]
+    public void WithGenericDeserialize_WhenDeserializeTaskStringFunctionIsNotNull_ShouldReturnSafeMethodWithResultFromJson(ISafeMethod safeMethod)
+    {
+        // Arrange
+        var safeMethodWithResult = new SafeMethodWithResult(safeMethod);
+        Func<string, Task<string>> deserializeFunction = response => null;
+
+        // Act
+        var result = safeMethodWithResult.WithGenericDeserialize(deserializeFunction);
+
+        // Assert
+        result.Should().BeOfType<SafeMethodWithResultAsGeneric<string>>();
+        result.Endpoint.Should().BeSameAs(safeMethod.Endpoint);
+        result.HttpMethod.Should().Be(safeMethod.HttpMethod);
+    }
+
+    [Test]
+    [AutoNSubstituteData]
+    public async Task WithGenericDeserialize_WhenDeserializeTaskStringFunctionIsNotNull_ShouldDeserializeResponse(
+        [Frozen] MockHttpMessageHandler mockHttpMessageHandler,
+        ISafeMethod safeMethod)
+    {
+        // Arrange 
+        const string expectedResponse = "Data";
+        mockHttpMessageHandler.ResponseContent = "Data";
+
+        string deserializeFunctionCapturedResponse = null;
+        var deserializeFunctionCallCount = 0;
+        Func<string, Task<string>> deserializeFunction = response =>
+        {
+            deserializeFunctionCapturedResponse = response;
+            deserializeFunctionCallCount++;
+            return Task.FromResult(response);
+        };
+
+        // Act
+        var response = await new SafeMethodWithResult(safeMethod)
+            .WithGenericDeserialize(deserializeFunction)
+            .SendAsync();
+
+        // Assert
+        response.Should().BeEquivalentTo(expectedResponse);
+        deserializeFunctionCallCount.Should().Be(1);
+        deserializeFunctionCapturedResponse.Should().Be(mockHttpMessageHandler.ResponseContent);
+    }
+
+    [Test]
+    [AutoNSubstituteData]
+    public void WithGenericDeserialize_WhenDeserializeTaskStreamFunctionIsNull_ShouldThrowArgumentNullException(ISafeMethod safeMethod)
+    {
+        // Arrange
+        var safeMethodWithResult = new SafeMethodWithResult(safeMethod);
+        Func<Stream, Task<string>> deserializeFunction = null;
+
+        // Act
+        Action action = () => _ = safeMethodWithResult.WithGenericDeserialize(deserializeFunction);
+
+        // Assert
+        action.Should().ThrowExactly<ArgumentNullException>();
+    }
+
+    [Test]
+    [AutoNSubstituteData]
+    public void WithGenericDeserialize_WhenDeserializeTaskStreamFunctionIsNotNull_ShouldReturnSafeMethodWithResultFromJson(ISafeMethod safeMethod)
+    {
+        // Arrange
+        var safeMethodWithResult = new SafeMethodWithResult(safeMethod);
+        Func<Stream, Task<string>> deserializeFunction = response => null;
+
+        // Act
+        var result = safeMethodWithResult.WithGenericDeserialize(deserializeFunction);
+
+        // Assert
+        result.Should().BeOfType<SafeMethodWithResultAsGeneric<string>>();
+        result.Endpoint.Should().BeSameAs(safeMethod.Endpoint);
+        result.HttpMethod.Should().Be(safeMethod.HttpMethod);
+    }
+
+    [Test]
+    [AutoNSubstituteData]
+    public async Task WithGenericDeserialize_WhenDeserializeTaskStreamFunctionIsNotNull_ShouldDeserializeResponse(
+        [Frozen] MockHttpMessageHandler mockHttpMessageHandler,
+        ISafeMethod safeMethod)
+    {
+        // Arrange 
+        const string expectedResponse = "Data";
+        mockHttpMessageHandler.ResponseContent = "Data";
+
+        string deserializeFunctionCapturedResponse = null;
+        var deserializeFunctionCallCount = 0;
+        Func<Stream, Task<string>> deserializeFunction = async response =>
+        {
+            await using var memoryStream = new MemoryStream();
+            await response.CopyToAsync(memoryStream);
+            var responseAsBytes = memoryStream.ToArray();
+            var responseAsString = Encoding.UTF8.GetString(responseAsBytes);
+
+            deserializeFunctionCapturedResponse = responseAsString;
+            deserializeFunctionCallCount++;
+            return responseAsString;
+        };
+
+        // Act
+        var response = await new SafeMethodWithResult(safeMethod)
+            .WithGenericDeserialize(deserializeFunction)
+            .SendAsync();
+
+        // Assert
+        response.Should().BeEquivalentTo(expectedResponse);
+        deserializeFunctionCallCount.Should().Be(1);
+        deserializeFunctionCapturedResponse.Should().Be(mockHttpMessageHandler.ResponseContent);
     }
 
     public sealed class PublicDummyClass

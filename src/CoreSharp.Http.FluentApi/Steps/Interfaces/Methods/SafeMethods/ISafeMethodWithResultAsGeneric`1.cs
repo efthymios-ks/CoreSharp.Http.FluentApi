@@ -13,8 +13,7 @@ public interface ISafeMethodWithResultAsGeneric<TResult> :
     where TResult : class
 {
     // Properties 
-    internal Func<Stream, TResult> DeserializeStreamFunction { get; set; }
-    internal Func<string, TResult> DeserializeStringFunction { get; set; }
+    internal Func<Stream, Task<TResult>> DeserializeFunction { get; set; }
 
     // Methods
     /// <inheritdoc cref="IMethod.SendAsync(CancellationToken)"/>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using JsonNet = Newtonsoft.Json;
 using TextJson = System.Text.Json;
 
@@ -33,15 +34,21 @@ public interface IUnsafeMethodWithResult : IUnsafeMethod
     IUnsafeMethodWithResultAsGeneric<TResponse> WithXmlDeserialize<TResponse>()
       where TResponse : class;
 
-    /// <inheritdoc cref="WithGenericDeserialize{TResponse}(Func{Stream, TResponse})"/>
-    IUnsafeMethodWithResultAsGeneric<TResponse> WithGenericDeserialize<TResponse>(Func<string, TResponse> deserializeStringFunction)
+    /// <inheritdoc cref="WithGenericDeserialize{TResponse}(Func{string, Task{TResponse}})"/>
+    IUnsafeMethodWithResultAsGeneric<TResponse> WithGenericDeserialize<TResponse>(Func<string, TResponse> deserializeFunction)
+        where TResponse : class;
+
+    /// <inheritdoc cref="WithGenericDeserialize{TResponse}(Func{Stream, Task{TResponse}})"/>
+    IUnsafeMethodWithResultAsGeneric<TResponse> WithGenericDeserialize<TResponse>(Func<Stream, TResponse> deserializeFunction)
+        where TResponse : class;
+
+    /// <inheritdoc cref="WithGenericDeserialize{TResponse}(Func{Stream, Task{TResponse}})"/>
+    IUnsafeMethodWithResultAsGeneric<TResponse> WithGenericDeserialize<TResponse>(Func<string, Task<TResponse>> deserializeFunction)
         where TResponse : class;
 
     /// <summary>
     /// Deserialize to provided type.
     /// </summary>
-    IUnsafeMethodWithResultAsGeneric<TResponse> WithGenericDeserialize<TResponse>(Func<Stream, TResponse> deserializeStreamFunction)
+    IUnsafeMethodWithResultAsGeneric<TResponse> WithGenericDeserialize<TResponse>(Func<Stream, Task<TResponse>> deserializeFunction)
         where TResponse : class;
-
-    // TODO: Add task deserialization overload.
 }

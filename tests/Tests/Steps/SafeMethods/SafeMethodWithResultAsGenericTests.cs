@@ -6,6 +6,7 @@ using NUnit.Framework;
 using System;
 using System.IO;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Tests.Internal.Attributes;
 using Tests.Internal.HttpmessageHandlers;
@@ -17,15 +18,14 @@ public sealed class SafeMethodWithResultAsGenericTests
 {
     [Test]
     [AutoNSubstituteData]
-    public void Constructor_WhenSafeMethodIsNullAndDeserializeFromStreamFunctionIsProvided_ShouldThrowArgumentNullException()
+    public void Constructor_WhenSafeMethodIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
         ISafeMethod safeMethod = null;
-        static string DeserializeStreamFunction(Stream response)
-            => null;
+        Func<Stream, Task<string>> deserializeFunction = null;
 
         // Act
-        Action action = () => _ = new SafeMethodWithResultAsGeneric<string>(safeMethod, DeserializeStreamFunction);
+        Action action = () => _ = new SafeMethodWithResultAsGeneric<string>(safeMethod, deserializeFunction);
 
         // Assert
         action.Should().ThrowExactly<ArgumentNullException>();
@@ -33,13 +33,13 @@ public sealed class SafeMethodWithResultAsGenericTests
 
     [Test]
     [AutoNSubstituteData]
-    public void Constructor_WhenDeserializeStreamFunctionIsNull_ShouldThrowArgumentNullException(ISafeMethod safeMethod)
+    public void Constructor_WhenDeserializeFunctionIsNull_ShouldThrowArgumentNullException(ISafeMethod safeMethod)
     {
         // Arrange
-        Func<Stream, string> deserializeStreamFunction = null!;
+        Func<Stream, Task<string>> deserializeFunction = null;
 
         // Act
-        Action action = () => _ = new SafeMethodWithResultAsGeneric<string>(safeMethod, deserializeStreamFunction);
+        Action action = () => _ = new SafeMethodWithResultAsGeneric<string>(safeMethod, deserializeFunction);
 
         // Assert
         action.Should().ThrowExactly<ArgumentNullException>();
@@ -47,95 +47,17 @@ public sealed class SafeMethodWithResultAsGenericTests
 
     [Test]
     [AutoNSubstituteData]
-    public void Constructor_WhenDeserializeStreamFunctionIsNotNull_ShouldSetDeserializeStreamFunction(ISafeMethod safeMethod)
+    public void Constructor_WhenCalled_ShouldSetProperties(ISafeMethod safeMethod)
     {
         // Arrange
-        Func<Stream, string> deserializeStreamFunction = response => null;
+        Func<Stream, Task<string>> deserializeFunction = response => Task.FromResult<string>(null);
 
         // Act
-        var safeMethodWithResultFromJson = new SafeMethodWithResultAsGeneric<string>(safeMethod, deserializeStreamFunction);
+        var safeMethodWithResultFromJson = new SafeMethodWithResultAsGeneric<string>(safeMethod, deserializeFunction);
 
         // Assert
         var safeMethodWithResultFromJsonAsInterface = (ISafeMethodWithResultAsGeneric<string>)safeMethodWithResultFromJson;
-        safeMethodWithResultFromJsonAsInterface.DeserializeStreamFunction.Should().BeSameAs(deserializeStreamFunction);
-        safeMethodWithResultFromJsonAsInterface.DeserializeStringFunction.Should().BeNull();
-    }
-
-    [Test]
-    [AutoNSubstituteData]
-    public void Constructor_WhenSafeMethodIsNullAndDeserializeFromStringFunctionIsProvided_ShouldThrowArgumentNullException()
-    {
-        // Arrange
-        ISafeMethod safeMethod = null;
-        static string DeserializeStringFunction(string response)
-            => null;
-
-        // Act
-        Action action = () => _ = new SafeMethodWithResultAsGeneric<string>(safeMethod, DeserializeStringFunction);
-
-        // Assert
-        action.Should().ThrowExactly<ArgumentNullException>();
-    }
-
-    [Test]
-    [AutoNSubstituteData]
-    public void Constructor_WhenDeserializeStringFunctionIsNull_ShouldThrowArgumentNullException(ISafeMethod safeMethod)
-    {
-        // Arrange
-        Func<string, string> deserializeStringFunction = null!;
-
-        // Act
-        Action action = () => _ = new SafeMethodWithResultAsGeneric<string>(safeMethod, deserializeStringFunction);
-
-        // Assert
-        action.Should().ThrowExactly<ArgumentNullException>();
-    }
-
-    [Test]
-    [AutoNSubstituteData]
-    public void Constructor_WhenDeserializeStringFunctionIsNotNull_ShouldSetDeserializeStringFunction(ISafeMethod safeMethod)
-    {
-        // Arrange
-        Func<string, string> deserializeStringFunction = response => null;
-
-        // Act
-        var safeMethodWithResultFromJson = new SafeMethodWithResultAsGeneric<string>(safeMethod, deserializeStringFunction);
-
-        // Assert
-        var safeMethodWithResultFromJsonAsInterface = (ISafeMethodWithResultAsGeneric<string>)safeMethodWithResultFromJson;
-        safeMethodWithResultFromJsonAsInterface.DeserializeStringFunction.Should().BeSameAs(deserializeStringFunction);
-        safeMethodWithResultFromJsonAsInterface.DeserializeStreamFunction.Should().BeNull();
-    }
-
-    [Test]
-    [AutoNSubstituteData]
-    public void Constructor_WhenSafeMethodWithResultFromJsonIsNull_ShouldThrowArgumentNullException()
-    {
-        // Arrange
-        ISafeMethodWithResultAsGeneric<DummyEntity> safeMethodWithResultFromJson = null;
-
-        // Act
-        Action action = () => _ = new DummySafeMethodWithResultFromJson(safeMethodWithResultFromJson);
-
-        // Assert
-        action.Should().ThrowExactly<ArgumentNullException>();
-    }
-
-    [Test]
-    [AutoNSubstituteData]
-    public void Constructor_WhenSafeMethodWithResultFromJsonIsNotNull_ShouldSetBothFunctions(ISafeMethodWithResultAsGeneric<DummyEntity> safeMethodWithResultFromJson)
-    {
-        // Arrange
-        safeMethodWithResultFromJson.DeserializeStringFunction = response => null;
-        safeMethodWithResultFromJson.DeserializeStreamFunction = response => null;
-
-        // Act
-        var dummySafeMethodWithResultFromJson = new DummySafeMethodWithResultFromJson(safeMethodWithResultFromJson);
-
-        // Assert
-        var dummySafeMethodWithResultFromJsonAsInterfaace = (ISafeMethodWithResultAsGeneric<DummyEntity>)dummySafeMethodWithResultFromJson;
-        dummySafeMethodWithResultFromJsonAsInterfaace.DeserializeStringFunction.Should().BeSameAs(safeMethodWithResultFromJson.DeserializeStringFunction);
-        dummySafeMethodWithResultFromJsonAsInterfaace.DeserializeStreamFunction.Should().BeSameAs(safeMethodWithResultFromJson.DeserializeStreamFunction);
+        safeMethodWithResultFromJsonAsInterface.DeserializeFunction.Should().BeSameAs(deserializeFunction);
     }
 
     [Test]
@@ -143,9 +65,8 @@ public sealed class SafeMethodWithResultAsGenericTests
     public void WithCache_WhenCalled_ShouldReturnSafeMethodWithResultFromJsonAndCache(ISafeMethod safeMethod)
     {
         // Arrange
-        static string DeserializeStringFunction(string response)
-            => null;
-        var safeMethodWithResultFromJson = new SafeMethodWithResultAsGeneric<string>(safeMethod, DeserializeStringFunction);
+        Func<Stream, Task<string>> deserializeFunction = _ => Task.FromResult<string>(null);
+        var safeMethodWithResultFromJson = new SafeMethodWithResultAsGeneric<string>(safeMethod, deserializeFunction);
         var duration = TimeSpan.FromMinutes(1);
 
         // Act
@@ -154,6 +75,25 @@ public sealed class SafeMethodWithResultAsGenericTests
         // Assert
         safeMethodWithResultFromJsonAndCache.Should().BeOfType<SafeMethodWithResultAsGenericAndCache<string>>();
         safeMethodWithResultFromJsonAndCache.CacheDuration.Should().Be(duration);
+    }
+
+    [Test]
+    [AutoNSubstituteData]
+    public async Task SendAsync_WhenCancellationIsRequested_ShouldThrowTaskCancelledException(ISafeMethod safeMethod)
+    {
+        // Arrange 
+        safeMethod.Endpoint.Request.ThrowOnError = true;
+        Func<Stream, Task<string>> deserializeFunction = response => Task.FromResult<string>(null);
+        using var cancellationTokenSource = new CancellationTokenSource();
+        cancellationTokenSource.Cancel();
+
+        var safeMethodWithResultFromJson = new SafeMethodWithResultAsGeneric<string>(safeMethod, deserializeFunction);
+
+        // Act
+        Func<Task> action = () => safeMethodWithResultFromJson.SendAsync(cancellationTokenSource.Token);
+
+        // Assert
+        await action.Should().ThrowExactlyAsync<TaskCanceledException>();
     }
 
     [Test]
@@ -169,10 +109,13 @@ public sealed class SafeMethodWithResultAsGenericTests
         };
         mockHttpMessageHandler.ResponseContent = JsonSerializer.Serialize(expectedResult);
 
-        static DummyEntity DeserializeStringFunction(string response)
-            => JsonSerializer.Deserialize<DummyEntity>(response);
+        Func<Stream, Task<DummyEntity>> deserializeFunction = response =>
+        {
+            var dummy = JsonSerializer.Deserialize<DummyEntity>(response);
+            return Task.FromResult(dummy);
+        };
 
-        var safeMethodWithResultFromJson = new SafeMethodWithResultAsGeneric<DummyEntity>(safeMethod, DeserializeStringFunction);
+        var safeMethodWithResultFromJson = new SafeMethodWithResultAsGeneric<DummyEntity>(safeMethod, deserializeFunction);
 
         // Act
         var result = await safeMethodWithResultFromJson.SendAsync();
@@ -180,11 +123,6 @@ public sealed class SafeMethodWithResultAsGenericTests
         // Assert
         result.Should().NotBeNull();
         result.Should().BeEquivalentTo(expectedResult);
-    }
-
-    private sealed class DummySafeMethodWithResultFromJson(ISafeMethodWithResultAsGeneric<DummyEntity> safeMethod)
-        : SafeMethodWithResultAsGeneric<DummyEntity>(safeMethod)
-    {
     }
 
     public sealed class DummyEntity

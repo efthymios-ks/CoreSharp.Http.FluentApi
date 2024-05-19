@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace CoreSharp.Http.FluentApi.Steps.Methods.SafeMethods;
 
@@ -36,10 +37,10 @@ public class SafeMethodWithResult : SafeMethod, ISafeMethodWithResult
     {
         ArgumentNullException.ThrowIfNull(jsonSerializerSettings);
 
-        return WithGenericDeserialize(DeserializeStreamFunction);
+        return WithGenericDeserialize(DeserializeFunction);
 
-        TResponse DeserializeStreamFunction(Stream stream)
-            => stream.FromJson<TResponse>(jsonSerializerSettings);
+        TResponse DeserializeFunction(Stream response)
+            => response.FromJson<TResponse>(jsonSerializerSettings);
     }
 
     public ISafeMethodWithResultAsGeneric<TResponse> WithJsonDeserialize<TResponse>(JsonSerializerOptions jsonSerializerOptions)
@@ -47,38 +48,68 @@ public class SafeMethodWithResult : SafeMethod, ISafeMethodWithResult
     {
         ArgumentNullException.ThrowIfNull(jsonSerializerOptions);
 
-        return WithGenericDeserialize(DeserializeStreamFunction);
+        return WithGenericDeserialize(DeserializeFunction);
 
-        // TODO: Fix after adding task-based deserialization.
-        TResponse DeserializeStreamFunction(Stream stream)
-            => stream
-                .FromJsonAsync<TResponse>(jsonSerializerOptions)
-                .GetAwaiter()
-                .GetResult();
+        Task<TResponse> DeserializeFunction(Stream response)
+            => response.FromJsonAsync<TResponse>(jsonSerializerOptions);
     }
 
     public ISafeMethodWithResultAsGeneric<TResponse> WithXmlDeserialize<TResponse>()
         where TResponse : class
     {
-        return WithGenericDeserialize(DeserializeStringFunction);
+        return WithGenericDeserialize(DeserializeFunction);
 
-        static TResponse DeserializeStringFunction(string xml)
+        static TResponse DeserializeFunction(string xml)
             => xml.FromXml<TResponse>();
     }
 
-    public ISafeMethodWithResultAsGeneric<TResponse> WithGenericDeserialize<TResponse>(Func<string, TResponse> deserializeStringFunction)
+    public ISafeMethodWithResultAsGeneric<TResponse> WithGenericDeserialize<TResponse>(Func<string, TResponse> deserializeFunction)
         where TResponse : class
     {
-        ArgumentNullException.ThrowIfNull(deserializeStringFunction);
+        ArgumentNullException.ThrowIfNull(deserializeFunction);
 
-        return new SafeMethodWithResultAsGeneric<TResponse>(this, deserializeStringFunction);
+        return WithGenericDeserialize(DeserializeTaskFunction);
+
+        async Task<TResponse> DeserializeTaskFunction(Stream response)
+        {
+            var responseAsString = await response.ToStringAsync();
+            return deserializeFunction(responseAsString);
+        }
     }
 
-    public ISafeMethodWithResultAsGeneric<TResponse> WithGenericDeserialize<TResponse>(Func<Stream, TResponse> deserializeStreamFunction)
+    public ISafeMethodWithResultAsGeneric<TResponse> WithGenericDeserialize<TResponse>(Func<Stream, TResponse> deserializeFunction)
         where TResponse : class
     {
-        ArgumentNullException.ThrowIfNull(deserializeStreamFunction);
+        ArgumentNullException.ThrowIfNull(deserializeFunction);
 
-        return new SafeMethodWithResultAsGeneric<TResponse>(this, deserializeStreamFunction);
+        return WithGenericDeserialize(DeserializeTaskFunction);
+
+        Task<TResponse> DeserializeTaskFunction(Stream response)
+        {
+            var deserializedResponse = deserializeFunction(response);
+            return Task.FromResult(deserializedResponse);
+        }
+    }
+
+    public ISafeMethodWithResultAsGeneric<TResponse> WithGenericDeserialize<TResponse>(Func<string, Task<TResponse>> deserializeFunction)
+        where TResponse : class
+    {
+        ArgumentNullException.ThrowIfNull(deserializeFunction);
+
+        return WithGenericDeserialize(DeserializeTaskFunction);
+
+        async Task<TResponse> DeserializeTaskFunction(Stream response)
+        {
+            var responseAsString = await response.ToStringAsync();
+            return await deserializeFunction(responseAsString);
+        }
+    }
+
+    public ISafeMethodWithResultAsGeneric<TResponse> WithGenericDeserialize<TResponse>(Func<Stream, Task<TResponse>> deserializeFunction)
+        where TResponse : class
+    {
+        ArgumentNullException.ThrowIfNull(deserializeFunction);
+
+        return new SafeMethodWithResultAsGeneric<TResponse>(this, deserializeFunction);
     }
 }

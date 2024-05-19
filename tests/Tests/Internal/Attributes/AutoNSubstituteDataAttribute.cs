@@ -1,9 +1,7 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoNSubstitute;
 using AutoFixture.NUnit3;
-using CoreSharp.Http.FluentApi.Services;
 using CoreSharp.Http.FluentApi.Steps.Interfaces;
-using CoreSharp.Http.FluentApi.Utilities;
 using NSubstitute;
 using System;
 using System.Collections.Generic;
@@ -29,8 +27,6 @@ public sealed class AutoNSubstituteDataAttribute : AutoDataAttribute
 
         fixture.Register<IFixture>(() => fixture);
 
-        fixture.Register<IHttpResponseMessageDeserializer>(() => new HttpResponseMessageDeserializer());
-
         fixture.Register(() => new MockHttpMessageHandler()
         {
             ResponseStatus = System.Net.HttpStatusCode.OK,
@@ -52,7 +48,6 @@ public sealed class AutoNSubstituteDataAttribute : AutoDataAttribute
             request.Headers.Returns(new Dictionary<string, string>());
             request.ThrowOnError.Returns(false);
             request.Timeout.Returns((TimeSpan?)null);
-            request.HttpResponseMessageDeserializer = fixture.Create<IHttpResponseMessageDeserializer>();
 
             return request;
         });
