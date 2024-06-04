@@ -3,7 +3,6 @@
 	<PropertyGroup Label="Package">
 		<AssemblyName>Samples.App</AssemblyName>
 		<OutputType>Exe</OutputType>
-		<TargetFramework>net7.0</TargetFramework>
 	</PropertyGroup>
 
 	<ItemGroup Label="Package references">
@@ -12,8 +11,7 @@
 	</ItemGroup>
 
 	<ItemGroup Label="Project references">
-		<ProjectReference Include="..\..\src\CoreSharp.Http.FluentApi\CoreSharp.Http.FluentApi.csproj" />
-		<ProjectReference Include="..\Domain\Domain.csproj" />
+		<ProjectReference Include="..\..\CoreSharp.Http.FluentApi\CoreSharp.Http.FluentApi.csproj" />
 	</ItemGroup>
 
 </Project>

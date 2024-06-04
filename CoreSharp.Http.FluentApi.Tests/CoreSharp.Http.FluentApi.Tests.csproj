@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup Label="Package">
+		<AssemblyName>CoreSharp.Http.FluentApi.Tests</AssemblyName>
+	</PropertyGroup>
+
+	<ItemGroup Label="Project references">
+		<ProjectReference Include="..\CoreSharp.Http.FluentApi\CoreSharp.Http.FluentApi.csproj" />
+	</ItemGroup>
+
+	<ItemGroup Label="Package references">
+		<PackageReference Include="Microsoft.Net.Http.Headers" Version="8.0.0">
+			<TreatAsUsed>true</TreatAsUsed>
+		</PackageReference>
+		<PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="7.0.0" PrivateAssets="Compile" />
+	</ItemGroup>
+</Project>

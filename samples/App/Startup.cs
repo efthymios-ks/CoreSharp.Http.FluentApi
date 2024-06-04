@@ -1,6 +1,5 @@
-﻿using Domain.Constants;
+﻿using App.Constants;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace App;
 
@@ -14,7 +13,7 @@ public static class Startup
     {
         var services = new ServiceCollection();
 
-        services.AddHttpClient("Default", http => http.BaseAddress = new Uri(Endpoints.EndpointUrl));
+        _ = services.AddHttpClient("Default", http => http.BaseAddress = new Uri(Endpoints.EndpointUrl));
 
         return services.BuildServiceProvider();
     }

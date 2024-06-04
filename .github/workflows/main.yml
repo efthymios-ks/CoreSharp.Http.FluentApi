@@ -40,14 +40,14 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           ./.sonar/scanner/dotnet-sonarscanner begin /k:"efthymios-ks_CoreSharp.Http.FluentApi" /o:"efthymios-ks" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-          dotnet build ./src/CoreSharp.Http.FluentApi/CoreSharp.Http.FluentApi.csproj --no-incremental
+          dotnet build ./CoreSharp.Http.FluentApi/CoreSharp.Http.FluentApi.csproj --no-incremental
           ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
       - name: Test coverage
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          ./.sonar/scanner/dotnet-sonarscanner begin /k:"efthymios-ks_CoreSharp.Http.FluentApi" /o:"efthymios-ks" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.coverage.inclusions="./src/CoreSharp.Http.FluentApi/**/*.cs" /d:sonar.cs.opencover.reportsPaths=coverage.xml
+          ./.sonar/scanner/dotnet-sonarscanner begin /k:"efthymios-ks_CoreSharp.Http.FluentApi" /o:"efthymios-ks" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.coverage.inclusions="./CoreSharp.Http.FluentApi/**/*.cs" /d:sonar.cs.opencover.reportsPaths=coverage.xml
           dotnet tool install coverlet.console --global
-          dotnet build tests/Tests/Tests.csproj --no-incremental
-          coverlet ./tests/Tests/bin/Debug/**/Tests.CoreSharp.Http.FluentApi.dll --target "dotnet" --targetargs "test --no-build" -f=opencover -o="coverage.xml"
+          dotnet build ./CoreSharp.Http.FluentApi.Tests/CoreSharp.Http.FluentApi.Tests.csproj --no-incremental
+          coverlet ./CoreSharp.Http.FluentApi.Tests/bin/Debug/**/CoreSharp.Http.FluentApi.Tests.dll --target "dotnet" --targetargs "test --no-build" -f=opencover -o="coverage.xml"
           ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"

@@ -1,10 +1,7 @@
 ﻿using App;
+using App.Models;
 using CoreSharp.Http.FluentApi.Exceptions;
 using CoreSharp.Http.FluentApi.Extensions;
-using Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
 
 // Methods 
 var services = Startup.ConfigureServices();
@@ -15,7 +12,7 @@ try
     var factory = services.GetService(typeof(IHttpClientFactory)) as IHttpClientFactory;
 
     // Create your HttpClient 
-    using var client = factory.CreateClient("Default");
+    using var client = factory!.CreateClient("Default");
 
     // GET /albums and map to IEnumerable 
     var albums = await client
@@ -63,18 +60,21 @@ try
         .SendAsync();
 
     // PATCH /users/2 and get HttpResponseMessage 
-    user.Name = "Efthymios";
+    var userToUpdate = user! with
+    {
+        Name = "Efthymios"
+    };
     using var response = await client
         .Request()
-        .WithEndpoint("users", user.Id)
+        .WithEndpoint("users", userToUpdate.Id)
         .Patch()
-        .WithJsonBody(user)
+        .WithJsonBody(userToUpdate)
         .SendAsync();
-    var success = response.IsSuccessStatusCode;
+    var success = response!.IsSuccessStatusCode;
     var json = await response.Content.ReadAsStringAsync();
 
     // Throw on failed request 
-    await client
+    _ = await client
         .Request()
         .WithEndpoint("wrong/url")
         .Get()
