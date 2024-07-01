@@ -7,7 +7,7 @@ using System.Reflection;
 namespace Tests.Exceptions;
 
 [TestFixture]
-public sealed class HttpOperationExceptionTests2
+public sealed class HttpOperationExceptionTests
 {
     [Test]
     public void Constructor_WhenCalled_ShouldSetPropertiesCorrectly()
