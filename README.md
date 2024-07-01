@@ -121,7 +121,7 @@ var response = client
 
 ### Ignore error
 ```CSharp
-// Propagates / throws exception
+// Propagates / throws exception by default
 var response = client
 	.Request()
 	.WithEndpoint("users")
@@ -130,7 +130,7 @@ var response = client
 ```
 
 ```CSharp
-// Silence / does not throw exception
+// Silences / does not throw exception
 var response = client
 	.Request()
 	.IgnoreError()
@@ -505,7 +505,7 @@ User response = client
 
 ```CSharp
 // Deserialize from string
-static User Deserialize(String response) => ...;
+static User Deserialize(string response) => ...;
 
 User response = client
 	.Request()
