@@ -1,115 +1,57 @@
 ﻿using CoreSharp.Http.FluentApi.Extensions;
-using FluentAssertions;
-using NSubstitute;
-using NUnit.Framework;
 using System.Text;
+using Tests.Common.Mocks;
 
-namespace Tests.Extensions;
+namespace CoreSharp.Http.FluentApi.Tests.Extensions;
 
-[TestFixture]
-public sealed class StreamExtensionsTests
+public sealed class StreamExtensionsTests : ProjectTestsBase
 {
     // Methods
-    [Test]
+    [Fact]
     public void GetBytes_WhenStreamIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
         using Stream stream = null!;
 
         // Act
-        Action action = () => stream.GetBytes();
+        void Action()
+            => stream.GetBytes();
 
         // Assert
-        action.Should().ThrowExactly<ArgumentNullException>();
+        Assert.Throws<ArgumentNullException>(Action);
     }
 
-    [Test]
+    [Fact]
     public async Task GetBytes_WhenStreamIsMemoryStream_ShouldReturnByteArrayForMemoryStream()
     {
         // Arrange 
-        var buffer = Encoding.UTF8.GetBytes("Data");
-        await using var stream = Substitute.For<MemoryStream>();
+        const string data = "Data";
+        var buffer = Encoding.UTF8.GetBytes(data);
+        await using var stream = MockCreate<MemoryStream>();
         stream.ToArray().Returns(buffer);
 
         // Act
         var streamReturned = stream.GetBytes();
 
         // Assert
-        streamReturned.Should().NotBeNull();
-        streamReturned.Should().BeEquivalentTo(buffer);
+        Assert.NotNull(streamReturned);
+        Assert.Equivalent(buffer, streamReturned);
         stream.Received(1).ToArray();
     }
 
-    [Test]
+    [Fact]
     public async Task GetBytes_WhenStreamIsNotMemoryStream_ShouldReturnByteArray()
     {
         // Arrange
-        var buffer = Encoding.UTF8.GetBytes("Data");
-        await using var stream = new DummyStream(buffer);
+        const string data = "Data";
+        var buffer = Encoding.UTF8.GetBytes(data);
+        await using var stream = new MockStream(buffer);
 
         // Act
         var streamReturned = stream.GetBytes();
 
         // Assert
-        streamReturned.Should().NotBeNull();
-        streamReturned.Should().BeEquivalentTo(buffer);
-        stream.BytesRead.Should().BeEquivalentTo(buffer);
-    }
-
-    private sealed class DummyStream : Stream
-    {
-        private readonly MemoryStream _stream;
-        private readonly List<byte> _bytesRead;
-
-        public DummyStream(byte[] buffer)
-        {
-            ArgumentNullException.ThrowIfNull(buffer);
-
-            _stream = new MemoryStream(buffer);
-            _bytesRead = [];
-        }
-
-        public IEnumerable<byte> BytesRead
-            => _bytesRead;
-
-        public override bool CanRead
-            => _stream.CanRead;
-
-        public override bool CanWrite
-            => _stream.CanWrite;
-
-        public override bool CanSeek
-            => _stream.CanSeek;
-
-        public override long Length
-            => _stream.Length;
-
-        public override long Position
-        {
-            get => _stream.Position;
-            set => _stream.Position = value;
-        }
-
-        public override int Read(byte[] buffer, int offset, int count)
-        {
-            var bytesRead = _stream.Read(buffer, offset, count);
-            _bytesRead.AddRange(buffer.Skip(offset).Take(bytesRead));
-            return bytesRead;
-        }
-
-        public override void Write(byte[] buffer, int offset, int count)
-            => _stream.Write(buffer, offset, count);
-
-        public override void Flush()
-            => _stream.Flush();
-
-        public override Task FlushAsync(CancellationToken cancellationToken)
-            => _stream.FlushAsync(cancellationToken);
-
-        public override long Seek(long offset, SeekOrigin origin)
-            => _stream.Seek(offset, origin);
-
-        public override void SetLength(long value)
-            => _stream.SetLength(value);
+        Assert.NotNull(streamReturned);
+        Assert.Equivalent(buffer, streamReturned);
     }
 }

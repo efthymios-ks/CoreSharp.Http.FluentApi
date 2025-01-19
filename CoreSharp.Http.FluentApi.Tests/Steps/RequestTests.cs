@@ -1,33 +1,29 @@
 ﻿using CoreSharp.Http.FluentApi.Services.Interfaces;
 using CoreSharp.Http.FluentApi.Steps;
 using CoreSharp.Http.FluentApi.Steps.Interfaces;
-using FluentAssertions;
 using Microsoft.Net.Http.Headers;
-using NSubstitute;
-using NUnit.Framework;
 using System.Net.Mime;
-using Tests.Internal.Attributes;
 
-namespace Tests.Steps;
+namespace CoreSharp.Http.FluentApi.Tests.Steps;
 
-[TestFixture]
-public sealed class RequestTests
+public sealed class RequestTests : ProjectTestsBase
 {
-    [Test]
+    [Fact]
     public void Constructor_WhenHttpClientIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange 
         using HttpClient httpClient = null!;
-        var cacheStorage = Substitute.For<ICacheStorage>();
+        var cacheStorage = MockCreate<ICacheStorage>();
 
         // Act 
-        Action action = () => _ = new Request(httpClient, cacheStorage);
+        void Action()
+            => _ = new Request(httpClient, cacheStorage);
 
         // Assert 
-        action.Should().ThrowExactly<ArgumentNullException>();
+        Assert.Throws<ArgumentNullException>(Action);
     }
 
-    [Test]
+    [Fact]
     public void Constructor_WhenCacheStorageIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange 
@@ -35,101 +31,106 @@ public sealed class RequestTests
         ICacheStorage cacheStorage = null!;
 
         // Act 
-        Action action = () => _ = new Request(httpClient, cacheStorage);
+        void Action()
+            => _ = new Request(httpClient, cacheStorage);
 
         // Assert 
-        action.Should().ThrowExactly<ArgumentNullException>();
+        Assert.Throws<ArgumentNullException>(Action);
     }
 
-    [Test]
+    [Fact]
     public void Constructor_WhenCalled_ShouldSetProperties()
     {
         // Arrange 
         using var httpClient = new HttpClient();
-        var cacheStorage = Substitute.For<ICacheStorage>();
+        var cacheStorage = MockCreate<ICacheStorage>();
 
         // Act 
         var request = new Request(httpClient, cacheStorage);
 
         // Assert 
         var requestInterface = (IRequest)request;
-        requestInterface.CacheStorage.Should().BeSameAs(cacheStorage);
-        requestInterface.HttpClient.Should().BeSameAs(httpClient);
-        requestInterface.Headers.Should().NotBeNull().And.BeEmpty();
-        requestInterface.ThrowOnError.Should().BeTrue();
-        requestInterface.HttpCompletionOption.Should().Be(HttpCompletionOption.ResponseHeadersRead);
-        requestInterface.Timeout.Should().BeNull();
+        Assert.Same(cacheStorage, requestInterface.CacheStorage);
+        Assert.Same(httpClient, requestInterface.HttpClient);
+        Assert.NotNull(requestInterface.Headers);
+        Assert.Empty(requestInterface.Headers);
+        Assert.True(requestInterface.ThrowOnError);
+        Assert.Equal(HttpCompletionOption.ResponseHeadersRead, requestInterface.HttpCompletionOption);
+        Assert.Null(requestInterface.Timeout);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithHeaders_WhenHeadersIsNull_ShouldThrowArgumentNullException(Request request)
+    [Fact]
+    public void WithHeaders_WhenHeadersIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
+        var request = MockCreate<Request>();
         IDictionary<string, string> headers = null!;
 
         // Act 
-        Action action = () => request.WithHeaders(headers);
+        void Action()
+            => request.WithHeaders(headers);
 
         // Assert 
-        action.Should().ThrowExactly<ArgumentNullException>();
+        Assert.Throws<ArgumentNullException>(Action);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithHeaders_WhenCalled_ShouldSetHeaders(Request request)
+    [Fact]
+    public void WithHeaders_WhenCalled_ShouldSetHeaders()
     {
         // Arrange
+        var request = MockCreate<Request>();
         var headers = new Dictionary<string, string>
-        {
-            { "key1", "value1" },
-            { "key2", "value2" }
-        };
+                {
+                    { "key1", "value1" },
+                    { "key2", "value2" }
+                };
 
         // Act 
         var requestReturned = request.WithHeaders(headers);
 
         // Assert 
         var requestInterface = (IRequest)request;
-        requestInterface.Headers.Should().BeEquivalentTo(headers);
-        requestReturned.Should().BeSameAs(request);
+        Assert.Equivalent(headers, requestInterface.Headers);
+        Assert.Same(request, requestReturned);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithHeader_WhenKeyIsNull_ShouldThrowArgumentNullException(Request request)
+    [Fact]
+    public void WithHeader_WhenKeyIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
+        var request = MockCreate<Request>();
         const string key = null!;
         const string value = "value";
 
         // Act 
-        Action action = () => request.WithHeader(key, value);
+        void Action()
+            => request.WithHeader(key, value);
 
         // Assert 
-        action.Should().ThrowExactly<ArgumentNullException>();
+        Assert.Throws<ArgumentNullException>(Action);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithHeader_WhenKeyIsEmpty_ShouldThrowArgumentException(Request request)
+    [Fact]
+    public void WithHeader_WhenKeyIsEmpty_ShouldThrowArgumentException()
     {
         // Arrange
+        var request = MockCreate<Request>();
         const string key = "";
         const string value = "value";
 
         // Act 
-        Action action = () => request.WithHeader(key, value);
+        void Action()
+            => request.WithHeader(key, value);
 
         // Assert 
-        action.Should().ThrowExactly<ArgumentException>();
+        Assert.Throws<ArgumentException>(Action);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithHeader_WhenCalled_ShouldSetHeader(Request request)
+    [Fact]
+    public void WithHeader_WhenCalled_ShouldSetHeader()
     {
         // Arrange
+        var request = MockCreate<Request>();
         const string key = "key";
         const string value = "value";
 
@@ -137,171 +138,186 @@ public sealed class RequestTests
         var requestReturned = request.WithHeader(key, value);
 
         // Assert 
-        requestReturned.Should().BeSameAs(request);
+        Assert.Same(request, requestReturned);
         var requestInterface = (IRequest)request;
-        requestInterface.Headers.Should().ContainKey(key).And.ContainValue(value);
+        Assert.True(requestInterface.Headers.ContainsKey(key));
+        Assert.Equal(value, requestInterface.Headers[key]);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void Accept_WhenCalled_ShouldSetAcceptHeader(Request request)
+    [Fact]
+    public void Accept_WhenCalled_ShouldSetAcceptHeader()
     {
         // Arrange
+        var request = MockCreate<Request>();
         var mediaTypeName = MediaTypeNames.Application.Json;
 
         // Act 
         var requestReturned = request.Accept(mediaTypeName);
 
         // Assert 
-        requestReturned.Should().BeSameAs(request);
+        Assert.Same(request, requestReturned);
         var requestInterface = (IRequest)request;
-        requestInterface.Headers.Should().Contain(header
-            => header.Key == HeaderNames.Accept && header.Value == mediaTypeName);
+        Assert.Contains(requestInterface.Headers, header
+            => header.Key == HeaderNames.Accept
+            && header.Value == mediaTypeName);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void AcceptJson_WhenCalled_ShouldSetAcceptJsonHeader(Request request)
+    [Fact]
+    public void AcceptJson_WhenCalled_ShouldSetAcceptJsonHeader()
     {
+        // Arrange
+        var request = MockCreate<Request>();
+
         // Act 
         var requestReturned = request.AcceptJson();
 
         // Assert 
-        requestReturned.Should().BeSameAs(request);
+        Assert.Same(request, requestReturned);
         var requestInterface = (IRequest)request;
-        requestInterface.Headers.Should().Contain(header
-            => header.Key == HeaderNames.Accept && header.Value == MediaTypeNames.Application.Json);
+        Assert.Contains(requestInterface.Headers, header
+            => header.Key == HeaderNames.Accept
+            && header.Value == MediaTypeNames.Application.Json);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void AcceptXml_WhenCalled_ShouldSetAcceptXmlHeader(Request request)
+    [Fact]
+    public void AcceptXml_WhenCalled_ShouldSetAcceptXmlHeader()
     {
+        // Arrange
+        var request = MockCreate<Request>();
+
         // Act 
         var requestReturned = request.AcceptXml();
 
         // Assert 
-        requestReturned.Should().BeSameAs(request);
+        Assert.Same(request, requestReturned);
         var requestInterface = (IRequest)request;
-        requestInterface.Headers.Should().Contain(header
-            => header.Key == HeaderNames.Accept && header.Value == MediaTypeNames.Application.Xml);
+        Assert.Contains(requestInterface.Headers, header
+            => header.Key == HeaderNames.Accept
+            && header.Value == MediaTypeNames.Application.Xml);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithAuthorization_WhenCalled_ShouldSetAuthorizationHeader(Request request)
+    [Fact]
+    public void WithAuthorization_WhenCalled_ShouldSetAuthorizationHeader()
     {
         // Arrange
+        var request = MockCreate<Request>();
         var authorization = "authorization";
 
         // Act 
         var requestReturned = request.WithAuthorization(authorization);
 
         // Assert 
-        requestReturned.Should().BeSameAs(request);
+        Assert.Same(request, requestReturned);
         var requestInterface = (IRequest)request;
-        requestInterface.Headers.Should().Contain(header
-            => header.Key == HeaderNames.Authorization && header.Value == authorization);
+        Assert.Contains(requestInterface.Headers, header
+            => header.Key == HeaderNames.Authorization
+            && header.Value == authorization);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithBearerToken_WhenCalled_ShouldSetBearerTokenHeader(Request request)
+    [Fact]
+    public void WithBearerToken_WhenCalled_ShouldSetBearerTokenHeader()
     {
         // Arrange
+        var request = MockCreate<Request>();
         var accessToken = "accessToken";
 
         // Act 
         var requestReturned = request.WithBearerToken(accessToken);
 
         // Assert 
-        requestReturned.Should().BeSameAs(request);
+        Assert.Same(request, requestReturned);
         var requestInterface = (IRequest)request;
-        requestInterface.Headers.Should().Contain(header
-             => header.Key == HeaderNames.Authorization && header.Value == $"Bearer {accessToken}");
+        Assert.Contains(requestInterface.Headers, header
+            => header.Key == HeaderNames.Authorization
+            && header.Value == $"Bearer {accessToken}");
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void IgnoreError_WhenCalled_ShouldSetThrowOnErrorToFalse(Request request)
+    [Fact]
+    public void IgnoreError_WhenCalled_ShouldSetThrowOnErrorToFalse()
     {
+        // Arrange
+        var request = MockCreate<Request>();
+
         // Act 
         var requestReturned = request.IgnoreError();
 
         // Assert 
-        requestReturned.Should().BeSameAs(request);
+        Assert.Same(request, requestReturned);
         var requestInterface = (IRequest)request;
-        requestInterface.ThrowOnError.Should().BeFalse();
+        Assert.False(requestInterface.ThrowOnError);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithCompletionOption_WhenCalled_ShouldSetCompletionOption(Request request)
+    [Fact]
+    public void WithCompletionOption_WhenCalled_ShouldSetCompletionOption()
     {
         // Arrange
+        var request = MockCreate<Request>();
         var completionOption = HttpCompletionOption.ResponseContentRead;
 
         // Act 
         var requestReturned = request.WithCompletionOption(completionOption);
 
         // Assert 
-        requestReturned.Should().BeSameAs(request);
+        Assert.Same(request, requestReturned);
         var requestInterface = (IRequest)request;
-        requestInterface.HttpCompletionOption.Should().Be(completionOption);
+        Assert.Equal(completionOption, requestInterface.HttpCompletionOption);
     }
 
-    [TestCase(-1)]
-    [TestCase(0)]
+    [Theory]
+    [InlineData(-1)]
+    [InlineData(0)]
     public void WithTimeout_WhenTimeoutIsZeroOrLess_ShouldThrowArgumentOutOfRangeException(int timeoutSeconds)
     {
         // Arrange 
         using var httpClient = new HttpClient();
-        var cacheStorage = Substitute.For<ICacheStorage>();
+        var cacheStorage = MockCreate<ICacheStorage>();
         var request = new Request(httpClient, cacheStorage);
         var timeout = TimeSpan.FromSeconds(timeoutSeconds);
 
         // Act 
-        Action action = () => request.WithTimeout(timeout);
+        void Action()
+            => request.WithTimeout(timeout);
 
         // Assert 
-        action.Should().ThrowExactly<ArgumentOutOfRangeException>();
+        Assert.Throws<ArgumentOutOfRangeException>(Action);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithTimeout_WhenTimeoutIsInfinite_ShouldThrowArgumentOutOfRangeException(Request request)
+    [Fact]
+    public void WithTimeout_WhenTimeoutIsInfinite_ShouldThrowArgumentOutOfRangeException()
     {
         // Arrange
+        var request = MockCreate<Request>();
         var timeout = Timeout.InfiniteTimeSpan;
 
         // Act 
-        Action action = () => request.WithTimeout(timeout);
+        void Action()
+            => request.WithTimeout(timeout);
 
         // Assert 
-        action.Should().ThrowExactly<ArgumentOutOfRangeException>();
+        Assert.Throws<ArgumentOutOfRangeException>(Action);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithTimeout_WhenCalled_ShouldSetTimeout(Request request)
+    [Fact]
+    public void WithTimeout_WhenCalled_ShouldSetTimeout()
     {
         // Arrange
+        var request = MockCreate<Request>();
         var timeout = TimeSpan.FromSeconds(10);
 
         // Act 
         var requestReturned = request.WithTimeout(timeout);
 
         // Assert 
-        requestReturned.Should().BeSameAs(request);
+        Assert.Same(request, requestReturned);
         var requestInterface = (IRequest)request;
-        requestInterface.Timeout.Should().Be(timeout);
+        Assert.Equal(timeout, requestInterface.Timeout);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithEndpoint_WhenIntKeyIsProvided_ShouldSetEndpoint(Request request)
+    [Fact]
+    public void WithEndpoint_WhenIntKeyIsProvided_ShouldSetEndpoint()
     {
         // Arrange
+        var request = MockCreate<Request>();
         const string resourceName = "students";
         const int key = 1;
         var expectedResourceName = $"{resourceName}/{key}/";
@@ -310,16 +326,16 @@ public sealed class RequestTests
         var endpoint = request.WithEndpoint(resourceName, key);
 
         // Assert 
-        endpoint.Should().NotBeNull();
-        endpoint.Should().BeOfType<Endpoint>();
-        endpoint.Endpoint.Should().Be(expectedResourceName);
+        Assert.NotNull(endpoint);
+        Assert.IsType<Endpoint>(endpoint);
+        Assert.Equal(expectedResourceName, endpoint.Endpoint);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithEndpoint_WhenLongKeyisprovided_ShouldSetEndpoint(Request request)
+    [Fact]
+    public void WithEndpoint_WhenLongKeyisprovided_ShouldSetEndpoint()
     {
         // Arrange
+        var request = MockCreate<Request>();
         const string resourceName = "students";
         const long key = 1;
         var expectedResourceName = $"{resourceName}/{key}/";
@@ -328,16 +344,16 @@ public sealed class RequestTests
         var endpoint = request.WithEndpoint(resourceName, key);
 
         // Assert 
-        endpoint.Should().NotBeNull();
-        endpoint.Should().BeOfType<Endpoint>();
-        endpoint.Endpoint.Should().Be(expectedResourceName);
+        Assert.NotNull(endpoint);
+        Assert.IsType<Endpoint>(endpoint);
+        Assert.Equal(expectedResourceName, endpoint.Endpoint);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithEndpoint_WhenGuidKeyIsProvided_ShouldSetEndpoint(Request request)
+    [Fact]
+    public void WithEndpoint_WhenGuidKeyIsProvided_ShouldSetEndpoint()
     {
         // Arrange
+        var request = MockCreate<Request>();
         const string resourceName = "students";
         var key = Guid.NewGuid();
         var expectedResourceName = $"{resourceName}/{key}/";
@@ -346,16 +362,16 @@ public sealed class RequestTests
         var endpoint = request.WithEndpoint(resourceName, key);
 
         // Assert 
-        endpoint.Should().NotBeNull();
-        endpoint.Should().BeOfType<Endpoint>();
-        endpoint.Endpoint.Should().Be(expectedResourceName);
+        Assert.NotNull(endpoint);
+        Assert.IsType<Endpoint>(endpoint);
+        Assert.Equal(expectedResourceName, endpoint.Endpoint);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithEndpoint_WhenStringKeyIsProvided_ShouldSetEndpoint(Request request)
+    [Fact]
+    public void WithEndpoint_WhenStringKeyIsProvided_ShouldSetEndpoint()
     {
         // Arrange
+        var request = MockCreate<Request>();
         const string resourceName = "students";
         const string key = "1";
         var expectedResourceName = $"{resourceName}/{key}/";
@@ -364,30 +380,31 @@ public sealed class RequestTests
         var endpoint = request.WithEndpoint(resourceName, key);
 
         // Assert 
-        endpoint.Should().NotBeNull();
-        endpoint.Should().BeOfType<Endpoint>();
-        endpoint.Endpoint.Should().Be(expectedResourceName);
+        Assert.NotNull(endpoint);
+        Assert.IsType<Endpoint>(endpoint);
+        Assert.Equal(expectedResourceName, endpoint.Endpoint);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithEndpoint_WhenSegmentsIsNull_ShouldThrowArgumentNullException(Request request)
+    [Fact]
+    public void WithEndpoint_WhenSegmentsIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
+        var request = MockCreate<Request>();
         IEnumerable<string> segments = null!;
 
         // Act 
-        Action action = () => request.WithEndpoint(segments);
+        void Action()
+            => request.WithEndpoint(segments);
 
         // Assert 
-        action.Should().ThrowExactly<ArgumentNullException>();
+        Assert.Throws<ArgumentNullException>(Action);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithEndpoint_WhenSegmentsIsNotNull_ShouldSetEndpoint(Request request)
+    [Fact]
+    public void WithEndpoint_WhenSegmentsIsNotNull_ShouldSetEndpoint()
     {
         // Arrange
+        var request = MockCreate<Request>();
         var segments = new[] { "/students/", "/1//" };
         var expectedResourceName = "students/1/";
 
@@ -395,44 +412,46 @@ public sealed class RequestTests
         var endpoint = request.WithEndpoint(segments);
 
         // Assert 
-        endpoint.Should().NotBeNull();
-        endpoint.Should().BeOfType<Endpoint>();
-        endpoint.Endpoint.Should().Be(expectedResourceName);
+        Assert.NotNull(endpoint);
+        Assert.IsType<Endpoint>(endpoint);
+        Assert.Equal(expectedResourceName, endpoint.Endpoint);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithEndpoint_WhenResourceNameIsNull_ShouldThrowArgumentNullException(Request request)
+    [Fact]
+    public void WithEndpoint_WhenResourceNameIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
+        var request = MockCreate<Request>();
         string resourceName = null!;
 
         // Act 
-        Action action = () => request.WithEndpoint(resourceName);
+        void Action()
+            => request.WithEndpoint(resourceName);
 
         // Assert 
-        action.Should().ThrowExactly<ArgumentNullException>();
+        Assert.Throws<ArgumentNullException>(Action);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithEndpoint_WhenResourceNameIsEmpty_ShouldThrowArgumentException(Request request)
+    [Fact]
+    public void WithEndpoint_WhenResourceNameIsEmpty_ShouldThrowArgumentException()
     {
         // Arrange
+        var request = MockCreate<Request>();
         const string resourceName = "";
 
         // Act 
-        Action action = () => request.WithEndpoint(resourceName);
+        void Action()
+            => request.WithEndpoint(resourceName);
 
         // Assert 
-        action.Should().ThrowExactly<ArgumentException>();
+        Assert.Throws<ArgumentException>(Action);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithEndpoint_WhenResourceNameIsNotNullOrEmpty_ShouldSetEndpoint(Request request)
+    [Fact]
+    public void WithEndpoint_WhenResourceNameIsNotNullOrEmpty_ShouldSetEndpoint()
     {
         // Arrange
+        var request = MockCreate<Request>();
         const string resourceName = "students";
         const string expectedResourceName = "students/";
 
@@ -440,8 +459,8 @@ public sealed class RequestTests
         var endpoint = request.WithEndpoint(resourceName);
 
         // Assert 
-        endpoint.Should().NotBeNull();
-        endpoint.Should().BeOfType<Endpoint>();
-        endpoint.Endpoint.Should().Be(expectedResourceName);
+        Assert.NotNull(endpoint);
+        Assert.IsType<Endpoint>(endpoint);
+        Assert.Equal(expectedResourceName, endpoint.Endpoint);
     }
 }

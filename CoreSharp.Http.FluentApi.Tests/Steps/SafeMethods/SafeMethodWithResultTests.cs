@@ -1,114 +1,115 @@
-﻿using AutoFixture.NUnit3;
-using CoreSharp.Http.FluentApi.Steps.Interfaces.Methods.SafeMethods;
+﻿using CoreSharp.Http.FluentApi.Steps.Interfaces.Methods.SafeMethods;
 using CoreSharp.Http.FluentApi.Steps.Methods.SafeMethods;
-using FluentAssertions;
-using NUnit.Framework;
 using System.Text;
-using Tests.Internal.Attributes;
-using Tests.Internal.HttpmessageHandlers;
+using Tests.Common.Mocks;
 using JsonNet = Newtonsoft.Json;
 using TextJson = System.Text.Json;
 
-namespace Tests.Steps.SafeMethods;
+namespace CoreSharp.Http.FluentApi.Tests.Steps.SafeMethods;
 
-[TestFixture]
-public sealed class SafeMethodWithResultTests
+public sealed class SafeMethodWithResultTests : ProjectTestsBase
 {
-    [Test]
-    [AutoNSubstituteData]
-    public void Constructor_WhenCalled_ShouldNotThrw(ISafeMethod safeMethod)
+    [Fact]
+    public void Constructor_WhenCalled_ShouldNotThrw()
     {
+        // Arrange
+        var safeMethod = MockCreate<ISafeMethod>();
+
         // Act
-        Action action = () => _ = new SafeMethodWithResult(safeMethod);
+        void Action()
+            => _ = new SafeMethodWithResult(safeMethod);
 
         // Assert 
-        action.Should().NotThrow();
+        var exception = Record.Exception(Action);
+        Assert.Null(exception);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void ToBytes_WhenCalled_ShouldReturnSafeMethodWithResultAsBytes(ISafeMethod safeMethod)
+    [Fact]
+    public void ToBytes_WhenCalled_ShouldReturnSafeMethodWithResultAsBytes()
     {
         // Arrange 
+        var safeMethod = MockCreate<ISafeMethod>();
         var safeMethodWithResult = new SafeMethodWithResult(safeMethod);
 
         // Act
         var result = safeMethodWithResult.ToBytes();
 
         // Assert
-        result.Should().BeOfType<SafeMethodWithResultAsBytes>();
-        result.Endpoint.Should().BeSameAs(safeMethod.Endpoint);
-        result.HttpMethod.Should().Be(safeMethod.HttpMethod);
+        Assert.IsType<SafeMethodWithResultAsBytes>(result);
+        Assert.Same(safeMethod.Endpoint, result.Endpoint);
+        Assert.Equal(safeMethod.HttpMethod, result.HttpMethod);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void ToStream_WhenCalled_ShouldReturnSafeMethodWithResultAsStream(ISafeMethod safeMethod)
+    [Fact]
+    public void ToStream_WhenCalled_ShouldReturnSafeMethodWithResultAsStream()
     {
         // Arrange 
+        var safeMethod = MockCreate<ISafeMethod>();
         var safeMethodWithResult = new SafeMethodWithResult(safeMethod);
 
         // Act
         var result = safeMethodWithResult.ToStream();
 
         // Assert
-        result.Should().BeOfType<SafeMethodWithResultAsStream>();
-        result.Endpoint.Should().BeSameAs(safeMethod.Endpoint);
-        result.HttpMethod.Should().Be(safeMethod.HttpMethod);
+        Assert.IsType<SafeMethodWithResultAsStream>(result);
+        Assert.Same(safeMethod.Endpoint, result.Endpoint);
+        Assert.Equal(safeMethod.HttpMethod, result.HttpMethod);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void ToString_WhenCalled_ShouldReturnSafeMethodWithResultAsString(ISafeMethod safeMethod)
+    [Fact]
+    public void ToString_WhenCalled_ShouldReturnSafeMethodWithResultAsString()
     {
         // Arrange 
+        var safeMethod = MockCreate<ISafeMethod>();
         var safeMethodWithResult = new SafeMethodWithResult(safeMethod);
 
         // Act
         var result = safeMethodWithResult.ToString();
 
         // Assert
-        result.Should().BeOfType<SafeMethodWithResultAsString>();
-        result.Endpoint.Should().BeSameAs(safeMethod.Endpoint);
-        result.HttpMethod.Should().Be(safeMethod.HttpMethod);
+        Assert.IsType<SafeMethodWithResultAsString>(result);
+        Assert.Same(safeMethod.Endpoint, result.Endpoint);
+        Assert.Equal(safeMethod.HttpMethod, result.HttpMethod);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithJsonDeserialize_WhenCalled_ShouldReturnSafeMethodWithResultFromJson(ISafeMethod safeMethod)
+    [Fact]
+    public void WithJsonDeserialize_WhenCalled_ShouldReturnSafeMethodWithResultFromJson()
     {
         // Arrange 
+        var safeMethod = MockCreate<ISafeMethod>();
         var safeMethodWithResult = new SafeMethodWithResult(safeMethod);
 
         // Act
         var result = safeMethodWithResult.WithJsonDeserialize<object>();
 
         // Assert
-        result.Should().BeOfType<SafeMethodWithResultAsGeneric<object>>();
-        result.Endpoint.Should().BeSameAs(safeMethod.Endpoint);
-        result.HttpMethod.Should().Be(safeMethod.HttpMethod);
+        Assert.IsType<SafeMethodWithResultAsGeneric<object>>(result);
+        Assert.Same(safeMethod.Endpoint, result.Endpoint);
+        Assert.Equal(safeMethod.HttpMethod, result.HttpMethod);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithJsonDeserialize_WhenJsonSerializerSettingsIsNull_ShouldThrowArgumentNullException(ISafeMethod safeMethod)
+    [Fact]
+    public void WithJsonDeserialize_WhenJsonSerializerSettingsIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
+        var safeMethod = MockCreate<ISafeMethod>();
         var safeMethodWithResult = new SafeMethodWithResult(safeMethod);
         JsonNet.JsonSerializerSettings jsonSerializerSettings = null!;
 
         // Act
-        Action action = () => safeMethodWithResult.WithJsonDeserialize<string>(jsonSerializerSettings);
+        void Action()
+            => safeMethodWithResult.WithJsonDeserialize<string>(jsonSerializerSettings);
 
         // Assert
-        action.Should().ThrowExactly<ArgumentNullException>();
+        var exception = Record.Exception(Action);
+        Assert.IsType<ArgumentNullException>(exception);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithJsonDeserialize_WhenJsonSerializerSettingsIsNotNull_ShouldReturnSafeMethodWithResultFromJson(ISafeMethod safeMethod)
+    [Fact]
+    public void WithJsonDeserialize_WhenJsonSerializerSettingsIsNotNull_ShouldReturnSafeMethodWithResultFromJson()
     {
         // Arrange
+        var safeMethod = MockCreate<ISafeMethod>();
         var safeMethodWithResult = new SafeMethodWithResult(safeMethod);
         var jsonSerializerSettings = new JsonNet.JsonSerializerSettings();
 
@@ -116,25 +117,27 @@ public sealed class SafeMethodWithResultTests
         var result = safeMethodWithResult.WithJsonDeserialize<string>(jsonSerializerSettings);
 
         // Assert
-        result.Should().BeOfType<SafeMethodWithResultAsGeneric<string>>();
-        result.Endpoint.Should().BeSameAs(safeMethod.Endpoint);
-        result.HttpMethod.Should().Be(safeMethod.HttpMethod);
+        Assert.IsType<SafeMethodWithResultAsGeneric<string>>(result);
+        Assert.Same(safeMethod.Endpoint, result.Endpoint);
+        Assert.Equal(safeMethod.HttpMethod, result.HttpMethod);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public async Task WithJsonDeserialize_WhenJsonSerializerSettingsIsNotNull_ShouldDeserializeResponseFromJson(
-        [Frozen] MockHttpMessageHandler mockHttpMessageHandler,
-        ISafeMethod safeMethod)
+    [Fact]
+    public async Task WithJsonDeserialize_WhenJsonSerializerSettingsIsNotNull_ShouldDeserializeResponseFromJson()
     {
         // Arrange
+        var mockHttpMessageHandler = MockFreeze<MockHttpMessageHandler>();
+        var safeMethod = MockCreate<ISafeMethod>();
         var jsonSerializerSettings = new JsonNet.JsonSerializerSettings();
         var safeMethodWithResult = new SafeMethodWithResult(safeMethod);
         var expectedResponse = new PublicDummyClass
         {
             Message = "Data"
         };
-        mockHttpMessageHandler.ResponseContent = JsonNet.JsonConvert.SerializeObject(expectedResponse);
+        mockHttpMessageHandler.HttpResponseMessageFactory = () => new()
+        {
+            Content = new StringContent(JsonNet.JsonConvert.SerializeObject(expectedResponse))
+        };
 
         // Act
         var response = await safeMethodWithResult
@@ -142,29 +145,31 @@ public sealed class SafeMethodWithResultTests
             .SendAsync();
 
         // Assert
-        response.Should().BeEquivalentTo(expectedResponse);
+        Assert.Equivalent(expectedResponse, response);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithJsonDeserialize_WhenJsonSerializerOptionsIsNull_ShouldThrowArgumentNullException(ISafeMethod safeMethod)
+    [Fact]
+    public void WithJsonDeserialize_WhenJsonSerializerOptionsIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
+        var safeMethod = MockCreate<ISafeMethod>();
         var safeMethodWithResult = new SafeMethodWithResult(safeMethod);
         TextJson.JsonSerializerOptions jsonSerializerOptions = null!;
 
         // Act
-        Action action = () => safeMethodWithResult.WithJsonDeserialize<string>(jsonSerializerOptions);
+        void Action()
+            => safeMethodWithResult.WithJsonDeserialize<string>(jsonSerializerOptions);
 
         // Assert
-        action.Should().ThrowExactly<ArgumentNullException>();
+        var exception = Record.Exception(Action);
+        Assert.IsType<ArgumentNullException>(exception);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithJsonDeserialize_WhenJsonSerializerOptionsIsNotNull_ShouldReturnSafeMethodWithResultFromJson(ISafeMethod safeMethod)
+    [Fact]
+    public void WithJsonDeserialize_WhenJsonSerializerOptionsIsNotNull_ShouldReturnSafeMethodWithResultFromJson()
     {
         // Arrange
+        var safeMethod = MockCreate<ISafeMethod>();
         var safeMethodWithResult = new SafeMethodWithResult(safeMethod);
         var jsonSerializerOptions = TextJson.JsonSerializerOptions.Default;
 
@@ -172,25 +177,27 @@ public sealed class SafeMethodWithResultTests
         var result = safeMethodWithResult.WithJsonDeserialize<string>(jsonSerializerOptions);
 
         // Assert
-        result.Should().BeOfType<SafeMethodWithResultAsGeneric<string>>();
-        result.Endpoint.Should().BeSameAs(safeMethod.Endpoint);
-        result.HttpMethod.Should().Be(safeMethod.HttpMethod);
+        Assert.IsType<SafeMethodWithResultAsGeneric<string>>(result);
+        Assert.Same(safeMethod.Endpoint, result.Endpoint);
+        Assert.Equal(safeMethod.HttpMethod, result.HttpMethod);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public async Task WithJsonDeserialize_WhenJsonSerializerOptionsIsNotNull_ShouldDeserializeResponseFromJson(
-        [Frozen] MockHttpMessageHandler mockHttpMessageHandler,
-        ISafeMethod safeMethod)
+    [Fact]
+    public async Task WithJsonDeserialize_WhenJsonSerializerOptionsIsNotNull_ShouldDeserializeResponseFromJson()
     {
         // Arrange
+        var mockHttpMessageHandler = MockFreeze<MockHttpMessageHandler>();
+        var safeMethod = MockCreate<ISafeMethod>();
         var jsonSerializerOptions = TextJson.JsonSerializerOptions.Default;
         var safeMethodWithResult = new SafeMethodWithResult(safeMethod);
         var expectedResponse = new PublicDummyClass
         {
             Message = "Data"
         };
-        mockHttpMessageHandler.ResponseContent = TextJson.JsonSerializer.Serialize(expectedResponse);
+        mockHttpMessageHandler.HttpResponseMessageFactory = () => new()
+        {
+            Content = new StringContent(TextJson.JsonSerializer.Serialize(expectedResponse))
+        };
 
         // Act
         var response = await safeMethodWithResult
@@ -198,42 +205,44 @@ public sealed class SafeMethodWithResultTests
             .SendAsync();
 
         // Assert
-        response.Should().BeEquivalentTo(expectedResponse);
+        Assert.Equivalent(expectedResponse, response);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithXmlDeserialize_WhenCalled_ShouldReturnSafeMethodWithResultFromXml(ISafeMethod safeMethod)
+    [Fact]
+    public void WithXmlDeserialize_WhenCalled_ShouldReturnSafeMethodWithResultFromXml()
     {
         // Arrange
+        var safeMethod = MockCreate<ISafeMethod>();
         var safeMethodWithResult = new SafeMethodWithResult(safeMethod);
 
         // Act
         var result = safeMethodWithResult.WithXmlDeserialize<object>();
 
         // Assert
-        result.Should().BeOfType<SafeMethodWithResultAsGeneric<object>>();
-        result.Endpoint.Should().BeSameAs(safeMethod.Endpoint);
-        result.HttpMethod.Should().Be(safeMethod.HttpMethod);
+        Assert.IsType<SafeMethodWithResultAsGeneric<object>>(result);
+        Assert.Same(safeMethod.Endpoint, result.Endpoint);
+        Assert.Equal(safeMethod.HttpMethod, result.HttpMethod);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public async Task WithXmlDeserialize_WhenCalled_ShouldDeserializeResponseFromXml(
-        [Frozen] MockHttpMessageHandler mockHttpMessageHandler,
-        ISafeMethod safeMethod)
+    [Fact]
+    public async Task WithXmlDeserialize_WhenCalled_ShouldDeserializeResponseFromXml()
     {
         // Arrange 
+        var mockHttpMessageHandler = MockFreeze<MockHttpMessageHandler>();
+        var safeMethod = MockCreate<ISafeMethod>();
         var safeMethodWithResult = new SafeMethodWithResult(safeMethod);
         var expectedResponse = new PublicDummyClass
         {
             Message = "Data"
         };
 
-        mockHttpMessageHandler.ResponseContent = @"
-        <PublicDummyClass xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
-            <Message>Data</Message>
-        </PublicDummyClass>";
+        mockHttpMessageHandler.HttpResponseMessageFactory = () => new()
+        {
+            Content = new StringContent(@"
+                <PublicDummyClass xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+                    <Message>Data</Message>
+                </PublicDummyClass>")
+        };
 
         // Act
         var response = await safeMethodWithResult
@@ -241,116 +250,126 @@ public sealed class SafeMethodWithResultTests
             .SendAsync();
 
         // Assert
-        response.Should().BeEquivalentTo(expectedResponse);
+        Assert.Equivalent(expectedResponse, response);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithGenericDeserialize_WhenDeserializeStringFunctionIsNull_ShouldThrowArgumentNullException(ISafeMethod safeMethod)
+    [Fact]
+    public void WithGenericDeserialize_WhenDeserializeStringFunctionIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
+        var safeMethod = MockCreate<ISafeMethod>();
         var safeMethodWithResult = new SafeMethodWithResult(safeMethod);
         Func<string, string?> deserializeFunction = null!;
 
         // Act
-        Action action = () => safeMethodWithResult.WithGenericDeserialize(deserializeFunction);
+        void Action()
+            => safeMethodWithResult.WithGenericDeserialize(deserializeFunction);
 
         // Assert
-        action.Should().ThrowExactly<ArgumentNullException>();
+        var exception = Record.Exception(Action);
+        Assert.IsType<ArgumentNullException>(exception);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithGenericDeserialize_WhenDeserializeStringFunctionIsNotNull_ShouldReturnSafeMethodWithResultFromJson(ISafeMethod safeMethod)
+    [Fact]
+    public void WithGenericDeserialize_WhenDeserializeStringFunctionIsNotNull_ShouldReturnSafeMethodWithResultFromJson()
     {
         // Arrange
+        var safeMethod = MockCreate<ISafeMethod>();
         var safeMethodWithResult = new SafeMethodWithResult(safeMethod);
-        Func<string, string?> deserializeFunction = response => null!;
+        static string? Deserialize(string response)
+            => null!;
 
         // Act
-        var result = safeMethodWithResult.WithGenericDeserialize(deserializeFunction);
+        var result = safeMethodWithResult.WithGenericDeserialize(Deserialize);
 
         // Assert
-        result.Should().BeOfType<SafeMethodWithResultAsGeneric<string>>();
-        result.Endpoint.Should().BeSameAs(safeMethod.Endpoint);
-        result.HttpMethod.Should().Be(safeMethod.HttpMethod);
+        Assert.IsType<SafeMethodWithResultAsGeneric<string>>(result);
+        Assert.Same(safeMethod.Endpoint, result.Endpoint);
+        Assert.Equal(safeMethod.HttpMethod, result.HttpMethod);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public async Task WithGenericDeserialize_WhenDeserializeStringFunctionIsNotNull_ShouldDeserializeResponse(
-        [Frozen] MockHttpMessageHandler mockHttpMessageHandler,
-        ISafeMethod safeMethod)
+    [Fact]
+    public async Task WithGenericDeserialize_WhenDeserializeStringFunctionIsNotNull_ShouldDeserializeResponse()
     {
         // Arrange 
+        var mockHttpMessageHandler = MockFreeze<MockHttpMessageHandler>();
+        var safeMethod = MockCreate<ISafeMethod>();
         const string expectedResponse = "Data";
-        mockHttpMessageHandler.ResponseContent = "Data";
+        mockHttpMessageHandler.HttpResponseMessageFactory = () => new()
+        {
+            Content = new StringContent("Data")
+        };
 
         string? deserializeFunctionCapturedResponse = null;
         var deserializeFunctionCallCount = 0;
-        Func<string, string?> deserializeFunction = response =>
+        string? Deserialize(string response)
         {
             deserializeFunctionCapturedResponse = response;
             deserializeFunctionCallCount++;
             return response;
-        };
+        }
 
         // Act
         var response = await new SafeMethodWithResult(safeMethod)
-            .WithGenericDeserialize(deserializeFunction)
+            .WithGenericDeserialize(Deserialize)
             .SendAsync();
 
         // Assert
-        response.Should().BeEquivalentTo(expectedResponse);
-        deserializeFunctionCallCount.Should().Be(1);
-        deserializeFunctionCapturedResponse.Should().Be(mockHttpMessageHandler.ResponseContent);
+        Assert.Equivalent(expectedResponse, response);
+        Assert.Equal(1, deserializeFunctionCallCount);
+        Assert.Equal("Data", deserializeFunctionCapturedResponse);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithGenericDeserialize_WhenDeserializeStreamFunctionIsNull_ShouldThrowArgumentNullException(ISafeMethod safeMethod)
+    [Fact]
+    public void WithGenericDeserialize_WhenDeserializeStreamFunctionIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
+        var safeMethod = MockCreate<ISafeMethod>();
         var safeMethodWithResult = new SafeMethodWithResult(safeMethod);
         Func<Stream, string?> deserializeFunction = null!;
 
         // Act
-        Action action = () => safeMethodWithResult.WithGenericDeserialize(deserializeFunction);
+        void Action()
+            => safeMethodWithResult.WithGenericDeserialize(deserializeFunction);
 
         // Assert
-        action.Should().ThrowExactly<ArgumentNullException>();
+        var exception = Record.Exception(Action);
+        Assert.IsType<ArgumentNullException>(exception);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithGenericDeserialize_WhenDeserializeStreamFunctionIsNotNull_ShouldReturnSafeMethodWithResultFromJson(ISafeMethod safeMethod)
+    [Fact]
+    public void WithGenericDeserialize_WhenDeserializeStreamFunctionIsNotNull_ShouldReturnSafeMethodWithResultFromJson()
     {
         // Arrange
+        var safeMethod = MockCreate<ISafeMethod>();
         var safeMethodWithResult = new SafeMethodWithResult(safeMethod);
-        Func<Stream, string?> deserializeFunction = response => null!;
+        static string? Deserialize(Stream response)
+            => null!;
 
         // Act
-        var result = safeMethodWithResult.WithGenericDeserialize(deserializeFunction);
+        var result = safeMethodWithResult.WithGenericDeserialize(Deserialize);
 
         // Assert
-        result.Should().BeOfType<SafeMethodWithResultAsGeneric<string>>();
-        result.Endpoint.Should().BeSameAs(safeMethod.Endpoint);
-        result.HttpMethod.Should().Be(safeMethod.HttpMethod);
+        Assert.IsType<SafeMethodWithResultAsGeneric<string>>(result);
+        Assert.Same(safeMethod.Endpoint, result.Endpoint);
+        Assert.Equal(safeMethod.HttpMethod, result.HttpMethod);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public async Task WithGenericDeserialize_WhenDeserializeStreamFunctionIsNotNull_ShouldDeserializeResponse(
-        [Frozen] MockHttpMessageHandler mockHttpMessageHandler,
-        ISafeMethod safeMethod)
+    [Fact]
+    public async Task WithGenericDeserialize_WhenDeserializeStreamFunctionIsNotNull_ShouldDeserializeResponse()
     {
         // Arrange 
+        var mockHttpMessageHandler = MockFreeze<MockHttpMessageHandler>();
+        var safeMethod = MockCreate<ISafeMethod>();
         const string expectedResponse = "Data";
-        mockHttpMessageHandler.ResponseContent = "Data";
+        mockHttpMessageHandler.HttpResponseMessageFactory = () => new()
+        {
+            Content = new StringContent("Data")
+        };
 
         string? deserializeFunctionCapturedResponse = null;
         var deserializeFunctionCallCount = 0;
-        Func<Stream, string> deserializeFunction = response =>
+        string Deserialize(Stream response)
         {
             using var memoryStream = new MemoryStream();
             response.CopyTo(memoryStream);
@@ -360,126 +379,136 @@ public sealed class SafeMethodWithResultTests
             deserializeFunctionCapturedResponse = responseAsString;
             deserializeFunctionCallCount++;
             return responseAsString;
-        };
+        }
 
         // Act
         var response = await new SafeMethodWithResult(safeMethod)
-            .WithGenericDeserialize(deserializeFunction)
+            .WithGenericDeserialize(Deserialize)
             .SendAsync();
 
         // Assert
-        response.Should().BeEquivalentTo(expectedResponse);
-        deserializeFunctionCallCount.Should().Be(1);
-        deserializeFunctionCapturedResponse.Should().Be(mockHttpMessageHandler.ResponseContent);
+        Assert.Equivalent(expectedResponse, response);
+        Assert.Equal(1, deserializeFunctionCallCount);
+        Assert.Equal("Data", deserializeFunctionCapturedResponse);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithGenericDeserialize_WhenDeserializeTaskStringFunctionIsNull_ShouldThrowArgumentNullException(ISafeMethod safeMethod)
+    [Fact]
+    public void WithGenericDeserialize_WhenDeserializeTaskStringFunctionIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
+        var safeMethod = MockCreate<ISafeMethod>();
         var safeMethodWithResult = new SafeMethodWithResult(safeMethod);
         Func<string, Task<string?>> deserializeFunction = null!;
 
         // Act
-        Action action = () => safeMethodWithResult.WithGenericDeserialize(deserializeFunction);
+        void Action()
+            => safeMethodWithResult.WithGenericDeserialize(deserializeFunction);
 
         // Assert
-        action.Should().ThrowExactly<ArgumentNullException>();
+        var exception = Record.Exception(Action);
+        Assert.IsType<ArgumentNullException>(exception);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithGenericDeserialize_WhenDeserializeTaskStringFunctionIsNotNull_ShouldReturnSafeMethodWithResultFromJson(ISafeMethod safeMethod)
+    [Fact]
+    public void WithGenericDeserialize_WhenDeserializeTaskStringFunctionIsNotNull_ShouldReturnSafeMethodWithResultFromJson()
     {
         // Arrange
+        var safeMethod = MockCreate<ISafeMethod>();
         var safeMethodWithResult = new SafeMethodWithResult(safeMethod);
-        Func<string, Task<string?>> deserializeFunction = response => null!;
+        static Task<string?> Deserialize(string response)
+            => null!;
 
         // Act
-        var result = safeMethodWithResult.WithGenericDeserialize(deserializeFunction);
+        var result = safeMethodWithResult.WithGenericDeserialize(Deserialize);
 
         // Assert
-        result.Should().BeOfType<SafeMethodWithResultAsGeneric<string>>();
-        result.Endpoint.Should().BeSameAs(safeMethod.Endpoint);
-        result.HttpMethod.Should().Be(safeMethod.HttpMethod);
+        Assert.IsType<SafeMethodWithResultAsGeneric<string>>(result);
+        Assert.Same(safeMethod.Endpoint, result.Endpoint);
+        Assert.Equal(safeMethod.HttpMethod, result.HttpMethod);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public async Task WithGenericDeserialize_WhenDeserializeTaskStringFunctionIsNotNull_ShouldDeserializeResponse(
-        [Frozen] MockHttpMessageHandler mockHttpMessageHandler,
-        ISafeMethod safeMethod)
+    [Fact]
+    public async Task WithGenericDeserialize_WhenDeserializeTaskStringFunctionIsNotNull_ShouldDeserializeResponse()
     {
         // Arrange 
+        var mockHttpMessageHandler = MockFreeze<MockHttpMessageHandler>();
+        var safeMethod = MockCreate<ISafeMethod>();
         const string expectedResponse = "Data";
-        mockHttpMessageHandler.ResponseContent = "Data";
+        mockHttpMessageHandler.HttpResponseMessageFactory = () => new()
+        {
+            Content = new StringContent("Data")
+        };
 
         string? deserializeFunctionCapturedResponse = null;
         var deserializeFunctionCallCount = 0;
-        Func<string, Task<string?>> deserializeFunction = response =>
+        Task<string?> Deserialize(string response)
         {
             deserializeFunctionCapturedResponse = response;
             deserializeFunctionCallCount++;
             return Task.FromResult<string?>(response);
-        };
+        }
 
         // Act
         var response = await new SafeMethodWithResult(safeMethod)
-            .WithGenericDeserialize(deserializeFunction)
+            .WithGenericDeserialize(Deserialize)
             .SendAsync();
 
         // Assert
-        response.Should().BeEquivalentTo(expectedResponse);
-        deserializeFunctionCallCount.Should().Be(1);
-        deserializeFunctionCapturedResponse.Should().Be(mockHttpMessageHandler.ResponseContent);
+        Assert.Equivalent(expectedResponse, response);
+        Assert.Equal(1, deserializeFunctionCallCount);
+        Assert.Equal("Data", deserializeFunctionCapturedResponse);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithGenericDeserialize_WhenDeserializeTaskStreamFunctionIsNull_ShouldThrowArgumentNullException(ISafeMethod safeMethod)
+    [Fact]
+    public void WithGenericDeserialize_WhenDeserializeTaskStreamFunctionIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
+        var safeMethod = MockCreate<ISafeMethod>();
         var safeMethodWithResult = new SafeMethodWithResult(safeMethod);
         Func<Stream, Task<string?>> deserializeFunction = null!;
 
         // Act
-        Action action = () => safeMethodWithResult.WithGenericDeserialize(deserializeFunction);
+        void Action()
+            => safeMethodWithResult.WithGenericDeserialize(deserializeFunction);
 
         // Assert
-        action.Should().ThrowExactly<ArgumentNullException>();
+        var exception = Record.Exception(Action);
+        Assert.IsType<ArgumentNullException>(exception);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithGenericDeserialize_WhenDeserializeTaskStreamFunctionIsNotNull_ShouldReturnSafeMethodWithResultFromJson(ISafeMethod safeMethod)
+    [Fact]
+    public void WithGenericDeserialize_WhenDeserializeTaskStreamFunctionIsNotNull_ShouldReturnSafeMethodWithResultFromJson()
     {
         // Arrange
+        var safeMethod = MockCreate<ISafeMethod>();
         var safeMethodWithResult = new SafeMethodWithResult(safeMethod);
-        Func<Stream, Task<string?>> deserializeFunction = response => null!;
+        static Task<string?> Deserialize(Stream response)
+            => null!;
 
         // Act
-        var result = safeMethodWithResult.WithGenericDeserialize(deserializeFunction);
+        var result = safeMethodWithResult.WithGenericDeserialize(Deserialize);
 
         // Assert
-        result.Should().BeOfType<SafeMethodWithResultAsGeneric<string>>();
-        result.Endpoint.Should().BeSameAs(safeMethod.Endpoint);
-        result.HttpMethod.Should().Be(safeMethod.HttpMethod);
+        Assert.IsType<SafeMethodWithResultAsGeneric<string>>(result);
+        Assert.Same(safeMethod.Endpoint, result.Endpoint);
+        Assert.Equal(safeMethod.HttpMethod, result.HttpMethod);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public async Task WithGenericDeserialize_WhenDeserializeTaskStreamFunctionIsNotNull_ShouldDeserializeResponse(
-        [Frozen] MockHttpMessageHandler mockHttpMessageHandler,
-        ISafeMethod safeMethod)
+    [Fact]
+    public async Task WithGenericDeserialize_WhenDeserializeTaskStreamFunctionIsNotNull_ShouldDeserializeResponse()
     {
         // Arrange 
+        var mockHttpMessageHandler = MockFreeze<MockHttpMessageHandler>();
+        var safeMethod = MockCreate<ISafeMethod>();
         const string expectedResponse = "Data";
-        mockHttpMessageHandler.ResponseContent = "Data";
+        mockHttpMessageHandler.HttpResponseMessageFactory = () => new()
+        {
+            Content = new StringContent("Data")
+        };
 
         string? deserializeFunctionCapturedResponse = null;
         var deserializeFunctionCallCount = 0;
-        Func<Stream, Task<string?>> deserializeFunction = async response =>
+        async Task<string?> Deserialize(Stream response)
         {
             await using var memoryStream = new MemoryStream();
             await response.CopyToAsync(memoryStream);
@@ -489,17 +518,17 @@ public sealed class SafeMethodWithResultTests
             deserializeFunctionCapturedResponse = responseAsString;
             deserializeFunctionCallCount++;
             return responseAsString;
-        };
+        }
 
         // Act
         var response = await new SafeMethodWithResult(safeMethod)
-            .WithGenericDeserialize(deserializeFunction)
+            .WithGenericDeserialize(Deserialize)
             .SendAsync();
 
         // Assert
-        response.Should().BeEquivalentTo(expectedResponse);
-        deserializeFunctionCallCount.Should().Be(1);
-        deserializeFunctionCapturedResponse.Should().Be(mockHttpMessageHandler.ResponseContent);
+        Assert.Equivalent(expectedResponse, response);
+        Assert.Equal(1, deserializeFunctionCallCount);
+        Assert.Equal("Data", deserializeFunctionCapturedResponse);
     }
 
     public sealed class PublicDummyClass

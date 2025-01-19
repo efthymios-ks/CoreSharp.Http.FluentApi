@@ -1,74 +1,75 @@
-﻿using AutoFixture.NUnit3;
-using CoreSharp.Http.FluentApi.Steps.Interfaces.Methods.SafeMethods;
+﻿using CoreSharp.Http.FluentApi.Steps.Interfaces.Methods.SafeMethods;
 using CoreSharp.Http.FluentApi.Steps.Methods.SafeMethods;
-using FluentAssertions;
-using NUnit.Framework;
-using Tests.Internal.Attributes;
-using Tests.Internal.HttpmessageHandlers;
+using Tests.Common.Mocks;
 
-namespace Tests.Steps.SafeMethods;
+namespace CoreSharp.Http.FluentApi.Tests.Steps.SafeMethods;
 
-[TestFixture]
-public sealed class SafeMethodWithResultAsStringTests
+public sealed class SafeMethodWithResultAsStringTests : ProjectTestsBase
 {
-    [Test]
-    [AutoNSubstituteData]
-    public void Constructor_WhenCalled_ShouldNotThrow(ISafeMethod safeMethod)
+    [Fact]
+    public void Constructor_WhenCalled_ShouldNotThrow()
     {
+        // Arrange
+        var safeMethod = MockCreate<ISafeMethod>();
+
         // Act
-        Action action = () => _ = new SafeMethodWithResultAsString(safeMethod);
+        void Action()
+            => _ = new SafeMethodWithResultAsString(safeMethod);
 
         // Assert
-        action.Should().NotThrow();
+        var exception = Record.Exception(Action);
+        Assert.Null(exception);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithCache_WhenCalled_ShouldReturnSafeMethodWithResultAsBytesAndCache(ISafeMethod safeMethod)
+    [Fact]
+    public void WithCache_WhenCalled_ShouldReturnSafeMethodWithResultAsBytesAndCache()
     {
         // Arrange 
+        var safeMethod = MockCreate<ISafeMethod>();
         var safeMethodWithResultAsString = new SafeMethodWithResultAsString(safeMethod);
-        var cacheDuration = TimeSpan.FromSeconds(1);
+        const int cacheDurationSeconds = 1;
+        var cacheDuration = TimeSpan.FromSeconds(cacheDurationSeconds);
 
         // Act
         var result = safeMethodWithResultAsString.WithCache(cacheDuration);
 
         // Assert
-        result.Should().BeOfType<SafeMethodWithResultAsStringAndCache>();
-        result.CacheDuration.Should().Be(cacheDuration);
+        Assert.IsType<SafeMethodWithResultAsStringAndCache>(result);
+        Assert.Equal(cacheDuration, result.CacheDuration);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public async Task SendAsync_WhenHttpResponseIsNull_ShouldReturnNull(
-        [Frozen] MockHttpMessageHandler mockHttpMessageHandler,
-        ISafeMethod safeMethod)
+    [Fact]
+    public async Task SendAsync_WhenHttpResponseIsNull_ShouldReturnNull()
     {
         // Arrange
-        mockHttpMessageHandler.SetResponseToNull = true;
+        var mockHttpMessageHandler = MockFreeze<MockHttpMessageHandler>();
+        mockHttpMessageHandler.HttpResponseMessageFactory = () => null!;
+        var safeMethod = MockCreate<ISafeMethod>();
         var safeMethodWithResultAsString = new SafeMethodWithResultAsString(safeMethod);
 
         // Act
         var result = await safeMethodWithResultAsString.SendAsync();
 
         // Assert
-        result.Should().BeNull();
+        Assert.Null(result);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public async Task SendAsync_WhenCalled_ShouldReturnByteArray(
-    [Frozen] MockHttpMessageHandler mockHttpMessageHandler,
-    ISafeMethod safeMethod)
+    [Fact]
+    public async Task SendAsync_WhenCalled_ShouldReturnString()
     {
         // Arrange
+        var mockHttpMessageHandler = MockFreeze<MockHttpMessageHandler>();
+        var safeMethod = MockCreate<ISafeMethod>();
         var safeMethodWithResultAsString = new SafeMethodWithResultAsString(safeMethod);
-        mockHttpMessageHandler.ResponseContent = "Dummy data";
+        mockHttpMessageHandler.HttpResponseMessageFactory = () => new()
+        {
+            Content = new StringContent("Dummy data")
+        };
 
         // Act
         var result = await safeMethodWithResultAsString.SendAsync();
 
         // Assert
-        result.Should().BeEquivalentTo(mockHttpMessageHandler.ResponseContent);
+        Assert.Equivalent("Dummy data", result);
     }
 }

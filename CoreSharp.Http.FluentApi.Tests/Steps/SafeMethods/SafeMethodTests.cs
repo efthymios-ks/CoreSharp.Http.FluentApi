@@ -2,34 +2,31 @@
 using CoreSharp.Http.FluentApi.Steps.Interfaces.Methods;
 using CoreSharp.Http.FluentApi.Steps.Interfaces.Methods.SafeMethods;
 using CoreSharp.Http.FluentApi.Steps.Methods.SafeMethods;
-using FluentAssertions;
-using NSubstitute;
-using NUnit.Framework;
 
-namespace Tests.Steps.SafeMethods;
+namespace CoreSharp.Http.FluentApi.Tests.Steps.SafeMethods;
 
-[TestFixture]
-public sealed class SafeMethodTests
+public sealed class SafeMethodTests : ProjectTestsBase
 {
-    [Test]
+    [Fact]
     public void Constructor_WhenMethodIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
         IMethod method = null!;
 
         // Act
-        Action action = () => _ = new SafeMethod(method);
+        void Action()
+            => _ = new SafeMethod(method);
 
         // Assert
-        action.Should().ThrowExactly<ArgumentNullException>();
+        Assert.Throws<ArgumentNullException>(Action);
     }
 
-    [Test]
+    [Fact]
     public void Constructor_WhenMethodIsNotNull_ShouldSetProperties()
     {
         // Arrange
-        var method = Substitute.For<IMethod>();
-        method.Endpoint = Substitute.For<IEndpoint>();
+        var method = MockCreate<IMethod>();
+        method.Endpoint = MockCreate<IEndpoint>();
         method.HttpMethod = HttpMethod.Get;
 
         // Act
@@ -37,11 +34,11 @@ public sealed class SafeMethodTests
 
         // Assert
         var sameMethodInterface = (ISafeMethod)safeMethod;
-        sameMethodInterface.Endpoint.Should().BeSameAs(method.Endpoint);
-        sameMethodInterface.HttpMethod.Should().Be(method.HttpMethod);
+        Assert.Same(method.Endpoint, sameMethodInterface.Endpoint);
+        Assert.Equal(method.HttpMethod, sameMethodInterface.HttpMethod);
     }
 
-    [Test]
+    [Fact]
     public void Constructor_WhenEndpointIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
@@ -49,31 +46,33 @@ public sealed class SafeMethodTests
         var httpMethod = HttpMethod.Get;
 
         // Act
-        Action action = () => _ = new SafeMethod(endpoint, httpMethod);
+        void Action()
+            => _ = new SafeMethod(endpoint, httpMethod);
 
         // Assert
-        action.Should().ThrowExactly<ArgumentNullException>();
+        Assert.Throws<ArgumentNullException>(Action);
     }
 
-    [Test]
+    [Fact]
     public void Constructor_WhenHttpMethodIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
-        var endpoint = Substitute.For<IEndpoint>();
+        var endpoint = MockCreate<IEndpoint>();
         HttpMethod? httpMethod = null;
 
         // Act
-        Action action = () => _ = new SafeMethod(endpoint, httpMethod);
+        void Action()
+            => _ = new SafeMethod(endpoint, httpMethod);
 
         // Assert
-        action.Should().ThrowExactly<ArgumentNullException>();
+        Assert.Throws<ArgumentNullException>(Action);
     }
 
-    [Test]
+    [Fact]
     public void Constructor_WhenEndpointAndHttpMethodAreNotNull_ShouldSetProperties()
     {
         // Arrange
-        var endpoint = Substitute.For<IEndpoint>();
+        var endpoint = MockCreate<IEndpoint>();
         var httpMethod = HttpMethod.Get;
 
         // Act
@@ -81,7 +80,7 @@ public sealed class SafeMethodTests
 
         // Assert
         var safeMethodInterface = (ISafeMethod)safeMethod;
-        safeMethodInterface.Endpoint.Should().BeSameAs(endpoint);
-        safeMethodInterface.HttpMethod.Should().Be(httpMethod);
+        Assert.Same(endpoint, safeMethodInterface.Endpoint);
+        Assert.Equal(httpMethod, safeMethodInterface.HttpMethod);
     }
 }

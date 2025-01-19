@@ -1,28 +1,26 @@
 ﻿using CoreSharp.Http.FluentApi.Extensions;
 using CoreSharp.Http.FluentApi.Steps;
-using FluentAssertions;
-using NUnit.Framework;
 
-namespace Tests.Extensions;
+namespace CoreSharp.Http.FluentApi.Tests.Extensions;
 
-[TestFixture]
 public sealed class HttpClientExtensionsTests
 {
     // Methods
-    [Test]
+    [Fact]
     public void Request_WhenHttpClientIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
         using HttpClient httpClient = null!;
 
         // Act
-        Action action = () => httpClient.Request();
+        void Action()
+            => httpClient.Request();
 
         // Assert
-        action.Should().ThrowExactly<ArgumentNullException>();
+        Assert.Throws<ArgumentNullException>(Action);
     }
 
-    [Test]
+    [Fact]
     public void Request_WhenCalled_ShouldReturnIRequest()
     {
         // Arrange
@@ -32,7 +30,7 @@ public sealed class HttpClientExtensionsTests
         var request = httpClient.Request();
 
         // Assert
-        request.Should().NotBeNull();
-        request.Should().BeOfType<Request>();
+        Assert.NotNull(request);
+        Assert.IsType<Request>(request);
     }
 }

@@ -3,15 +3,10 @@
 namespace CoreSharp.Http.FluentApi.Steps.Methods.SafeMethods;
 
 /// <inheritdoc cref="ISafeMethodWithResultAsBytes"/>
-public class SafeMethodWithResultAsBytes :
-    SafeMethodWithResult,
+public class SafeMethodWithResultAsBytes(ISafeMethod safeMethod)
+    : SafeMethodWithResult(safeMethod),
     ISafeMethodWithResultAsBytes
 {
-    // Constructors 
-    internal SafeMethodWithResultAsBytes(ISafeMethod safeMethod)
-        : base(safeMethod)
-    {
-    }
 
     // Methods
     public ISafeMethodWithResultAsBytesAndCache WithCache(TimeSpan duration)

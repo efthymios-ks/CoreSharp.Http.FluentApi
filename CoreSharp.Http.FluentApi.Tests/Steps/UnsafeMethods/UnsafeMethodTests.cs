@@ -2,41 +2,37 @@
 using CoreSharp.Http.FluentApi.Steps.Interfaces.Methods;
 using CoreSharp.Http.FluentApi.Steps.Interfaces.Methods.UnsafeMethods;
 using CoreSharp.Http.FluentApi.Steps.Methods.UnsafeMethods;
-using FluentAssertions;
-using NSubstitute;
-using NUnit.Framework;
 using System.Net.Http.Headers;
 using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
 using System.Xml;
 using System.Xml.Serialization;
-using Tests.Internal.Attributes;
 
-namespace Tests.Steps.UnsafeMethods;
+namespace CoreSharp.Http.FluentApi.Tests.Steps.UnsafeMethods;
 
-[TestFixture]
-public sealed class UnsafeMethodTests
+public sealed class UnsafeMethodTests : ProjectTestsBase
 {
-    [Test]
+    [Fact]
     public void Constructor_WhenMethodIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
         IMethod method = null!;
 
         // Act
-        Action action = () => _ = new UnsafeMethod(method);
+        void Action()
+            => _ = new UnsafeMethod(method);
 
         // Assert
-        action.Should().ThrowExactly<ArgumentNullException>();
+        Assert.Throws<ArgumentNullException>(Action);
     }
 
-    [Test]
+    [Fact]
     public void Constructor_WhenMethodIsNotNull_ShouldSetProperties()
     {
         // Arrange
-        var method = Substitute.For<IMethod>();
-        method.Endpoint = Substitute.For<IEndpoint>();
+        var method = MockCreate<IMethod>();
+        method.Endpoint = MockCreate<IEndpoint>();
         method.HttpMethod = HttpMethod.Get;
 
         // Act
@@ -44,11 +40,11 @@ public sealed class UnsafeMethodTests
 
         // Assert
         var unsameMethodInterface = (IUnsafeMethod)unsafeMethod;
-        unsameMethodInterface.Endpoint.Should().BeSameAs(method.Endpoint);
-        unsameMethodInterface.HttpMethod.Should().Be(method.HttpMethod);
+        Assert.Same(method.Endpoint, unsameMethodInterface.Endpoint);
+        Assert.Equal(method.HttpMethod, unsameMethodInterface.HttpMethod);
     }
 
-    [Test]
+    [Fact]
     public void Constructor_WhenEndpointIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
@@ -56,31 +52,33 @@ public sealed class UnsafeMethodTests
         var httpMethod = HttpMethod.Get;
 
         // Act
-        Action action = () => _ = new UnsafeMethod(endpoint, httpMethod);
+        void Action()
+            => _ = new UnsafeMethod(endpoint, httpMethod);
 
         // Assert
-        action.Should().ThrowExactly<ArgumentNullException>();
+        Assert.Throws<ArgumentNullException>(Action);
     }
 
-    [Test]
+    [Fact]
     public void Constructor_WhenHttpMethodIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
-        var endpoint = Substitute.For<IEndpoint>();
+        var endpoint = MockCreate<IEndpoint>();
         HttpMethod httpMethod = null!;
 
         // Act
-        Action action = () => _ = new UnsafeMethod(endpoint, httpMethod);
+        void Action()
+            => _ = new UnsafeMethod(endpoint, httpMethod);
 
         // Assert
-        action.Should().ThrowExactly<ArgumentNullException>();
+        Assert.Throws<ArgumentNullException>(Action);
     }
 
-    [Test]
+    [Fact]
     public void Constructor_WhenEndpointAndHttpMethodAreNotNull_ShouldSetProperties()
     {
         // Arrange
-        var endpoint = Substitute.For<IEndpoint>();
+        var endpoint = MockCreate<IEndpoint>();
         var httpMethod = HttpMethod.Get;
 
         // Act
@@ -88,15 +86,15 @@ public sealed class UnsafeMethodTests
 
         // Assert
         var safeMethodInterface = (IUnsafeMethod)unsafeMethod;
-        safeMethodInterface.Endpoint.Should().BeSameAs(endpoint);
-        safeMethodInterface.HttpMethod.Should().Be(httpMethod);
+        Assert.Same(endpoint, safeMethodInterface.Endpoint);
+        Assert.Equal(httpMethod, safeMethodInterface.HttpMethod);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public async Task WithJsonBody_WhenCalled_ShouldStringHttpContent(IMethod method)
+    [Fact]
+    public async Task WithJsonBody_WhenCalled_ShouldStringHttpContent()
     {
         // Arrange
+        var method = MockCreate<IMethod>();
         var unsafeMethod = new UnsafeMethod(method);
         var expectedContentAsJson = JsonSerializer.Serialize(new
         {
@@ -107,35 +105,36 @@ public sealed class UnsafeMethodTests
         var unsafeMethodReturned = unsafeMethod.WithJsonBody(expectedContentAsJson);
 
         // Assert
-        unsafeMethodReturned.Should().BeSameAs(unsafeMethod);
-        var content = unsafeMethodReturned.HttpContent.Should().BeOfType<StringContent>().Subject;
+        Assert.Same(unsafeMethod, unsafeMethodReturned);
+        var content = Assert.IsType<StringContent>(unsafeMethodReturned.HttpContent);
         var contentAsJson = await content.ReadAsStringAsync();
-        contentAsJson.Should().Be(expectedContentAsJson);
-        content.Headers.ContentType!.CharSet.Should().Contain(Encoding.UTF8.WebName);
-        content.Headers.ContentType.MediaType.Should().Be(MediaTypeNames.Application.Json);
-        content.Headers.ContentLength.Should().Be(expectedContentAsJson.Length);
+        Assert.Equal(expectedContentAsJson, contentAsJson);
+        Assert.Contains(Encoding.UTF8.WebName, content.Headers.ContentType!.CharSet);
+        Assert.Equal(MediaTypeNames.Application.Json, content.Headers.ContentType.MediaType);
+        Assert.Equal(expectedContentAsJson.Length, content.Headers.ContentLength);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithJsonBody_WhenObjectToSerializeIsNull_ShouldThrowArgumentNullException(IMethod method)
+    [Fact]
+    public void WithJsonBody_WhenObjectToSerializeIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
         object content = null!;
+        var method = MockCreate<IMethod>();
         var unsafeMethod = new UnsafeMethod(method);
 
         // Act
-        Action action = () => unsafeMethod.WithJsonBody(content);
+        void Action()
+            => unsafeMethod.WithJsonBody(content);
 
         // Assert
-        action.Should().ThrowExactly<ArgumentNullException>();
+        Assert.Throws<ArgumentNullException>(Action);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public async Task WithJsonBody_WhenObjectToSerializeIsNotNull_ShouldSetObjectContent(IMethod method)
+    [Fact]
+    public async Task WithJsonBody_WhenObjectToSerializeIsNotNull_ShouldSetObjectContent()
     {
         // Arrange
+        var method = MockCreate<IMethod>();
         var unsafeMethod = new UnsafeMethod(method);
         var expectedPayload = new PublicDummyClass
         {
@@ -146,35 +145,36 @@ public sealed class UnsafeMethodTests
         var unsafeMethodReturned = unsafeMethod.WithJsonBody(expectedPayload);
 
         // Assert
-        unsafeMethodReturned.Should().BeSameAs(unsafeMethod);
-        var content = unsafeMethodReturned.HttpContent.Should().BeOfType<StreamContent>().Subject;
+        Assert.Same(unsafeMethod, unsafeMethodReturned);
+        var content = Assert.IsType<StreamContent>(unsafeMethodReturned.HttpContent);
         var contentAsJson = await content.ReadAsStringAsync();
         var contentPayload = JsonSerializer.Deserialize<PublicDummyClass>(contentAsJson);
-        contentPayload.Should().BeEquivalentTo(expectedPayload);
-        content.Headers.ContentType!.CharSet.Should().Contain(Encoding.UTF8.WebName);
-        content.Headers.ContentType.MediaType.Should().Be(MediaTypeNames.Application.Json);
+        Assert.Equivalent(expectedPayload, contentPayload);
+        Assert.Contains(Encoding.UTF8.WebName, content.Headers.ContentType!.CharSet);
+        Assert.Equal(MediaTypeNames.Application.Json, content.Headers.ContentType.MediaType);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithJsonBody_WhenStreamIsNull_ShouldThrowArgumentNullException(IMethod method)
+    [Fact]
+    public void WithJsonBody_WhenStreamIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
+        var method = MockCreate<IMethod>();
         var unsafeMethod = new UnsafeMethod(method);
         Stream jsonStream = null!;
 
         // Act
-        Action action = () => unsafeMethod.WithJsonBody(jsonStream);
+        void Action()
+            => unsafeMethod.WithJsonBody(jsonStream);
 
         // Assert
-        action.Should().ThrowExactly<ArgumentNullException>();
+        Assert.Throws<ArgumentNullException>(Action);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public async Task WithJsonBody_WhenStreamIsNotNull_ShouldSetStreamContent(IMethod method)
+    [Fact]
+    public async Task WithJsonBody_WhenStreamIsNotNull_ShouldSetStreamContent()
     {
         // Arrange
+        var method = MockCreate<IMethod>();
         var unsafeMethod = new UnsafeMethod(method);
         var expectedContentAsJson = JsonSerializer.Serialize(new
         {
@@ -186,56 +186,57 @@ public sealed class UnsafeMethodTests
         var unsafeMethodReturned = unsafeMethod.WithJsonBody(jsonStream);
 
         // Assert
-        unsafeMethodReturned.Should().BeSameAs(unsafeMethod);
-        var content = unsafeMethodReturned.HttpContent.Should().BeOfType<StreamContent>().Subject;
+        Assert.Same(unsafeMethod, unsafeMethodReturned);
+        var content = Assert.IsType<StreamContent>(unsafeMethodReturned.HttpContent);
         var contentAsJson = await content.ReadAsStringAsync();
-        contentAsJson.Should().Be(expectedContentAsJson);
-        content.Headers.ContentType!.CharSet.Should().Contain(Encoding.UTF8.WebName);
-        content.Headers.ContentType.MediaType.Should().Be(MediaTypeNames.Application.Json);
-        content.Headers.ContentLength.Should().Be(expectedContentAsJson.Length);
+        Assert.Equal(expectedContentAsJson, contentAsJson);
+        Assert.Contains(Encoding.UTF8.WebName, content.Headers.ContentType!.CharSet);
+        Assert.Equal(MediaTypeNames.Application.Json, content.Headers.ContentType.MediaType);
+        Assert.Equal(expectedContentAsJson.Length, content.Headers.ContentLength);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithXmlBody_WhenCalled_ShouldStringHttpContent(IMethod method)
+    [Fact]
+    public void WithXmlBody_WhenCalled_ShouldStringHttpContent()
     {
         // Arrange
+        var method = MockCreate<IMethod>();
         var unsafeMethod = new UnsafeMethod(method);
-        var expectedContentAsXml = "<Message>Data</Message>";
+        const string expectedContentAsXml = "<Message>Data</Message>";
 
         // Act
         var unsafeMethodReturned = unsafeMethod.WithXmlBody(expectedContentAsXml);
 
         // Assert
-        unsafeMethodReturned.Should().BeSameAs(unsafeMethod);
-        var content = unsafeMethodReturned.HttpContent.Should().BeOfType<StringContent>().Subject;
+        Assert.Same(unsafeMethod, unsafeMethodReturned);
+        var content = Assert.IsType<StringContent>(unsafeMethodReturned.HttpContent);
         var contentAsXml = content.ReadAsStringAsync().Result;
-        contentAsXml.Should().Be(expectedContentAsXml);
-        content.Headers.ContentType!.CharSet.Should().Contain(Encoding.UTF8.WebName);
-        content.Headers.ContentType.MediaType.Should().Be(MediaTypeNames.Application.Xml);
-        content.Headers.ContentLength.Should().Be(expectedContentAsXml.Length);
+        Assert.Equal(expectedContentAsXml, contentAsXml);
+        Assert.Contains(Encoding.UTF8.WebName, content.Headers.ContentType!.CharSet);
+        Assert.Equal(MediaTypeNames.Application.Xml, content.Headers.ContentType.MediaType);
+        Assert.Equal(expectedContentAsXml.Length, content.Headers.ContentLength);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithXmlBody_WhenObjectToSerializeIsNull_ShouldThrowArgumentNullException(IMethod method)
+    [Fact]
+    public void WithXmlBody_WhenObjectToSerializeIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
         object content = null!;
+        var method = MockCreate<IMethod>();
         var unsafeMethod = new UnsafeMethod(method);
 
         // Act
-        Action action = () => unsafeMethod.WithXmlBody(content);
+        void Action()
+            => unsafeMethod.WithXmlBody(content);
 
         // Assert
-        action.Should().ThrowExactly<ArgumentNullException>();
+        Assert.Throws<ArgumentNullException>(Action);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithXmlBody_WhenObjectToSerializeIsNotNull_ShouldSetObjectContent(IMethod method)
+    [Fact]
+    public void WithXmlBody_WhenObjectToSerializeIsNotNull_ShouldSetObjectContent()
     {
         // Arrange
+        var method = MockCreate<IMethod>();
         var unsafeMethod = new UnsafeMethod(method);
         var expectedPayload = new PublicDummyClass
         {
@@ -246,101 +247,102 @@ public sealed class UnsafeMethodTests
         var unsafeMethodReturned = unsafeMethod.WithXmlBody(expectedPayload);
 
         // Assert
-        unsafeMethodReturned.Should().BeSameAs(unsafeMethod);
-        var content = unsafeMethodReturned.HttpContent.Should().BeOfType<StringContent>().Subject;
+        Assert.Same(unsafeMethod, unsafeMethodReturned);
+        var content = Assert.IsType<StringContent>(unsafeMethodReturned.HttpContent);
         var contentAsXml = content.ReadAsStringAsync().Result;
         var contentPayload = DeserializeXml<PublicDummyClass>(contentAsXml);
-        contentPayload.Should().BeEquivalentTo(expectedPayload);
-        content.Headers.ContentType!.CharSet.Should().Contain(Encoding.UTF8.WebName);
-        content.Headers.ContentType.MediaType.Should().Be(MediaTypeNames.Application.Xml);
+        Assert.Equivalent(expectedPayload, contentPayload);
+        Assert.Contains(Encoding.UTF8.WebName, content.Headers.ContentType!.CharSet);
+        Assert.Equal(MediaTypeNames.Application.Xml, content.Headers.ContentType.MediaType);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithXmlBody_WhenStreamIsNull_ShouldThrowArgumentNullException(IMethod method)
+    [Fact]
+    public void WithXmlBody_WhenStreamIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
+        var method = MockCreate<IMethod>();
         var unsafeMethod = new UnsafeMethod(method);
         Stream xmlStream = null!;
 
         // Act
-        Action action = () => unsafeMethod.WithXmlBody(xmlStream);
+        void Action()
+            => unsafeMethod.WithXmlBody(xmlStream);
 
         // Assert
-        action.Should().ThrowExactly<ArgumentNullException>();
+        Assert.Throws<ArgumentNullException>(Action);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithXmlBody_WhenStreamIsNotNull_ShouldSetStreamContent(IMethod method)
+    [Fact]
+    public void WithXmlBody_WhenStreamIsNotNull_ShouldSetStreamContent()
     {
         // Arrange
+        var method = MockCreate<IMethod>();
         var unsafeMethod = new UnsafeMethod(method);
-        var expectedContentAsXml = "<Message>Data</Message>";
+        const string expectedContentAsXml = "<Message>Data</Message>";
         using var xmlStream = new MemoryStream(Encoding.UTF8.GetBytes(expectedContentAsXml));
 
         // Act
         var unsafeMethodReturned = unsafeMethod.WithXmlBody(xmlStream);
 
         // Assert
-        unsafeMethodReturned.Should().BeSameAs(unsafeMethod);
-        var content = unsafeMethodReturned.HttpContent.Should().BeOfType<StreamContent>().Subject;
+        Assert.Same(unsafeMethod, unsafeMethodReturned);
+        var content = Assert.IsType<StreamContent>(unsafeMethodReturned.HttpContent);
         var contentAsXml = content.ReadAsStringAsync().Result;
-        contentAsXml.Should().Be(expectedContentAsXml);
-        content.Headers.ContentType!.CharSet.Should().Contain(Encoding.UTF8.WebName);
-        content.Headers.ContentType.MediaType.Should().Be(MediaTypeNames.Application.Xml);
-        content.Headers.ContentLength.Should().Be(expectedContentAsXml.Length);
+        Assert.Equal(expectedContentAsXml, contentAsXml);
+        Assert.Contains(Encoding.UTF8.WebName, content.Headers.ContentType!.CharSet);
+        Assert.Equal(MediaTypeNames.Application.Xml, content.Headers.ContentType.MediaType);
+        Assert.Equal(expectedContentAsXml.Length, content.Headers.ContentLength);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithBody_WhenContentAndMediaTypeAreProvided_ShouldSetStringContent(IMethod method)
+    [Fact]
+    public void WithBody_WhenContentAndMediaTypeAreProvided_ShouldSetStringContent()
     {
         // Arrange
+        var method = MockCreate<IMethod>();
         var unsafeMethod = new UnsafeMethod(method);
-        var expectedContent = "Data";
-        var expectedMediaType = MediaTypeNames.Text.Plain;
+        const string expectedContent = "Data";
+        const string expectedMediaType = MediaTypeNames.Text.Plain;
 
         // Act
         var unsafeMethodReturned = unsafeMethod.WithBody(expectedContent, expectedMediaType);
 
         // Assert
-        unsafeMethodReturned.Should().BeSameAs(unsafeMethod);
-        var content = unsafeMethodReturned.HttpContent.Should().BeOfType<StringContent>().Subject;
+        Assert.Same(unsafeMethod, unsafeMethodReturned);
+        var content = Assert.IsType<StringContent>(unsafeMethodReturned.HttpContent);
         var contentAsString = content.ReadAsStringAsync().Result;
-        contentAsString.Should().Be(expectedContent);
-        content.Headers.ContentType!.CharSet.Should().Contain(Encoding.UTF8.WebName);
-        content.Headers.ContentType.MediaType.Should().Be(expectedMediaType);
-        content.Headers.ContentLength.Should().Be(expectedContent.Length);
+        Assert.Equal(expectedContent, contentAsString);
+        Assert.Contains(Encoding.UTF8.WebName, content.Headers.ContentType!.CharSet);
+        Assert.Equal(expectedMediaType, content.Headers.ContentType.MediaType);
+        Assert.Equal(expectedContent.Length, content.Headers.ContentLength);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithBody_WhenContentAndEncodingAndMediaTypeAreProvided_ShouldSetStringContent(IMethod method)
+    [Fact]
+    public void WithBody_WhenContentAndEncodingAndMediaTypeAreProvided_ShouldSetStringContent()
     {
         // Arrange
+        var method = MockCreate<IMethod>();
         var unsafeMethod = new UnsafeMethod(method);
-        var expectedContent = "Data";
+        const string expectedContent = "Data";
         var expectedEncoding = Encoding.Unicode;
-        var expectedMediaType = MediaTypeNames.Text.Plain;
+        const string expectedMediaType = MediaTypeNames.Text.Plain;
 
         // Act
         var unsafeMethodReturned = unsafeMethod.WithBody(expectedContent, expectedEncoding, expectedMediaType);
 
         // Assert
-        unsafeMethodReturned.Should().BeSameAs(unsafeMethod);
-        var content = unsafeMethodReturned.HttpContent.Should().BeOfType<StringContent>().Subject;
+        Assert.Same(unsafeMethod, unsafeMethodReturned);
+        var content = Assert.IsType<StringContent>(unsafeMethodReturned.HttpContent);
         var contentAsString = content.ReadAsStringAsync().Result;
-        contentAsString.Should().Be(expectedContent);
-        content.Headers.ContentType!.CharSet.Should().Contain(expectedEncoding.WebName);
-        content.Headers.ContentType.MediaType.Should().Be(expectedMediaType);
+        Assert.Equal(expectedContent, contentAsString);
+        Assert.Contains(expectedEncoding.WebName, content.Headers.ContentType!.CharSet);
+        Assert.Equal(expectedMediaType, content.Headers.ContentType.MediaType);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public async Task SendAsync_WhenCalled_ShouldIncludeHttpContentI(UnsafeMethod unsafeMethod)
+    [Fact]
+    public async Task SendAsync_WhenCalled_ShouldIncludeHttpContentI()
     {
         // Arrange 
+        var unsafeMethod = MockCreate<UnsafeMethod>();
         using var httpContent = new StringContent("Data", new MediaTypeHeaderValue(MediaTypeNames.Text.Plain));
 
         // Act
@@ -349,8 +351,8 @@ public sealed class UnsafeMethodTests
             .SendAsync();
 
         // Assert
-        response.Should().NotBeNull();
-        response!.RequestMessage!.Content.Should().BeSameAs(httpContent);
+        Assert.NotNull(response);
+        Assert.Same(httpContent, response!.RequestMessage!.Content);
     }
 
     private static TResult? DeserializeXml<TResult>(string xml)

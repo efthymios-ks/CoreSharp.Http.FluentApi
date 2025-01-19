@@ -1,77 +1,79 @@
-﻿using AutoFixture.NUnit3;
-using CoreSharp.Http.FluentApi.Steps.Interfaces.Methods.SafeMethods;
+﻿using CoreSharp.Http.FluentApi.Steps.Interfaces.Methods.SafeMethods;
 using CoreSharp.Http.FluentApi.Steps.Methods.SafeMethods;
-using FluentAssertions;
-using NUnit.Framework;
 using System.Text;
-using Tests.Internal.Attributes;
-using Tests.Internal.HttpmessageHandlers;
+using Tests.Common.Mocks;
 
-namespace Tests.Steps.SafeMethods;
+namespace CoreSharp.Http.FluentApi.Tests.Steps.SafeMethods;
 
-[TestFixture]
-public sealed class SafeMethodWithResultAsBytesTests
+public sealed class SafeMethodWithResultAsBytesTests : ProjectTestsBase
 {
-    [Test]
-    [AutoNSubstituteData]
-    public void Constructor_WhenCalled_ShouldNotThrow(ISafeMethod safeMethod)
+    [Fact]
+    public void Constructor_WhenCalled_ShouldNotThrow()
     {
+        // Arrange
+        var safeMethod = MockCreate<ISafeMethod>();
+
         // Act
-        Action action = () => _ = new SafeMethodWithResultAsBytes(safeMethod);
+        void Action()
+            => _ = new SafeMethodWithResultAsBytes(safeMethod);
 
         // Assert
-        action.Should().NotThrow();
+        var exception = Record.Exception(Action);
+        Assert.Null(exception);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithCache_WhenCalled_ShouldReturnSafeMethodWithResultAsBytesAndCache(ISafeMethod safeMethod)
+    [Fact]
+    public void WithCache_WhenCalled_ShouldReturnSafeMethodWithResultAsBytesAndCache()
     {
         // Arrange 
+        var safeMethod = MockCreate<ISafeMethod>();
         var safeMethodWithResultAsBytes = new SafeMethodWithResultAsBytes(safeMethod);
-        var cacheDuration = TimeSpan.FromSeconds(1);
+        const int cacheDurationSeconds = 1;
+        var cacheDuration = TimeSpan.FromSeconds(cacheDurationSeconds);
 
         // Act
         var result = safeMethodWithResultAsBytes.WithCache(cacheDuration);
 
         // Assert
-        result.Should().BeOfType<SafeMethodWithResultAsBytesAndCache>();
-        result.CacheDuration.Should().Be(cacheDuration);
+        Assert.IsType<SafeMethodWithResultAsBytesAndCache>(result);
+        Assert.Equal(cacheDuration, result.CacheDuration);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public async Task SendAsync_WhenHttpResponseIsNull_ShouldReturnEmptyArray(
-        [Frozen] MockHttpMessageHandler mockHttpMessageHandler,
-        ISafeMethod safeMethod)
+    [Fact]
+    public async Task SendAsync_WhenHttpResponseIsNull_ShouldReturnEmptyArray()
     {
         // Arrange
-        mockHttpMessageHandler.SetResponseToNull = true;
+        var mockHttpMessageHandler = MockFreeze<MockHttpMessageHandler>();
+        mockHttpMessageHandler.HttpResponseMessageFactory = () => null!;
+        var safeMethod = MockCreate<ISafeMethod>();
         var safeMethodWithResultAsBytes = new SafeMethodWithResultAsBytes(safeMethod);
 
         // Act
         var result = await safeMethodWithResultAsBytes.SendAsync();
 
         // Assert
-        result.Should().NotBeNull();
-        result.Should().BeEmpty();
+        Assert.NotNull(result);
+        Assert.Empty(result);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public async Task SendAsync_WhenCalled_ShouldReturnByteArray(
-        [Frozen] MockHttpMessageHandler mockHttpMessageHandler,
-        ISafeMethod safeMethod)
+    [Fact]
+    public async Task SendAsync_WhenCalled_ShouldReturnByteArray()
     {
         // Arrange
+        var mockHttpMessageHandler = MockFreeze<MockHttpMessageHandler>();
+        var safeMethod = MockCreate<ISafeMethod>();
         var safeMethodWithResultAsBytes = new SafeMethodWithResultAsBytes(safeMethod);
-        mockHttpMessageHandler.ResponseContent = "Dummy data";
-        var expectedResult = Encoding.UTF8.GetBytes(mockHttpMessageHandler.ResponseContent);
+        mockHttpMessageHandler.HttpResponseMessageFactory = () => new()
+        {
+            Content = new StringContent("Dummy data")
+        };
+
+        var expectedResult = Encoding.UTF8.GetBytes("Dummy data");
 
         // Act
         var result = await safeMethodWithResultAsBytes.SendAsync();
 
         // Assert
-        result.Should().BeEquivalentTo(expectedResult);
+        Assert.Equivalent(expectedResult, result);
     }
 }

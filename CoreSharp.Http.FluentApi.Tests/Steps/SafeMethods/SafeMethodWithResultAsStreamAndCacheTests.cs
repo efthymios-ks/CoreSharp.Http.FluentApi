@@ -1,56 +1,52 @@
-﻿using AutoFixture.NUnit3;
-using CoreSharp.Http.FluentApi.Services;
+﻿using CoreSharp.Http.FluentApi.Services;
 using CoreSharp.Http.FluentApi.Services.Interfaces;
 using CoreSharp.Http.FluentApi.Steps.Interfaces.Methods.SafeMethods;
 using CoreSharp.Http.FluentApi.Steps.Methods.SafeMethods;
-using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
-using NSubstitute;
 using NSubstitute.ReceivedExtensions;
-using NUnit.Framework;
 using System.Text;
-using Tests.Internal.Attributes;
-using Tests.Internal.HttpmessageHandlers;
+using Tests.Common.Mocks;
 
-namespace Tests.Steps.SafeMethods;
+namespace CoreSharp.Http.FluentApi.Tests.Steps.SafeMethods;
 
-[TestFixture]
-public sealed class SafeMethodWithResultAsStreamAndCacheTests
+public sealed class SafeMethodWithResultAsStreamAndCacheTests : ProjectTestsBase
 {
-    [Test]
-    [AutoNSubstituteData]
-    public void Constructor_WhenCalled_ShouldSetProperties(ISafeMethodWithResultAsStream safeMethodWithResultAsStream)
+    [Fact]
+    public void Constructor_WhenCalled_ShouldSetProperties()
     {
         // Arrange
-        var duration = TimeSpan.FromMinutes(1);
+        const int durationMinutes = 1;
+        var safeMethodWithResultAsStream = MockCreate<ISafeMethodWithResultAsStream>();
+        var duration = TimeSpan.FromMinutes(durationMinutes);
 
-        // Arrange
+        // Act
         var safeMethodWithResultAsStreamAndCache = new SafeMethodWithResultAsStreamAndCache(safeMethodWithResultAsStream, duration);
 
         // Assert
         var safeMethodWithResultAsStreamAndCacheAsInterface = (ISafeMethodWithResultAsStreamAndCache)safeMethodWithResultAsStreamAndCache;
-        safeMethodWithResultAsStreamAndCacheAsInterface.CacheDuration.Should().Be(duration);
+        Assert.Equal(duration, safeMethodWithResultAsStreamAndCacheAsInterface.CacheDuration);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithCacheInvalidation_WhenFactoryIsNull_ShouldThrowArgumentNullException(SafeMethodWithResultAsStreamAndCache safeMethodWithResultAsStreamAndCache)
+    [Fact]
+    public void WithCacheInvalidation_WhenFactoryIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
+        var safeMethodWithResultAsStreamAndCache = MockCreate<SafeMethodWithResultAsStreamAndCache>();
         Func<bool> cacheInvalidationFactory = null!;
 
         // Act
-        Action action = () => safeMethodWithResultAsStreamAndCache.WithCacheInvalidation(cacheInvalidationFactory);
+        void Action()
+            => safeMethodWithResultAsStreamAndCache.WithCacheInvalidation(cacheInvalidationFactory);
 
         // Assert
-        action.Should().Throw<ArgumentNullException>();
+        Assert.Throws<ArgumentNullException>(Action);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public async Task WithCacheInvalidation_WhenFactoryIsNotNull_ShouldSetCacheInvalidationFactory(SafeMethodWithResultAsStreamAndCache safeMethodWithResultAsStreamAndCache)
+    [Fact]
+    public async Task WithCacheInvalidation_WhenFactoryIsNotNull_ShouldSetCacheInvalidationFactory()
     {
         // Arrange
+        var safeMethodWithResultAsStreamAndCache = MockCreate<SafeMethodWithResultAsStreamAndCache>();
         var cacheInvalidationFactoryCalledCount = 0;
         bool CacheInvalidationFactory()
         {
@@ -64,30 +60,31 @@ public sealed class SafeMethodWithResultAsStreamAndCacheTests
         var shouldInvalidateCache = await safeMethodWithResultAsStreamAndCacheAsInterface.CacheInvalidationFactory();
 
         // Assert
-        result.Should().BeSameAs(safeMethodWithResultAsStreamAndCache);
-        cacheInvalidationFactoryCalledCount.Should().Be(1);
-        shouldInvalidateCache.Should().BeTrue();
+        Assert.Same(safeMethodWithResultAsStreamAndCache, result);
+        Assert.Equal(1, cacheInvalidationFactoryCalledCount);
+        Assert.True(shouldInvalidateCache);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithCacheInvalidation_WhenTaskFactoryIsNull_ShouldThrowArgumentNullException(SafeMethodWithResultAsStreamAndCache safeMethodWithResultAsStreamAndCache)
+    [Fact]
+    public void WithCacheInvalidation_WhenTaskFactoryIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
+        var safeMethodWithResultAsStreamAndCache = MockCreate<SafeMethodWithResultAsStreamAndCache>();
         Func<Task<bool>> cacheInvalidationFactory = null!;
 
         // Act
-        Action action = () => safeMethodWithResultAsStreamAndCache.WithCacheInvalidation(cacheInvalidationFactory);
+        void Action()
+            => safeMethodWithResultAsStreamAndCache.WithCacheInvalidation(cacheInvalidationFactory);
 
         // Assert
-        action.Should().Throw<ArgumentNullException>();
+        Assert.Throws<ArgumentNullException>(Action);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public async Task WithCacheInvalidation_WhenTaskFactoryIsNotNull_ShouldSetCacheInvalidationFactory(SafeMethodWithResultAsStreamAndCache safeMethodWithResultAsStreamAndCache)
+    [Fact]
+    public async Task WithCacheInvalidation_WhenTaskFactoryIsNotNull_ShouldSetCacheInvalidationFactory()
     {
         // Arrange
+        var safeMethodWithResultAsStreamAndCache = MockCreate<SafeMethodWithResultAsStreamAndCache>();
         var cacheInvalidationFactoryCalledCount = 0;
         Task<bool> CacheInvalidationFactory()
         {
@@ -101,19 +98,18 @@ public sealed class SafeMethodWithResultAsStreamAndCacheTests
         var shouldInvalidateCache = await safeMethodWithResultAsStreamAndCacheAsInterface.CacheInvalidationFactory();
 
         // Assert
-        result.Should().BeSameAs(safeMethodWithResultAsStreamAndCache);
-        cacheInvalidationFactoryCalledCount.Should().Be(1);
-        shouldInvalidateCache.Should().BeTrue();
+        Assert.Same(safeMethodWithResultAsStreamAndCache, result);
+        Assert.Equal(1, cacheInvalidationFactoryCalledCount);
+        Assert.True(shouldInvalidateCache);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public async Task SendAsync_WhenResultIsNotCached_ShouldRequestCacheAndReturn(
-        [Frozen] IMemoryCache memoryCache,
-        [Frozen] MockHttpMessageHandler mockHttpMessageHandler,
-        ISafeMethodWithResultAsStream safeMethodWithResultAsStream)
+    [Fact]
+    public async Task SendAsync_WhenResultIsNotCached_ShouldRequestCacheAndReturn()
     {
         // Arrange
+        var memoryCache = MockFreeze<IMemoryCache>();
+        var mockHttpMessageHandler = MockFreeze<MockHttpMessageHandler>();
+        var safeMethodWithResultAsStream = MockCreate<ISafeMethodWithResultAsStream>();
         ICacheStorage cacheStorage = new CacheStorage(memoryCache);
         var safeMethodWithResultAsStreamAndCache = new SafeMethodWithResultAsStreamAndCache(safeMethodWithResultAsStream, TimeSpan.FromMinutes(1));
 
@@ -128,20 +124,23 @@ public sealed class SafeMethodWithResultAsStreamAndCacheTests
             .ReturnsForAnyArgs(false);
 
         var expectedResult = Encoding.UTF8.GetBytes("Data");
-        using var cacheEntry = Substitute.For<ICacheEntry>();
+        using var cacheEntry = MockCreate<ICacheEntry>();
         cacheEntry.Value = expectedResult;
         memoryCache
             .CreateEntry(default!)
             .ReturnsForAnyArgs(cacheEntry);
 
-        mockHttpMessageHandler.ResponseContent = Encoding.UTF8.GetString(expectedResult);
+        mockHttpMessageHandler.HttpResponseMessageFactory = () => new()
+        {
+            Content = new StringContent(Encoding.UTF8.GetString(expectedResult))
+        };
 
         // Act
         using var resultAsStream = await safeMethodWithResultAsStreamAndCache.SendAsync();
 
         // Assert 
         var resultAsBytes = await GetBytesAsync(resultAsStream);
-        resultAsBytes.Should().BeEquivalentTo(expectedResult);
+        Assert.Equivalent(expectedResult, resultAsBytes);
         memoryCache
             .ReceivedWithAnyArgs(1)
             .TryGetValue<byte[]>(default!, out _);
@@ -150,13 +149,12 @@ public sealed class SafeMethodWithResultAsStreamAndCacheTests
             .Set<byte[]>(default!, default!, default(TimeSpan));
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public async Task SendAsync_WhenResultIsCached_ShouldReturnCachedResult(
-        [Frozen] IMemoryCache memoryCache,
-        ISafeMethodWithResultAsStream safeMethodWithResultAsStream)
+    [Fact]
+    public async Task SendAsync_WhenResultIsCached_ShouldReturnCachedResult()
     {
         // Arrange
+        var memoryCache = MockFreeze<IMemoryCache>();
+        var safeMethodWithResultAsStream = MockCreate<ISafeMethodWithResultAsStream>();
         ICacheStorage cacheStorage = new CacheStorage(memoryCache);
         var safeMethodWithResultAsStreamAndCache = new SafeMethodWithResultAsStreamAndCache(safeMethodWithResultAsStream, TimeSpan.FromMinutes(1));
 
@@ -180,7 +178,7 @@ public sealed class SafeMethodWithResultAsStreamAndCacheTests
 
         // Assert
         var resultAsBytes = await GetBytesAsync(resultAsStream);
-        resultAsBytes.Should().BeEquivalentTo(expectedResult);
+        Assert.Equivalent(expectedResult, resultAsBytes);
         memoryCache
             .ReceivedWithAnyArgs(1)
             .TryGetValue<byte[]>(default!, out _);

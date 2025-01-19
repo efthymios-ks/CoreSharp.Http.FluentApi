@@ -1,15 +1,12 @@
 ﻿using CoreSharp.Http.FluentApi.Exceptions;
-using FluentAssertions;
-using NUnit.Framework;
 using System.Net;
 using System.Reflection;
 
-namespace Tests.Exceptions;
+namespace CoreSharp.Http.FluentApi.Tests.Exceptions;
 
-[TestFixture]
 public sealed class HttpOperationExceptionTests
 {
-    [Test]
+    [Fact]
     public void Constructor_WhenCalled_ShouldSetPropertiesCorrectly()
     {
         // Arrange
@@ -28,17 +25,17 @@ public sealed class HttpOperationExceptionTests
             innerException);
 
         // Assert
-        exception.Should().NotBeNull();
-        exception.RequestUrl.Should().Be(requestUrl);
-        exception.RequestMethod.Should().Be(requestMethod.Method);
-        exception.ResponseStatusCode.Should().Be(responseStatusCode);
-        exception.ResponseContent.Should().Be(responseContent);
-        exception.Message.Should().Be(responseContent);
-        exception.LogEntry.Should().Be($"{requestMethod.Method} > {requestUrl} > {(int)responseStatusCode} {responseStatusCode}");
-        exception.InnerException.Should().BeSameAs(innerException);
+        Assert.NotNull(exception);
+        Assert.Equal(requestUrl, exception.RequestUrl);
+        Assert.Equal(requestMethod.Method, exception.RequestMethod);
+        Assert.Equal(responseStatusCode, exception.ResponseStatusCode);
+        Assert.Equal(responseContent, exception.ResponseContent);
+        Assert.Equal(responseContent, exception.Message);
+        Assert.Equal($"{requestMethod.Method} > {requestUrl} > {(int)responseStatusCode} {responseStatusCode}", exception.LogEntry);
+        Assert.Same(innerException, exception.InnerException);
     }
 
-    [Test]
+    [Fact]
     public void DebuggerDisplay_WhenCalled_ShouldReturnLogEntry()
     {
         // Act
@@ -54,11 +51,11 @@ public sealed class HttpOperationExceptionTests
             .GetProperty("DebuggerDisplay", BindingFlags.Instance | BindingFlags.NonPublic)
             ?.GetValue(exception);
 
-        // Arrange
-        debuggerDisplay.Should().Be(exception.LogEntry);
+        // Assert
+        Assert.Equal(exception.LogEntry, debuggerDisplay);
     }
 
-    [Test]
+    [Fact]
     public void ToString_WhenCalled_ShouldReturnLogEntry()
     {
         // Act
@@ -71,24 +68,25 @@ public sealed class HttpOperationExceptionTests
         // Act
         var toStringValue = exception.ToString();
 
-        // Arrange
-        toStringValue.Should().Be(exception.LogEntry);
+        // Assert
+        Assert.Equal(exception.LogEntry, toStringValue);
     }
 
-    [Test]
+    [Fact]
     public async Task CreateAsync_WhenHttpResponseMessageIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
         using HttpResponseMessage httpResponse = null!;
 
         // Act
-        Func<Task> action = () => HttpOperationException.CreateAsync(httpResponse);
+        async Task Action()
+            => await HttpOperationException.CreateAsync(httpResponse);
 
         // Assert
-        await action.Should().ThrowAsync<ArgumentNullException>();
+        await Assert.ThrowsAsync<ArgumentNullException>(Action);
     }
 
-    [Test]
+    [Fact]
     public async Task CreateAsync_WhenHttpResponseMessageIsNotNull_ShouldCreateInstanceFromHttpResponseMessage()
     {
         // Arrange 
@@ -109,12 +107,12 @@ public sealed class HttpOperationExceptionTests
         var exception = await HttpOperationException.CreateAsync(response);
 
         // Assert
-        exception.Should().NotBeNull();
-        exception.RequestUrl.Should().Be(requestUrl);
-        exception.RequestMethod.Should().Be(requestMethod.Method);
-        exception.ResponseStatusCode.Should().Be(responseStatusCode);
-        exception.ResponseContent.Should().Be(responseContent);
-        exception.Message.Should().Be(responseContent);
-        exception.LogEntry.Should().Be($"{requestMethod.Method} > {requestUrl} > {(int)responseStatusCode} {responseStatusCode}");
+        Assert.NotNull(exception);
+        Assert.Equal(requestUrl, exception.RequestUrl);
+        Assert.Equal(requestMethod.Method, exception.RequestMethod);
+        Assert.Equal(responseStatusCode, exception.ResponseStatusCode);
+        Assert.Equal(responseContent, exception.ResponseContent);
+        Assert.Equal(responseContent, exception.Message);
+        Assert.Equal($"{requestMethod.Method} > {requestUrl} > {(int)responseStatusCode} {responseStatusCode}", exception.LogEntry);
     }
 }

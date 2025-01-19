@@ -1,28 +1,22 @@
-﻿using AutoFixture.NUnit3;
-using CoreSharp.Http.FluentApi.Services;
+﻿using CoreSharp.Http.FluentApi.Services;
 using CoreSharp.Http.FluentApi.Steps.Interfaces.Methods;
-using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
-using NSubstitute;
-using NUnit.Framework;
-using Tests.Internal.Attributes;
 
-namespace Tests.Services;
+namespace CoreSharp.Http.FluentApi.Tests.Services;
 
-[TestFixture]
-public sealed class CacheStorageTests
+public sealed class CacheStorageTests : ProjectTestsBase
 {
-    [Test]
-    public void Instance_WhenCalled_ShouldReturnNotNulLValue()
+    [Fact]
+    public void Instance_WhenCalled_ShouldReturnNotNullValue()
     {
         // Act
         var cacheStorage = CacheStorage.Instance;
 
         // Assert
-        cacheStorage.Should().NotBeNull();
+        Assert.NotNull(cacheStorage);
     }
 
-    [Test]
+    [Fact]
     public void Instance_WhenCalled_ShouldReturnSameInstance()
     {
         // Act
@@ -30,30 +24,31 @@ public sealed class CacheStorageTests
         var cacheStorage2 = CacheStorage.Instance;
 
         // Assert
-        cacheStorage1.Should().BeSameAs(cacheStorage2);
+        Assert.Same(cacheStorage1, cacheStorage2);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void GetCacheKey_WhenMethodIsNull_ShouldThrowArgumentNullException(CacheStorage cacheStorage)
+    [Fact]
+    public void GetCacheKey_WhenMethodIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange 
+        var cacheStorage = MockCreate<CacheStorage>();
+
         IMethod method = null!;
 
         // Act
-        Action action = () => cacheStorage.GetCacheKey<string>(method);
+        void Action()
+            => cacheStorage.GetCacheKey<string>(method);
 
         // Assert
-        action.Should().Throw<ArgumentNullException>();
+        Assert.Throws<ArgumentNullException>(Action);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void GetCacheKey_WhenHasQueryParameters_ShouldIncludeThemInKey(
-        IMethod method,
-        CacheStorage cacheStorage)
+    [Fact]
+    public void GetCacheKey_WhenHasQueryParameters_ShouldIncludeThemInKey()
     {
         // Arrange 
+        var cacheStorage = MockCreate<CacheStorage>();
+        var method = MockCreate<IMethod>();
         method.Endpoint!.QueryParameters["Key1"] = "Value1";
         method.Endpoint.QueryParameters["Key2"] = "Value2";
 
@@ -61,17 +56,16 @@ public sealed class CacheStorageTests
         var cacheKey = cacheStorage.GetCacheKey<string>(method);
 
         // Assert
-        cacheKey.Should().Contain("Key1=Value1");
-        cacheKey.Should().Contain("Key2=Value2");
+        Assert.Contains("Key1=Value1", cacheKey);
+        Assert.Contains("Key2=Value2", cacheKey);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void GetCacheKey_WhenHasHeaders_ShouldIncludeThemInKey(
-        IMethod method,
-        CacheStorage cacheStorage)
+    [Fact]
+    public void GetCacheKey_WhenHasHeaders_ShouldIncludeThemInKey()
     {
         // Arrange 
+        var cacheStorage = MockCreate<CacheStorage>();
+        var method = MockCreate<IMethod>();
         method.Endpoint!.Request!.Headers["Key1"] = "Value1";
         method.Endpoint.Request.Headers["Key2"] = "Value2";
 
@@ -79,17 +73,16 @@ public sealed class CacheStorageTests
         var cacheKey = cacheStorage.GetCacheKey<string>(method);
 
         // Assert
-        cacheKey.Should().Contain("Key1=Value1");
-        cacheKey.Should().Contain("Key2=Value2");
+        Assert.Contains("Key1=Value1", cacheKey);
+        Assert.Contains("Key2=Value2", cacheKey);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void GetCacheKey_WhenCalled_ShouldIncludeEndpointInKey(
-        IMethod method,
-        CacheStorage cacheStorage)
+    [Fact]
+    public void GetCacheKey_WhenCalled_ShouldIncludeEndpointInKey()
     {
         // Arrange 
+        var cacheStorage = MockCreate<CacheStorage>();
+        var method = MockCreate<IMethod>();
         const string endpoint = @"https://www.example.com/";
         method.Endpoint!.Endpoint = endpoint;
 
@@ -97,99 +90,96 @@ public sealed class CacheStorageTests
         var cacheKey = cacheStorage.GetCacheKey<string>(method);
 
         // Assert
-        cacheKey.Should().Contain(endpoint);
+        Assert.Contains(endpoint, cacheKey);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void GetCacheKey_WhenCalled_ShouldIncludeResponseTypeInKey(
-        IMethod method,
-        CacheStorage cacheStorage)
+    [Fact]
+    public void GetCacheKey_WhenCalled_ShouldIncludeResponseTypeInKey()
     {
+        // Arrange
+        var cacheStorage = MockCreate<CacheStorage>();
+        var method = MockCreate<IMethod>();
+
         // Act
         var cacheKey = cacheStorage.GetCacheKey<string>(method);
 
         // Assert
-        cacheKey.Should().Contain(typeof(string).FullName);
+        Assert.Contains(typeof(string).FullName!, cacheKey);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void GetOrAddAsync_WhenMethodIsNull_ShouldThrowArgumentNullException(CacheStorage cacheStorage)
+    [Fact]
+    public void GetOrAddAsync_WhenMethodIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
+        var cacheStorage = MockCreate<CacheStorage>();
         IMethod method = null!;
         var cacheDuration = TimeSpan.FromMinutes(1);
-        static Task<string> RequestFactory()
-            => Task.FromResult("Result");
-        static Task<bool> CacheInvalidationFactory()
-            => Task.FromResult(false);
+        static Task<string> RequestFactory() => Task.FromResult("Result");
+        static Task<bool> CacheInvalidationFactory() => Task.FromResult(false);
 
         // Act
-        Func<Task> action = () => cacheStorage.GetOrAddAsync(
+        Task Action() => cacheStorage.GetOrAddAsync(
             method,
             cacheDuration,
             RequestFactory,
-            CacheInvalidationFactory);
+            CacheInvalidationFactory
+        );
 
         // Assert
-        action.Should().ThrowExactlyAsync<ArgumentNullException>();
+        Assert.ThrowsAsync<ArgumentNullException>(Action);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void GetOrAddAsync_WhenCacheInvalidationFactoryIsNull_ShouldThrowArgumentNullException(
-        IMethod method,
-        CacheStorage cacheStorage)
+    [Fact]
+    public void GetOrAddAsync_WhenCacheInvalidationFactoryIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
+        var cacheStorage = MockCreate<CacheStorage>();
+        var method = MockCreate<IMethod>();
         var cacheDuration = TimeSpan.FromMinutes(1);
         Func<Task<bool>> cacheInvalidationFactory = null!;
-        static Task<string> RequestFactory()
-            => Task.FromResult("Result");
+        static Task<string> RequestFactory() => Task.FromResult("Result");
 
         // Act
-        Func<Task> action = () => cacheStorage.GetOrAddAsync(
+        Task Action() => cacheStorage.GetOrAddAsync(
             method,
             cacheDuration,
             RequestFactory,
-            cacheInvalidationFactory);
+            cacheInvalidationFactory
+        );
 
         // Assert
-        action.Should().ThrowExactlyAsync<ArgumentNullException>();
+        Assert.ThrowsAsync<ArgumentNullException>(Action);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void GetOrAddAsync_WhenRequestFactoryIsNull_ShouldThrowArgumentNullException(
-        IMethod method,
-        CacheStorage cacheStorage)
+    [Fact]
+    public void GetOrAddAsync_WhenRequestFactoryIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
+        var cacheStorage = MockCreate<CacheStorage>();
+        var method = MockCreate<IMethod>();
         var cacheDuration = TimeSpan.FromMinutes(1);
-        static Task<bool> CacheInvalidationFactory()
-            => Task.FromResult(false);
+        static Task<bool> CacheInvalidationFactory() => Task.FromResult(false);
         Func<Task<string>> requestFactory = null!;
 
         // Act
-        Func<Task> action = () => cacheStorage.GetOrAddAsync(
+        Task Action() => cacheStorage.GetOrAddAsync(
             method,
             cacheDuration,
             requestFactory,
-            CacheInvalidationFactory);
+            CacheInvalidationFactory
+        );
 
         // Assert
-        action.Should().ThrowExactlyAsync<ArgumentNullException>();
+        Assert.ThrowsAsync<ArgumentNullException>(Action);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void GetOrAddAsync_WhenCacheDurationIsZero_ShouldCallFactoryAndReturnResult(
-        IMethod method,
-        [Frozen] IMemoryCache memoryCache,
-        CacheStorage cacheStorage)
+    [Fact]
+    public void GetOrAddAsync_WhenCacheDurationIsZero_ShouldCallFactoryAndReturnResult()
     {
         // Arrange
+        var memoryCache = MockFreeze<IMemoryCache>();
+        var cacheStorage = MockCreate<CacheStorage>();
+        var method = MockCreate<IMethod>();
         var cacheDuration = TimeSpan.Zero;
         const string expectedResult = "Result";
 
@@ -215,9 +205,9 @@ public sealed class CacheStorageTests
             CacheInvalidationFactory);
 
         // Assert
-        result.Result.Should().Be(expectedResult);
-        requestFactoryCallCount.Should().Be(1);
-        cacheInvalidationFactoryCallCount.Should().Be(0);
+        Assert.Equal(expectedResult, result.Result);
+        Assert.Equal(1, requestFactoryCallCount);
+        Assert.Equal(0, cacheInvalidationFactoryCallCount);
         memoryCache
             .DidNotReceiveWithAnyArgs()
             .TryGetValue<string>(default!, out var cachedResult);
@@ -226,14 +216,13 @@ public sealed class CacheStorageTests
             .Set<string>(default!, default!, default(TimeSpan));
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void GetOrAddAsync_WhenForceRequestIsTrue_ShouldCallFactoryAndCacheAndReturnResult(
-        IMethod method,
-        [Frozen] IMemoryCache memoryCache,
-        CacheStorage cacheStorage)
+    [Fact]
+    public void GetOrAddAsync_WhenForceRequestIsTrue_ShouldCallFactoryAndCacheAndReturnResult()
     {
         // Arrange
+        var memoryCache = MockFreeze<IMemoryCache>();
+        var cacheStorage = MockCreate<CacheStorage>();
+        var method = MockCreate<IMethod>();
         var cacheDuration = TimeSpan.FromMinutes(1);
         const string expectedResult = "Result";
 
@@ -259,9 +248,9 @@ public sealed class CacheStorageTests
             CacheInvalidationFactory);
 
         // Assert
-        result.Result.Should().Be(expectedResult);
-        requestFactoryCallCount.Should().Be(1);
-        cacheInvalidationFactoryCallCount.Should().Be(1);
+        Assert.Equal(expectedResult, result.Result);
+        Assert.Equal(1, requestFactoryCallCount);
+        Assert.Equal(1, cacheInvalidationFactoryCallCount);
         memoryCache
             .DidNotReceiveWithAnyArgs()
             .TryGetValue<string>(default!, out var cachedResult);
@@ -270,14 +259,13 @@ public sealed class CacheStorageTests
             .Set<string>(default!, default!, default(TimeSpan));
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void GetOrAddAsync_WhenCacheKeyExists_ShouldReturnCachedResult(
-        IMethod method,
-        [Frozen] IMemoryCache memoryCache,
-        CacheStorage cacheStorage)
+    [Fact]
+    public void GetOrAddAsync_WhenCacheKeyExists_ShouldReturnCachedResult()
     {
         // Arrange
+        var memoryCache = MockFreeze<IMemoryCache>();
+        var cacheStorage = MockCreate<CacheStorage>();
+        var method = MockCreate<IMethod>();
         var cacheDuration = TimeSpan.FromMinutes(1);
         const string newResult = "Result";
         const string cachedResult = "CachedResult";
@@ -312,9 +300,9 @@ public sealed class CacheStorageTests
             CacheInvalidationFactory);
 
         // Assert
-        result.Result.Should().Be(cachedResult);
-        requestFactoryCallCount.Should().Be(0);
-        cacheInvalidationFactoryCallCount.Should().Be(1);
+        Assert.Equal(cachedResult, result.Result);
+        Assert.Equal(0, requestFactoryCallCount);
+        Assert.Equal(1, cacheInvalidationFactoryCallCount);
         memoryCache
             .ReceivedWithAnyArgs(1)
             .TryGetValue<string>(default!, out _);
@@ -323,14 +311,13 @@ public sealed class CacheStorageTests
             .Set<string>(default!, default!, default(TimeSpan));
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void GetOrAddAsync_WhenCacheKeyDoesNotExist_ShouldCallFactoryAndCacheAndReturnResult(
-        IMethod method,
-        [Frozen] IMemoryCache memoryCache,
-        CacheStorage cacheStorage)
+    [Fact]
+    public void GetOrAddAsync_WhenCacheKeyDoesNotExist_ShouldCallFactoryAndCacheAndReturnResult()
     {
         // Arrange
+        var memoryCache = MockFreeze<IMemoryCache>();
+        var cacheStorage = MockCreate<CacheStorage>();
+        var method = MockCreate<IMethod>();
         var cacheDuration = TimeSpan.FromMinutes(1);
         const string expectedResult = "Result";
 
@@ -356,9 +343,9 @@ public sealed class CacheStorageTests
             CacheInvalidationFactory);
 
         // Assert
-        result.Result.Should().Be(expectedResult);
-        requestFactoryCallCount.Should().Be(1);
-        cacheInvalidationFactoryCallCount.Should().Be(1);
+        Assert.Equal(expectedResult, result.Result);
+        Assert.Equal(1, requestFactoryCallCount);
+        Assert.Equal(1, cacheInvalidationFactoryCallCount);
         memoryCache
             .ReceivedWithAnyArgs(1)
             .TryGetValue<string>(default!, out var cachedResult);

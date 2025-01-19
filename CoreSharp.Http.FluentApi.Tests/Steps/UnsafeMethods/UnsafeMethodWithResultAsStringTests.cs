@@ -1,58 +1,59 @@
-﻿using AutoFixture.NUnit3;
-using CoreSharp.Http.FluentApi.Steps.Interfaces.Methods.UnsafeMethods;
+﻿using CoreSharp.Http.FluentApi.Steps.Interfaces.Methods.UnsafeMethods;
 using CoreSharp.Http.FluentApi.Steps.Methods.UnsafeMethods;
-using FluentAssertions;
-using NUnit.Framework;
-using Tests.Internal.Attributes;
-using Tests.Internal.HttpmessageHandlers;
+using Tests.Common.Mocks;
 
-namespace Tests.Steps.UnsafeMethods;
+namespace CoreSharp.Http.FluentApi.Tests.Steps.UnsafeMethods;
 
-[TestFixture]
-public sealed class UnsafeMethodWithResultAsStringTests
+public sealed class UnsafeMethodWithResultAsStringTests : ProjectTestsBase
 {
-    [Test]
-    [AutoNSubstituteData]
-    public void Constructor_WhenCalled_ShouldNotThrow(IUnsafeMethod unsafeMethod)
+    [Fact]
+    public void Constructor_WhenCalled_ShouldNotThrow()
     {
-        // Act
-        Action action = () => _ = new UnsafeMethodWithResultAsString(unsafeMethod);
+        var unsafeMethod = MockCreate<IUnsafeMethod>();
+
+        void Action()
+            => _ = new UnsafeMethodWithResultAsString(unsafeMethod);
 
         // Assert
-        action.Should().NotThrow();
+        var exception = Record.Exception(Action);
+        Assert.Null(exception);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public async Task SendAsync_WhenHttpResponseIsNull_ShouldReturnNull(
-        [Frozen] MockHttpMessageHandler mockHttpMessageHandler,
-        IUnsafeMethod unsafeMethod)
+    [Fact]
+    public async Task SendAsync_WhenHttpResponseIsNull_ShouldReturnNull()
     {
+        var mockHttpMessageHandler = MockFreeze<MockHttpMessageHandler>();
+        var unsafeMethod = MockCreate<IUnsafeMethod>();
+
         // Arrange
-        mockHttpMessageHandler.SetResponseToNull = true;
+        mockHttpMessageHandler.HttpResponseMessageFactory = () => null!;
         var unsafeMethodWithResultAsString = new UnsafeMethodWithResultAsString(unsafeMethod);
 
         // Act
         var result = await unsafeMethodWithResultAsString.SendAsync();
 
         // Assert
-        result.Should().BeNull();
+        Assert.Null(result);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public async Task SendAsync_WhenCalled_ShouldReturnByteArray(
-        [Frozen] MockHttpMessageHandler mockHttpMessageHandler,
-        IUnsafeMethod unsafeMethod)
+    [Fact]
+    public async Task SendAsync_WhenCalled_ShouldReturnString()
     {
+        var mockHttpMessageHandler = MockFreeze<MockHttpMessageHandler>();
+        var unsafeMethod = MockCreate<IUnsafeMethod>();
+
         // Arrange
         var unsafeMethodWithResultAsString = new UnsafeMethodWithResultAsString(unsafeMethod);
-        mockHttpMessageHandler.ResponseContent = "Dummy data";
+        const string responseContent = "Dummy data";
+        mockHttpMessageHandler.HttpResponseMessageFactory = () => new()
+        {
+            Content = new StringContent(responseContent)
+        };
 
         // Act
         var result = await unsafeMethodWithResultAsString.SendAsync();
 
         // Assert
-        result.Should().BeEquivalentTo(mockHttpMessageHandler.ResponseContent);
+        Assert.Equivalent(responseContent, result);
     }
 }

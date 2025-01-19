@@ -2,17 +2,12 @@
 using CoreSharp.Http.FluentApi.Steps.Interfaces;
 using CoreSharp.Http.FluentApi.Steps.Methods.SafeMethods;
 using CoreSharp.Http.FluentApi.Steps.Methods.UnsafeMethods;
-using FluentAssertions;
-using NSubstitute;
-using NUnit.Framework;
-using Tests.Internal.Attributes;
 
-namespace Tests.Steps;
+namespace CoreSharp.Http.FluentApi.Tests.Steps;
 
-[TestFixture]
-public sealed class EndpointTests
+public sealed class EndpointTests : ProjectTestsBase
 {
-    [Test]
+    [Fact]
     public void Constructor_WhenRequestIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
@@ -20,45 +15,48 @@ public sealed class EndpointTests
         const string resourceName = "resourceName";
 
         // Act
-        Action action = () => _ = new Endpoint(request, resourceName);
+        void Action()
+            => _ = new Endpoint(request, resourceName);
 
         // Assert
-        action.Should().ThrowExactly<ArgumentNullException>();
+        Assert.Throws<ArgumentNullException>(Action);
     }
 
-    [Test]
+    [Fact]
     public void Constructor_WhenResourceNameIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
-        var request = Substitute.For<IRequest>();
+        var request = MockCreate<IRequest>();
         const string resourceName = null!;
 
         // Act
-        Action action = () => _ = new Endpoint(request, resourceName);
+        void Action()
+            => _ = new Endpoint(request, resourceName);
 
         // Assert
-        action.Should().ThrowExactly<ArgumentNullException>();
+        Assert.Throws<ArgumentNullException>(Action);
     }
 
-    [Test]
+    [Fact]
     public void Constructor_WhenResourceNameIsEmpty_ShouldThrowArgumentNullException()
     {
         // Arrange
-        var request = Substitute.For<IRequest>();
+        var request = MockCreate<IRequest>();
         const string resourceName = "";
 
         // Act
-        Action action = () => _ = new Endpoint(request, resourceName);
+        void Action()
+            => _ = new Endpoint(request, resourceName);
 
         // Assert
-        action.Should().ThrowExactly<ArgumentException>();
+        Assert.Throws<ArgumentException>(Action);
     }
 
-    [Test]
+    [Fact]
     public void Constructor_WhenCalled_ShouldSetProperties()
     {
         // Arrange
-        var request = Substitute.For<IRequest>();
+        var request = MockCreate<IRequest>();
         const string resourceName = "students";
 
         // Act
@@ -66,151 +64,154 @@ public sealed class EndpointTests
 
         // Assert
         var endpointInterface = (IEndpoint)endpoint;
-        endpointInterface.Request.Should().BeSameAs(request);
-        endpointInterface.Endpoint.Should().Be(resourceName);
-        endpointInterface.QueryParameters.Should().NotBeNull().And.BeEmpty();
+        Assert.Same(request, endpointInterface.Request);
+        Assert.Equal(resourceName, endpointInterface.Endpoint);
+        Assert.NotNull(endpointInterface.QueryParameters);
+        Assert.Empty(endpointInterface.QueryParameters);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithQuery_WhenDictionaryIsNull_ShouldThrowArgumentNullException(Endpoint endpoint)
+    [Fact]
+    public void WithQuery_WhenDictionaryIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
+        var endpoint = MockCreate<Endpoint>();
         IDictionary<string, object> parameters = null!;
 
         // Act 
-        Action action = () => endpoint.WithQuery(parameters);
+        void Action()
+            => endpoint.WithQuery(parameters);
 
         // Assert 
-        action.Should().ThrowExactly<ArgumentNullException>();
+        Assert.Throws<ArgumentNullException>(Action);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithQuery_WhenDictionaryIsNotNull_ShouldSetQueryStringFromDictionary(Endpoint endpoint)
+    [Fact]
+    public void WithQuery_WhenDictionaryIsNotNull_ShouldSetQueryStringFromDictionary()
     {
         // Arrange
-        IDictionary<string, object> parameters = new Dictionary<string, object>
-        {
-            { "key1", "value1" },
-            { "key2", "value2" }
-        };
+        var endpoint = MockCreate<Endpoint>();
+        var parameters = new Dictionary<string, object>
+                {
+                    { "key1", "value1" },
+                    { "key2", "value2" }
+                };
 
         // Act 
         var endpointReturned = endpoint.WithQuery(parameters);
 
         // Assert 
-        endpointReturned.Should().BeSameAs(endpoint);
+        Assert.Same(endpoint, endpointReturned);
         var endpointInterface = (IEndpoint)endpoint;
-        endpointInterface.QueryParameters.Should().BeEquivalentTo(parameters);
+        Assert.Equivalent(parameters, endpointInterface.QueryParameters);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithQuery_WhenGenericClassIsNull_ShouldThrowArgumentNullException(Endpoint endpoint)
+    [Fact]
+    public void WithQuery_WhenGenericClassIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
+        var endpoint = MockCreate<Endpoint>();
         object parameters = null!;
 
         // Act 
-        Action action = () => endpoint.WithQuery(parameters);
+        void Action()
+            => endpoint.WithQuery(parameters);
 
         // Assert 
-        action.Should().ThrowExactly<ArgumentNullException>();
+        Assert.Throws<ArgumentNullException>(Action);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithQuery_WhenGenericClassIsDictionary_ShouldSetQueryStringFromDictionary(Endpoint endpoint)
+    [Fact]
+    public void WithQuery_WhenGenericClassIsDictionary_ShouldSetQueryStringFromDictionary()
     {
         // Arrange
+        var endpoint = MockCreate<Endpoint>();
         var payload = new Dictionary<string, object>
-        {
-            { "key1", "value1" },
-            { "key2", "value2" }
-        };
+                {
+                    { "key1", "value1" },
+                    { "key2", "value2" }
+                };
 
         // Act 
         var endpointReturned = endpoint.WithQuery(payload);
 
         // Assert 
-        endpointReturned.Should().BeSameAs(endpoint);
+        Assert.Same(endpoint, endpointReturned);
         var endpointInterface = (IEndpoint)endpoint;
-        endpointInterface.QueryParameters.Should().BeEquivalentTo(payload);
+        Assert.Equivalent(payload, endpointInterface.QueryParameters);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithQuery_WhenGenericClassIsNotDictionary_ShouldSetQueryStringFromObjectProperties(Endpoint endpoint)
+    [Fact]
+    public void WithQuery_WhenGenericClassIsNotDictionary_ShouldSetQueryStringFromObjectProperties()
     {
         // Arrange
+        var endpoint = MockCreate<Endpoint>();
         var payload = new
         {
             Key1 = "Value1",
             Key2 = "Value2"
         };
         var expectedQueryParameters = new Dictionary<string, object>
-        {
-            { "Key1", "Value1" },
-            { "Key2", "Value2" }
-        };
+                {
+                    { "Key1", "Value1" },
+                    { "Key2", "Value2" }
+                };
 
         // Act 
         var endpointReturned = endpoint.WithQuery(payload);
 
         // Assert 
-        endpointReturned.Should().BeSameAs(endpoint);
+        Assert.Same(endpoint, endpointReturned);
         var endpointInterface = (IEndpoint)endpoint;
-        endpointInterface.QueryParameters.Should().BeEquivalentTo(expectedQueryParameters);
+        Assert.Equivalent(expectedQueryParameters, endpointInterface.QueryParameters);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithQuery_WhenValueIsNull_ShouldSetQueryStringWithEmptyString(Endpoint endpoint)
+    [Fact]
+    public void WithQuery_WhenValueIsNull_ShouldSetQueryStringWithEmptyString()
     {
         // Arrange
+        var endpoint = MockCreate<Endpoint>();
         const string key = "key";
         const string value = null!;
         var expectedQueryParameters = new Dictionary<string, object>
-        {
-            { key, string.Empty }
-        };
+                {
+                    { key, string.Empty }
+                };
 
         // Act 
         var endpointReturned = endpoint.WithQuery(key, value);
 
         // Assert 
-        endpointReturned.Should().BeSameAs(endpoint);
+        Assert.Same(endpoint, endpointReturned);
         var endpointInterface = (IEndpoint)endpoint;
-        endpointInterface.QueryParameters.Should().BeEquivalentTo(expectedQueryParameters);
+        Assert.Equivalent(expectedQueryParameters, endpointInterface.QueryParameters);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void WithQuery_WhenValueIsNotNull_ShouldSetQueryString(Endpoint endpoint)
+    [Fact]
+    public void WithQuery_WhenValueIsNotNull_ShouldSetQueryString()
     {
         // Arrange
+        var endpoint = MockCreate<Endpoint>();
         const string key = "key";
         const string value = "value";
         var expectedQueryParameters = new Dictionary<string, object>
-        {
-            { key, value }
-        };
+                {
+                    { key, value }
+                };
 
         // Act 
         var endpointReturned = endpoint.WithQuery(key, value);
 
         // Assert 
-        endpointReturned.Should().BeSameAs(endpoint);
+        Assert.Same(endpoint, endpointReturned);
         var endpointInterface = (IEndpoint)endpoint;
-        endpointInterface.QueryParameters.Should().BeEquivalentTo(expectedQueryParameters);
+        Assert.Equivalent(expectedQueryParameters, endpointInterface.QueryParameters);
     }
 
-    [Test]
+    [Fact]
     public void Get_WhenCalled_ShouldReturnSafeMethodWithResult()
     {
         // Arrange
-        var request = Substitute.For<IRequest>();
+        var request = MockCreate<IRequest>();
         const string resourceName = "students";
         var endpoint = new Endpoint(request, resourceName);
 
@@ -218,15 +219,15 @@ public sealed class EndpointTests
         var result = endpoint.Get();
 
         // Assert
-        result.Should().BeOfType<SafeMethodWithResult>();
-        result.HttpMethod.Should().Be(HttpMethod.Get);
+        Assert.IsType<SafeMethodWithResult>(result);
+        Assert.Equal(HttpMethod.Get, result.HttpMethod);
     }
 
-    [Test]
+    [Fact]
     public void Post_WhenCalled_ShouldReturnUnsafeMethodWithResult()
     {
         // Arrange
-        var request = Substitute.For<IRequest>();
+        var request = MockCreate<IRequest>();
         const string resourceName = "students";
         var endpoint = new Endpoint(request, resourceName);
 
@@ -234,15 +235,15 @@ public sealed class EndpointTests
         var result = endpoint.Post();
 
         // Assert
-        result.Should().BeOfType<UnsafeMethodWithResult>();
-        result.HttpMethod.Should().Be(HttpMethod.Post);
+        Assert.IsType<UnsafeMethodWithResult>(result);
+        Assert.Equal(HttpMethod.Post, result.HttpMethod);
     }
 
-    [Test]
+    [Fact]
     public void Put_WhenCalled_ShouldReturnUnsafeMethodWithResult()
     {
         // Arrange
-        var request = Substitute.For<IRequest>();
+        var request = MockCreate<IRequest>();
         const string resourceName = "students";
         var endpoint = new Endpoint(request, resourceName);
 
@@ -250,15 +251,15 @@ public sealed class EndpointTests
         var result = endpoint.Put();
 
         // Assert
-        result.Should().BeOfType<UnsafeMethodWithResult>();
-        result.HttpMethod.Should().Be(HttpMethod.Put);
+        Assert.IsType<UnsafeMethodWithResult>(result);
+        Assert.Equal(HttpMethod.Put, result.HttpMethod);
     }
 
-    [Test]
+    [Fact]
     public void Patch_WhenCalled_ShouldReturnUnsafeMethodWithResult()
     {
         // Arrange
-        var request = Substitute.For<IRequest>();
+        var request = MockCreate<IRequest>();
         const string resourceName = "students";
         var endpoint = new Endpoint(request, resourceName);
 
@@ -266,15 +267,15 @@ public sealed class EndpointTests
         var result = endpoint.Patch();
 
         // Assert
-        result.Should().BeOfType<UnsafeMethodWithResult>();
-        result.HttpMethod.Should().Be(HttpMethod.Patch);
+        Assert.IsType<UnsafeMethodWithResult>(result);
+        Assert.Equal(HttpMethod.Patch, result.HttpMethod);
     }
 
-    [Test]
+    [Fact]
     public void Delete_WhenCalled_ShouldReturnUnsafeMethodWithResult()
     {
         // Arrange
-        var request = Substitute.For<IRequest>();
+        var request = MockCreate<IRequest>();
         const string resourceName = "students";
         var endpoint = new Endpoint(request, resourceName);
 
@@ -282,15 +283,15 @@ public sealed class EndpointTests
         var result = endpoint.Delete();
 
         // Assert
-        result.Should().BeOfType<UnsafeMethodWithResult>();
-        result.HttpMethod.Should().Be(HttpMethod.Delete);
+        Assert.IsType<UnsafeMethodWithResult>(result);
+        Assert.Equal(HttpMethod.Delete, result.HttpMethod);
     }
 
-    [Test]
+    [Fact]
     public void Head_WhenCalled_ShouldReturnSafeMethodWithResult()
     {
         // Arrange
-        var request = Substitute.For<IRequest>();
+        var request = MockCreate<IRequest>();
         const string resourceName = "students";
         var endpoint = new Endpoint(request, resourceName);
 
@@ -298,15 +299,15 @@ public sealed class EndpointTests
         var result = endpoint.Head();
 
         // Assert
-        result.Should().BeOfType<SafeMethodWithResult>();
-        result.HttpMethod.Should().Be(HttpMethod.Head);
+        Assert.IsType<SafeMethodWithResult>(result);
+        Assert.Equal(HttpMethod.Head, result.HttpMethod);
     }
 
-    [Test]
+    [Fact]
     public void Options_WhenCalled_ShouldReturnSafeMethodWithResult()
     {
         // Arrange
-        var request = Substitute.For<IRequest>();
+        var request = MockCreate<IRequest>();
         const string resourceName = "students";
         var endpoint = new Endpoint(request, resourceName);
 
@@ -314,15 +315,15 @@ public sealed class EndpointTests
         var result = endpoint.Options();
 
         // Assert
-        result.Should().BeOfType<SafeMethodWithResult>();
-        result.HttpMethod.Should().Be(HttpMethod.Options);
+        Assert.IsType<SafeMethodWithResult>(result);
+        Assert.Equal(HttpMethod.Options, result.HttpMethod);
     }
 
-    [Test]
+    [Fact]
     public void Trace_WhenCalled_ShouldReturnSafeMethodWithResult()
     {
         // Arrange
-        var request = Substitute.For<IRequest>();
+        var request = MockCreate<IRequest>();
         const string resourceName = "students";
         var endpoint = new Endpoint(request, resourceName);
 
@@ -330,7 +331,7 @@ public sealed class EndpointTests
         var result = endpoint.Trace();
 
         // Assert
-        result.Should().BeOfType<SafeMethodWithResult>();
-        result.HttpMethod.Should().Be(HttpMethod.Trace);
+        Assert.IsType<SafeMethodWithResult>(result);
+        Assert.Equal(HttpMethod.Trace, result.HttpMethod);
     }
 }

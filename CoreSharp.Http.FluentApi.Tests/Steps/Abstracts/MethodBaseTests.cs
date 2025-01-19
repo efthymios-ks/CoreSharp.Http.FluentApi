@@ -1,19 +1,13 @@
-﻿using AutoFixture.NUnit3;
-using CoreSharp.Http.FluentApi.Steps.Interfaces;
+﻿using CoreSharp.Http.FluentApi.Steps.Interfaces;
 using CoreSharp.Http.FluentApi.Steps.Interfaces.Methods;
 using CoreSharp.Http.FluentApi.Steps.Methods.Abstracts;
-using FluentAssertions;
-using NSubstitute;
-using NUnit.Framework;
-using Tests.Internal.Attributes;
-using Tests.Internal.HttpmessageHandlers;
+using Tests.Common.Mocks;
 
-namespace Tests.Steps.Abstracts;
+namespace CoreSharp.Http.FluentApi.Tests.Steps.Abstracts;
 
-[TestFixture]
-public sealed class MethodBaseTests
+public sealed class MethodBaseTests : ProjectTestsBase
 {
-    [Test]
+    [Fact]
     public void Constructor_WhenEndpointIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
@@ -21,31 +15,33 @@ public sealed class MethodBaseTests
         var httpMethod = HttpMethod.Get;
 
         // Act
-        Action action = () => _ = new DummyMethod(endpoint, httpMethod);
+        void Action()
+            => _ = new DummyMethod(endpoint, httpMethod);
 
         // Assert
-        action.Should().ThrowExactly<ArgumentNullException>();
+        Assert.Throws<ArgumentNullException>(Action);
     }
 
-    [Test]
+    [Fact]
     public void Constructor_WhenHttpMethodIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
-        var endpoint = Substitute.For<IEndpoint>();
+        var endpoint = MockCreate<IEndpoint>();
         HttpMethod httpMethod = null!;
 
         // Act
-        Action action = () => _ = new DummyMethod(endpoint, httpMethod);
+        void Action()
+            => _ = new DummyMethod(endpoint, httpMethod);
 
         // Assert
-        action.Should().ThrowExactly<ArgumentNullException>();
+        Assert.Throws<ArgumentNullException>(Action);
     }
 
-    [Test]
+    [Fact]
     public void Constructor_WhenCalled_ShouldSetProperties()
     {
         // Arrange
-        var endpoint = Substitute.For<IEndpoint>();
+        var endpoint = MockCreate<IEndpoint>();
         var httpMethod = HttpMethod.Get;
 
         // Act
@@ -53,17 +49,16 @@ public sealed class MethodBaseTests
 
         // Assert
         var methodInterface = (IMethod)method;
-        methodInterface.Endpoint.Should().BeSameAs(endpoint);
-        methodInterface.HttpMethod.Should().BeSameAs(httpMethod);
+        Assert.Same(endpoint, methodInterface.Endpoint);
+        Assert.Same(httpMethod, methodInterface.HttpMethod);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public async Task SendAsync_WhenHasQueryParameters_ShouldAppendQueryParametersToEndpoint(
-        [Frozen] MockHttpMessageHandler mockHttpMessageHandler,
-        IEndpoint endpoint)
+    [Fact]
+    public async Task SendAsync_WhenHasQueryParameters_ShouldAppendQueryParametersToEndpoint()
     {
         // Arrange 
+        var mockHttpMessageHandler = MockFreeze<MockHttpMessageHandler>();
+        var endpoint = MockCreate<IEndpoint>();
         var httpMethod = HttpMethod.Get;
         var method = new DummyMethod(endpoint, httpMethod);
         endpoint.QueryParameters.Add("key1", "value1");
@@ -73,17 +68,16 @@ public sealed class MethodBaseTests
 
         // Assert
         var capturedUrl = mockHttpMessageHandler.CapturedRequest!.RequestUri!.AbsoluteUri;
-        capturedUrl.Should().Contain("key1=value1");
+        Assert.Contains("key1=value1", capturedUrl);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public async Task SendAsync_WhenHasHeaders_ShouldAddHeadersToRequest(
-        [Frozen] MockHttpMessageHandler mockHttpMessageHandler,
-        [Frozen] IRequest request,
-        IEndpoint endpoint)
+    [Fact]
+    public async Task SendAsync_WhenHasHeaders_ShouldAddHeadersToRequest()
     {
         // Arrange 
+        var mockHttpMessageHandler = MockFreeze<MockHttpMessageHandler>();
+        var request = MockFreeze<IRequest>();
+        var endpoint = MockCreate<IEndpoint>();
         var httpMethod = HttpMethod.Get;
         var method = new DummyMethod(endpoint, httpMethod);
         request.Headers.Add("key1", "value1");
@@ -93,49 +87,51 @@ public sealed class MethodBaseTests
 
         // Assert
         var capturedHeaders = mockHttpMessageHandler.CapturedRequest!.Headers;
-        capturedHeaders.Should().Contain(header =>
+        Assert.Contains(capturedHeaders, header =>
             header.Key == "key1"
             && header.Value.FirstOrDefault() == "value1");
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void SendAsync_WhenCancellationIsRequested_ShouldThrowTaskCancelledException(IEndpoint endpoint)
+    [Fact]
+    public void SendAsync_WhenCancellationIsRequested_ShouldThrowTaskCancelledException()
     {
         // Arrange 
+        var endpoint = MockCreate<IEndpoint>();
         var httpMethod = HttpMethod.Get;
         var method = new DummyMethod(endpoint, httpMethod);
         using var cancellationTokenSource = new CancellationTokenSource();
         cancellationTokenSource.Cancel();
 
         // Act
-        Func<Task> action = () => method.SendAsync(cancellationTokenSource.Token);
+        Task Action()
+            => method.SendAsync(cancellationTokenSource.Token);
 
         // Assert
-        action.Should().ThrowExactlyAsync<TaskCanceledException>();
+        Assert.ThrowsAsync<TaskCanceledException>(Action);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void SendAsync_WhenTimedOut_ShouldThrowTimeoutException(IEndpoint endpoint)
+    [Fact]
+    public void SendAsync_WhenTimedOut_ShouldThrowTimeoutException()
     {
         // Arrange 
+        var endpoint = MockCreate<IEndpoint>();
         var httpMethod = HttpMethod.Get;
         var method = new DummyMethod(endpoint, httpMethod);
         endpoint.Request!.Timeout = TimeSpan.FromTicks(1);
 
         // Act
-        Func<Task> action = () => method.SendAsync();
+        Task Action()
+            => method.SendAsync();
 
         // Assert
-        action.Should().ThrowExactlyAsync<TimeoutException>();
+        Assert.ThrowsAsync<TimeoutException>(Action);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public async Task SendAsync_WhenIgnoreErrorIsFalseAndThrowsException_ShouldThrowException(IEndpoint endpoint)
+    [Fact]
+    public async Task SendAsync_WhenIgnoreErrorIsFalseAndThrowsException_ShouldThrowException()
     {
         // Arrange 
+        var endpoint = MockCreate<IEndpoint>();
         var httpMethod = HttpMethod.Get;
         var method = new DummyMethod(endpoint, httpMethod);
         using var cancellationTokenSource = new CancellationTokenSource();
@@ -143,18 +139,18 @@ public sealed class MethodBaseTests
         endpoint.Request!.ThrowOnError = true;
 
         // Act
-        Func<Task<HttpResponseMessage?>> action = () => method.SendAsync(cancellationTokenSource.Token);
+        Task<HttpResponseMessage?> Action()
+            => method.SendAsync(cancellationTokenSource.Token);
 
         // Assert
-        await action.Should().ThrowExactlyAsync<TaskCanceledException>();
-
+        await Assert.ThrowsAsync<TaskCanceledException>(Action);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public async Task SendAsync_WhenIgnoreErrorIsTrueAndThrowsException_ShouldNotThrowExceptionAndReturnNull(IEndpoint endpoint)
+    [Fact]
+    public async Task SendAsync_WhenIgnoreErrorIsTrueAndThrowsException_ShouldNotThrowExceptionAndReturnNull()
     {
         // Arrange 
+        var endpoint = MockCreate<IEndpoint>();
         var httpMethod = HttpMethod.Get;
         var method = new DummyMethod(endpoint, httpMethod);
         using var cancellationTokenSource = new CancellationTokenSource();
@@ -162,12 +158,12 @@ public sealed class MethodBaseTests
         endpoint.Request!.ThrowOnError = false;
 
         // Act
-        Func<Task<HttpResponseMessage?>> action = () => method.SendAsync(cancellationTokenSource.Token);
+        Task<HttpResponseMessage?> Action()
+            => method.SendAsync(cancellationTokenSource.Token);
 
         // Assert
-        var response = (await action.Should().NotThrowAsync()).Subject;
-        response.Should().BeNull();
-
+        var response = await Record.ExceptionAsync(Action);
+        Assert.Null(response);
     }
 
     private sealed class DummyMethod(IEndpoint endpoint, HttpMethod httpMethod)

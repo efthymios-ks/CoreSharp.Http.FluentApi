@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup Label="Package">
-		<AssemblyName>Samples.App</AssemblyName>
 		<OutputType>Exe</OutputType>
 	</PropertyGroup>
 
@@ -11,7 +10,7 @@
 	</ItemGroup>
 
 	<ItemGroup Label="Project references">
-		<ProjectReference Include="..\..\CoreSharp.Http.FluentApi\CoreSharp.Http.FluentApi.csproj" />
+		<ProjectReference Include="..\CoreSharp.Http.FluentApi\CoreSharp.Http.FluentApi.csproj" />
 	</ItemGroup>
 
 </Project>

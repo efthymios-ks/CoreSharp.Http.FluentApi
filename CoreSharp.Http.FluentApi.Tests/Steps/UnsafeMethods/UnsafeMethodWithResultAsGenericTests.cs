@@ -1,19 +1,13 @@
-﻿using AutoFixture.NUnit3;
-using CoreSharp.Http.FluentApi.Steps.Interfaces.Methods.UnsafeMethods;
+﻿using CoreSharp.Http.FluentApi.Steps.Interfaces.Methods.UnsafeMethods;
 using CoreSharp.Http.FluentApi.Steps.Methods.UnsafeMethods;
-using FluentAssertions;
-using NUnit.Framework;
 using System.Text.Json;
-using Tests.Internal.Attributes;
-using Tests.Internal.HttpmessageHandlers;
+using Tests.Common.Mocks;
 
-namespace Tests.Steps.UnsafeMethods;
+namespace CoreSharp.Http.FluentApi.Tests.Steps.UnsafeMethods;
 
-[TestFixture]
-public sealed class UnsafeMethodWithResultAsGenericTests
+public sealed class UnsafeMethodWithResultAsGenericTests : ProjectTestsBase
 {
-    [Test]
-    [AutoNSubstituteData]
+    [Fact]
     public void Constructor_WhenUnsafeMethodIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
@@ -22,31 +16,33 @@ public sealed class UnsafeMethodWithResultAsGenericTests
             => Task.FromResult<string?>(null!);
 
         // Act
-        Action action = () => _ = new UnsafeMethodWithResultAsGeneric<string>(unsafeMethod, DeserializeFunction);
+        void Action()
+            => _ = new UnsafeMethodWithResultAsGeneric<string>(unsafeMethod, DeserializeFunction);
 
         // Assert
-        action.Should().ThrowExactly<ArgumentNullException>();
+        Assert.Throws<ArgumentNullException>(Action);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void Constructor_WhenDeserializeFunctionIsNull_ShouldThrowArgumentNullException(IUnsafeMethod unsafeMethod)
+    [Fact]
+    public void Constructor_WhenDeserializeFunctionIsNull_ShouldThrowArgumentNullException()
     {
         // Arrange
+        var unsafeMethod = MockCreate<IUnsafeMethod>();
         Func<Stream, Task<string?>> deserializeFunction = null!;
 
         // Act
-        Action action = () => _ = new UnsafeMethodWithResultAsGeneric<string>(unsafeMethod, deserializeFunction);
+        void Action()
+            => _ = new UnsafeMethodWithResultAsGeneric<string>(unsafeMethod, deserializeFunction);
 
         // Assert
-        action.Should().ThrowExactly<ArgumentNullException>();
+        Assert.Throws<ArgumentNullException>(Action);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public void Constructor_WhenDeserializeFunctionIsNotNull_ShouldSetDeserializeFunction(IUnsafeMethod unsafeMethod)
+    [Fact]
+    public void Constructor_WhenDeserializeFunctionIsNotNull_ShouldSetDeserializeFunction()
     {
         // Arrange
+        var unsafeMethod = MockCreate<IUnsafeMethod>();
         Func<Stream, Task<string?>> deserializeFunction = response => null!;
 
         // Act
@@ -54,63 +50,67 @@ public sealed class UnsafeMethodWithResultAsGenericTests
 
         // Assert
         var unsafeMethodWithResultFromJsonAsInterface = (IUnsafeMethodWithResultAsGeneric<string>)unsafeMethodWithResultFromJson;
-        unsafeMethodWithResultFromJsonAsInterface.DeserializeFunction.Should().BeSameAs(deserializeFunction);
+        Assert.Same(deserializeFunction, unsafeMethodWithResultFromJsonAsInterface.DeserializeFunction);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public async Task SendAsync_WhenCancellationIsRequested_ShouldThrowTaskCancelledException(IUnsafeMethod unsafeMethod)
+    [Fact]
+    public async Task SendAsync_WhenCancellationIsRequested_ShouldThrowTaskCancelledException()
     {
         // Arrange 
+        var unsafeMethod = MockCreate<IUnsafeMethod>();
         unsafeMethod.Endpoint!.Request!.ThrowOnError = true;
-        Func<Stream, Task<string?>> deserializeFunction = response => Task.FromResult<string?>(null!);
+        Task<string?> Deserialize(Stream response)
+            => Task.FromResult<string?>(null!);
+
         using var cancellationTokenSource = new CancellationTokenSource();
         cancellationTokenSource.Cancel();
 
-        var unsafeMethodWithResultFromJson = new UnsafeMethodWithResultAsGeneric<string>(unsafeMethod, deserializeFunction);
+        var unsafeMethodWithResultFromJson = new UnsafeMethodWithResultAsGeneric<string>(unsafeMethod, Deserialize);
 
         // Act
-        Func<Task> action = () => unsafeMethodWithResultFromJson.SendAsync(cancellationTokenSource.Token);
+        async Task Action()
+            => await unsafeMethodWithResultFromJson.SendAsync(cancellationTokenSource.Token);
 
         // Assert
-        await action.Should().ThrowExactlyAsync<TaskCanceledException>();
+        await Assert.ThrowsAsync<TaskCanceledException>(Action);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public async Task SendAsync_WhenHttpResponseIsNull_ShouldReturnNull(
-        [Frozen] MockHttpMessageHandler mockHttpMessageHandler,
-        IUnsafeMethod unsafeMethod)
+    [Fact]
+    public async Task SendAsync_WhenHttpResponseIsNull_ShouldReturnNull()
     {
         // Arrange 
-        mockHttpMessageHandler.SetResponseToNull = true;
+        var mockHttpMessageHandler = MockFreeze<MockHttpMessageHandler>();
+        mockHttpMessageHandler.HttpResponseMessageFactory = () => null!;
+        var unsafeMethod = MockCreate<IUnsafeMethod>();
 
-        Func<Stream, Task<DummyEntity?>> deserializeFunction = _ => Task.FromResult<DummyEntity?>(new()
+        static Task<DummyEntity?> Deserialize(Stream _) => Task.FromResult<DummyEntity?>(new()
         {
             Name = "Test"
         });
 
-        var unsafeMethodWithResultFromJson = new UnsafeMethodWithResultAsGeneric<DummyEntity>(unsafeMethod, deserializeFunction);
+        var unsafeMethodWithResultFromJson = new UnsafeMethodWithResultAsGeneric<DummyEntity>(unsafeMethod, Deserialize);
 
         // Act
         var result = await unsafeMethodWithResultFromJson.SendAsync();
 
         // Assert
-        result.Should().BeNull();
+        Assert.Null(result);
     }
 
-    [Test]
-    [AutoNSubstituteData]
-    public async Task SendAsync_WhenCalled_ShouldReturnDeserializedObject(
-        [Frozen] MockHttpMessageHandler mockHttpMessageHandler,
-        IUnsafeMethod unsafeMethod)
+    [Fact]
+    public async Task SendAsync_WhenCalled_ShouldReturnDeserializedObject()
     {
         // Arrange
+        var mockHttpMessageHandler = MockFreeze<MockHttpMessageHandler>();
+        var unsafeMethod = MockCreate<IUnsafeMethod>();
         var expectedResult = new DummyEntity
         {
             Name = "Test"
         };
-        mockHttpMessageHandler.ResponseContent = JsonSerializer.Serialize(expectedResult);
+        mockHttpMessageHandler.HttpResponseMessageFactory = () => new()
+        {
+            Content = new StringContent(JsonSerializer.Serialize(expectedResult))
+        };
 
         static Task<DummyEntity?> DeserializeFunction(Stream response)
         {
@@ -124,8 +124,8 @@ public sealed class UnsafeMethodWithResultAsGenericTests
         var result = await unsafeMethodWithResultFromJson.SendAsync();
 
         // Assert
-        result.Should().NotBeNull();
-        result.Should().BeEquivalentTo(expectedResult);
+        Assert.NotNull(result);
+        Assert.Equivalent(expectedResult, result);
     }
 
     public sealed class DummyEntity
